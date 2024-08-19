@@ -1,5 +1,6 @@
 "use client";
 
+import { border } from "@chakra-ui/react";
 import {
   ImportContacts,
   Forum,
@@ -21,22 +22,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function BottomBar() {
-    const router = useRouter();
-    const handleNavigation = (path: string) => {
-        router.push(path);
-    }
+  const router = useRouter();
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
   return (
-    <Box style={{top: 0, left: 0}}>
-      <BottomNavigation showLabels sx={{height : 60}}>
+    <Box style={{ position: "fixed", left: 0, bottom: 0, width: "100%" }}>
+      <BottomNavigation showLabels sx={{ height: 60, }}>
         <BottomNavigationAction
           label="Diary"
           icon={<ImportContacts fontSize="large" />}
-          onClick={() => handleNavigation('/')}
+          onClick={() => handleNavigation("/")}
         />
         <BottomNavigationAction
           label="AIchat"
           icon={<Forum fontSize="large" />}
-          onClick={()=>handleNavigation('/aichat')}
+          onClick={() => handleNavigation("/aichat")}
         />
         {/* <BottomNavigationAction
           label="StoryNode"
@@ -45,6 +46,7 @@ export default function BottomBar() {
         <BottomNavigationAction
           label="ToDo"
           icon={<CheckCircle fontSize="large" />}
+          onClick={() => handleNavigation("/todo")}
         />
         <BottomNavigationAction
           label="Settings"
