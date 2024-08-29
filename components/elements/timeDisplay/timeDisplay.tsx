@@ -7,7 +7,7 @@ export default function TimeDisplay() {
   const day = now.getDate();
   return (
     <Box sx={{mb: 2}}>
-      <Typography style={{ fontSize: 30, fontWeight: "normal" }}>
+      <Typography style={{ fontSize: 25, fontWeight: "bold" }}>
         {year}年{month}月{day}日
       </Typography>
     </Box>

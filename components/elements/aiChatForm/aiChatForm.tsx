@@ -8,16 +8,14 @@ import {
   Select,
   TextField,
   Typography,
-  MenuItem,
 } from "@mui/material";
 import { useState } from "react";
 import { createStyles, makeStyles, Theme, styled } from "@mui/material/styles";
 
-export default function DiaryInput() {
-  const d_maxLength: number = 200; /// 入力上限定義
+export default function AiChatForm() {
+  const d_maxLength: number = 4000; /// 入力上限定義
   const [diaryInput, setDiaryInput] = useState<string>("");
-  const [inputEmotion, setInputEmotion] = useState<string>();
-  const [listEmotion, setListEmotion] = useState<string>();
+  //   const [diaryEmotion, setDiaryEmotion] = useState<string>();
 
   // handleChange関数を追加
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,12 +26,8 @@ export default function DiaryInput() {
     }
   };
 
-  const inputEmotionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setInputEmotion(event.target.value as string);
-  };
-
   return (
-    <Box sx={{ borderColor: "gray", borderRadius: 1, marginBottom: 2 }}>
+    <Box sx={{ borderColor: "gray", borderRadius: 1, marginBottom: 2, mt: 3 }}>
       <Box
         component="form"
         sx={{
@@ -52,22 +46,17 @@ export default function DiaryInput() {
           <InputLabel
             style={{
               backgroundColor: "white",
-              paddingLeft: '5px',
-              paddingRight: "5px"
+              paddingLeft: "5px",
+              paddingRight: "5px",
             }}
           >
-            Emotion
+            日記の収集期間
           </InputLabel>
           <Select
             sx={{ width: "40%" }}
-            value={inputEmotion}
+            value={"Emotion"}
             placeholder="Emotion"
-            onChange={inputEmotionChange}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
+          ></Select>
         </FormControl>
         <Typography
           sx={{
@@ -80,9 +69,8 @@ export default function DiaryInput() {
           入力文字制限: {diaryInput === "" ? "0" : diaryInput?.length} /{" "}
           {d_maxLength}文字
         </Typography>
-        {/* <Typography>{inputEmotion}</Typography> */}
         <TextField
-          label="日記を記入してください"
+          label="プロンプトを入力して下さい"
           variant="outlined"
           multiline
           rows={4}
@@ -95,7 +83,7 @@ export default function DiaryInput() {
           }}
         ></TextField>
         <Button variant="contained" sx={{ marginTop: 2, height: "40px" }}>
-          記録する
+          質問
         </Button>
       </Box>
     </Box>

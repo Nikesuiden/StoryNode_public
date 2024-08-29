@@ -4,9 +4,9 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
 export default function ToDoInput() {
-  const [todoInput, setTodoInput] = useState<string>();
+  const [todoInput, setTodoInput] = useState<string>("");
 
-  const t_maxLength: number = 50; // ToDo入力制限を課す。
+  const t_maxLength: number = 40; // ToDo入力制限を課す。
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
@@ -37,7 +37,7 @@ export default function ToDoInput() {
           noValidate
         >
           <TextField
-            label="ToDo"
+            label="ToDoを記入してください"
             variant="outlined"
             multiline
             maxRows={1}
@@ -45,6 +45,7 @@ export default function ToDoInput() {
               backgroundColor: "white",
               flex: 8,
               marginRight: 5,
+              marginTop: 2
             }}
             onChange={handleChange}
             inputProps={{ maxLength: t_maxLength }}

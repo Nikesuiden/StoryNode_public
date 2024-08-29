@@ -1,6 +1,4 @@
 "use client";
-
-import { border } from "@chakra-ui/react";
 import {
   ImportContacts,
   Forum,
@@ -16,9 +14,7 @@ import {
   BottomNavigationAction,
   makeStyles,
 } from "@mui/material";
-import { constants } from "buffer";
-import { px } from "framer-motion";
-import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 
 export default function BottomBar() {
@@ -28,7 +24,7 @@ export default function BottomBar() {
   };
   return (
     <Box style={{ position: "fixed", left: 0, bottom: 0, width: "100%" }}>
-      <BottomNavigation showLabels sx={{ height: 60, }}>
+      <BottomNavigation showLabels sx={{ height: 60 }}>
         <BottomNavigationAction
           label="Diary"
           icon={<ImportContacts fontSize="large" />}
@@ -56,3 +52,5 @@ export default function BottomBar() {
     </Box>
   );
 }
+
+// 背景カラーは#5A5A5A
