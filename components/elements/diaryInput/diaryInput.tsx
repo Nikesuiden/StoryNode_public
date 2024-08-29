@@ -54,8 +54,8 @@ export default function DiaryInput() {
           sx={{
             fontSize: 15,
             color: diaryInput?.length === d_maxLength ? "red" : "inherit",
-            marginBottom: 0.5,
-            marginTop: 1,
+            marginBottom: 1,
+            marginTop: 2,
           }}
         >
           入力文字制限: {diaryInput === "" ? "0" : diaryInput?.length} /
@@ -74,7 +74,7 @@ export default function DiaryInput() {
             maxLength: d_maxLength, // 300文字までしか入力できないように設定
           }}
         ></TextField>
-        <Button variant="contained" sx={{ marginTop: 1 }}>
+        <Button variant="contained" sx={{ marginTop: 2, height: '40px' }}>
           記録する
         </Button>
       </Box>
