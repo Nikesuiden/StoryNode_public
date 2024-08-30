@@ -10,8 +10,15 @@ import {
   Typography,
   MenuItem,
 } from "@mui/material";
+import { useState } from "react";
 
 export default function DiaryList() {
+  const [listEmotion, setListEmotion] = useState<string>("all");
+
+  const ListEmotionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setListEmotion(event.target.value as string);
+  };
+
   return (
     <Box sx={{ mt: 1.5 }}>
       <FormControl
@@ -21,7 +28,8 @@ export default function DiaryList() {
         fullWidth
       >
         {/* <InputLabel>Emotion</InputLabel> */}
-        <Select sx={{ width: "30%", height: 40 }}>
+        <Select sx={{ width: "30%", height: 40 }} value={listEmotion} onChange={ListEmotionChange}>
+          <MenuItem value={"all"}>すべて</MenuItem>
           <MenuItem value={"none"}>--未設定--</MenuItem>
           <MenuItem value={"grad"}>嬉しい</MenuItem>
           <MenuItem value={"Funny"}>楽しみ</MenuItem>
@@ -33,6 +41,7 @@ export default function DiaryList() {
           <MenuItem value={"anxiety"}>不安</MenuItem>
         </Select>
       </FormControl>
+      <Typography>{listEmotion}</Typography>
     </Box>
   );
 }

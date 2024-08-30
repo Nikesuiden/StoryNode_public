@@ -16,8 +16,8 @@ import { createStyles, makeStyles, Theme, styled } from "@mui/material/styles";
 export default function DiaryInput() {
   const d_maxLength: number = 200; /// 入力上限定義
   const [diaryInput, setDiaryInput] = useState<string>("");
-  const [inputEmotion, setInputEmotion] = useState<string>();
-  const [listEmotion, setListEmotion] = useState<string>();
+  const [inputEmotion, setInputEmotion] = useState<string>("none");
+  
 
   // handleChange関数を追加
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
