@@ -9,15 +9,19 @@ import {
   TextField,
   Typography,
   MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
+import { setPriority } from "os";
 import { useState } from "react";
 
 export default function DiaryList() {
   const [listEmotion, setListEmotion] = useState<string>("all");
 
-  const ListEmotionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const ListEmotionChange = (event: SelectChangeEvent) => {
     setListEmotion(event.target.value as string);
   };
+
+
 
   return (
     <Box sx={{ mt: 1.5 }}>
@@ -27,8 +31,11 @@ export default function DiaryList() {
         }}
         fullWidth
       >
-        {/* <InputLabel>Emotion</InputLabel> */}
-        <Select sx={{ width: "30%", height: 40 }} value={listEmotion} onChange={ListEmotionChange}>
+        <Select
+          sx={{ width: "30%", height: 40 }}
+          value={listEmotion}
+          onChange={ListEmotionChange}
+        >
           <MenuItem value={"all"}>すべて</MenuItem>
           <MenuItem value={"none"}>--未設定--</MenuItem>
           <MenuItem value={"grad"}>嬉しい</MenuItem>
@@ -41,7 +48,6 @@ export default function DiaryList() {
           <MenuItem value={"anxiety"}>不安</MenuItem>
         </Select>
       </FormControl>
-      <Typography>{listEmotion}</Typography>
     </Box>
   );
 }

@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
   MenuItem,
+  SelectChangeEvent
 } from "@mui/material";
 import { useState } from "react";
 import { createStyles, makeStyles, Theme, styled } from "@mui/material/styles";
@@ -28,7 +29,7 @@ export default function DiaryInput() {
     }
   };
 
-  const inputEmotionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const inputEmotionChange = (event: SelectChangeEvent) => {
     setInputEmotion(event.target.value as string);
   };
 
