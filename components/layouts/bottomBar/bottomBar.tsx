@@ -47,6 +47,7 @@ export default function BottomBar() {
         <BottomNavigationAction
           label="Settings"
           icon={<Settings fontSize="large" />}
+          onClick={() => handleNavigation("/settings")}
         />
       </BottomNavigation>
     </Box>
