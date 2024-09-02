@@ -7,7 +7,6 @@ import TopBar from "@/components/layouts/topBar/topBar";
 import { Box } from "@mui/material";
 
 export default function Index() {
-
   return (
     <Box sx={{ margin: 2 }}>
       <TopBar />
