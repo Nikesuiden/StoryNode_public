@@ -13,6 +13,7 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   makeStyles,
+  Divider,
 } from "@mui/material";
 
 import { useRouter } from "next/navigation";
@@ -24,7 +25,8 @@ export default function BottomBar() {
   };
   return (
     <Box style={{ position: "fixed", left: 0, bottom: 0, width: "100%" }}>
-      <BottomNavigation showLabels sx={{ height: 60 }}>
+      <Divider />
+      <BottomNavigation showLabels sx={{ height: 60 , marginTop: 0.5}}>
         <BottomNavigationAction
           label="Diary"
           icon={<ImportContacts fontSize="large" />}

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   ImportContacts,
@@ -28,16 +28,18 @@ export default function SideBar() {
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
-    console.log('ヒカキンマニア')
+    console.log("ヒカキンマニア");
     router.push(path);
   };
 
   const icons = [
-    { component: <ImportContacts fontSize="large" onClick={() => handleNavigation("/")}/>, key: "importContacts" },
-    { component: <Forum fontSize="large" onClick={() => handleNavigation("/aichat")}/>, key: "forum" },
-    { component: <CheckCircle fontSize="large" onClick={() => handleNavigation("/todo")}/>, key: "checkCircle" },
-    { component: <Settings fontSize="large" onClick={() => handleNavigation("/settings")}/>, key: "settings" },
+    { component: <ImportContacts fontSize="large" />, key: "importContacts" },
+    { component: <Forum fontSize="large" />, key: "forum" },
+    { component: <CheckCircle fontSize="large" />, key: "checkCircle" },
+    { component: <Settings fontSize="large" />, key: "settings" },
   ];
+
+  const urls = ["/", "/aichat", "/todo", "/settings"];
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -45,8 +47,7 @@ export default function SideBar() {
       <AppBar
         position="fixed"
         sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-      >
-      </AppBar>
+      ></AppBar>
       <Drawer
         sx={{
           width: drawerWidth,
@@ -59,11 +60,13 @@ export default function SideBar() {
         variant="permanent"
         anchor="left"
       >
-     
-
-        <List sx={{ml: 2}}>
+        <List sx={{ ml: 2 }}>
           {["Diary", "AIchat", "ToDo", "Settings"].map((text, index) => (
-            <ListItem key={text} disablePadding>
+            <ListItem
+              key={text}
+              disablePadding
+              onClick={() => handleNavigation(urls[index])}
+            >
               <ListItemButton>
                 <ListItemIcon>
                   {cloneElement(icons[index].component, {

@@ -3,18 +3,53 @@ import DiaryInput from "@/components/elements/diaryInput/diaryInput";
 import DiaryList from "@/components/elements/diaryList/diaryList";
 import TimeDisplay from "@/components/elements/timeDisplay/timeDisplay";
 import BottomBar from "@/components/layouts/bottomBar/bottomBar";
+import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { Box } from "@mui/material";
 
 export default function Index() {
   return (
-    <Box sx={{ margin: 2 }}>
-      <TopBar />
-      <TimeDisplay />
-      <DiaryInput />
-      <hr />
-      <DiaryList />
-      <BottomBar />
+    <Box>
+      <Box
+        sx={{
+          margin: 2,
+          "@media screen and (min-width:700px)": {
+            display: "flex",
+            justifyContent: "center",
+          },
+        }}
+      >
+        {/* スマホレスポンシブ */}
+        <Box
+          sx={{
+            "@media screen and (min-width:700px)": {
+              display: "none",
+            },
+          }}
+        >
+          <BottomBar />
+        </Box>
+
+        {/* PCレスポンシブ */}
+        <Box
+          sx={{
+            "@media screen and (max-width:700px)": {
+              display: "none",
+            },
+          }}
+        >
+          <SideBar />
+        </Box>
+
+        {/* アプリ情報情報 */}
+        <Box sx={{width:"auto"}}>
+          <TopBar />
+          <TimeDisplay />
+          <DiaryInput />
+          <hr />
+          <DiaryList />
+        </Box>
+      </Box>
     </Box>
   );
 }
