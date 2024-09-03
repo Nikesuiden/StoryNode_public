@@ -15,7 +15,6 @@ export default function Index() {
           margin: 2,
           "@media screen and (min-width:700px)": {
             display: "flex",
-            justifyContent: "center",
           },
         }}
       >
@@ -42,7 +41,7 @@ export default function Index() {
         </Box>
 
         {/* アプリ情報情報 */}
-        <Box sx={{width:"auto"}}>
+        <Box sx={{flex: 4}}>
           <TopBar />
           <TimeDisplay />
           <DiaryInput />
