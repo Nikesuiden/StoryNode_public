@@ -39,7 +39,6 @@ export default function ToDoInput() {
           <TextField
             label="ToDoを記入してください"
             variant="outlined"
-            multiline
             maxRows={1}
             style={{
               backgroundColor: "white",
