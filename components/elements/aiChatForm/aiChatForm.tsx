@@ -33,7 +33,7 @@ export default function AiChatForm() {
   };
 
   return (
-    <Box sx={{ borderColor: "gray", borderRadius: 1, marginBottom: 2, mt: 3 }}>
+    <Box sx={{ borderColor: "gray", borderRadius: 1, marginBottom: 2, mt: 2 }}>
       <Box
         component="form"
         sx={{

@@ -7,7 +7,7 @@ import { Typography } from "@mui/material";
 
 export default function Settings() {
   return (
-    <Box>
+    <Box sx={{margin: 2}}>
       <Box
         sx={{
           margin: 2,
