@@ -9,9 +9,9 @@ import {
   TextField,
   Typography,
   MenuItem,
-  SelectChangeEvent
+  SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createStyles, makeStyles, Theme, styled } from "@mui/material/styles";
 
 interface DiaryPost {
@@ -21,14 +21,9 @@ interface DiaryPost {
 }
 
 export default function DiaryInput() {
-
   const d_maxLength: number = 200; /// 入力上限定義
   const [diaryInput, setDiaryInput] = useState<string>("");
   const [inputEmotion, setInputEmotion] = useState<string>("none");
-
-    // API送信用
-    const 
-  
 
   // handleChange関数を追加
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +36,38 @@ export default function DiaryInput() {
 
   const inputEmotionChange = (event: SelectChangeEvent) => {
     setInputEmotion(event.target.value as string);
+  };
+
+  /// フォーム送信時の処理
+  const handleSubmit = async () => {
+
+    console.log('1')
+
+    if (!diaryInput) {
+      alert("日記の内容を記入してください。");
+      return;
+    }
+    console.log('2')
+    try {
+      const response = await fetch("../api/diaryPost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: diaryInput, emotion: inputEmotion }),
+      });
+      console.log('3')
+      if (response.ok) {
+        alert("日記が記録されました！");
+        setDiaryInput("");
+        setInputEmotion("none"); // 初期化
+      } else {
+        alert("エラーが発生しました。もう一度お試しください。");
+      }
+    } catch (error) {
+      console.log('送信エラー')
+      console.error("Error creating diary post:", error);
+      alert("サーバーとの通信中にエラーが発生しました。");
+    }
+    console.log('4')
   };
 
   return (
@@ -111,9 +138,12 @@ export default function DiaryInput() {
             maxLength: d_maxLength, // 300文字までしか入力できないように設定
           }}
         ></TextField>
-        <Button variant="contained" sx={{ marginTop: 2, height: "40px" }}>
+        <Button variant="contained" type="button" sx={{ marginTop: 2, height: "40px" }} onClick={handleSubmit}>
           記録する
         </Button>
+
+        <Typography>{diaryInput}</Typography>
+        <Typography>{inputEmotion}</Typography>
       </Box>
     </Box>
   );
