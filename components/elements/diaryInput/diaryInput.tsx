@@ -14,10 +14,20 @@ import {
 import { useState } from "react";
 import { createStyles, makeStyles, Theme, styled } from "@mui/material/styles";
 
+interface DiaryPost {
+  id: number;
+  content: string;
+  emotion: string;
+}
+
 export default function DiaryInput() {
+
   const d_maxLength: number = 200; /// 入力上限定義
   const [diaryInput, setDiaryInput] = useState<string>("");
   const [inputEmotion, setInputEmotion] = useState<string>("none");
+
+    // API送信用
+    const 
   
 
   // handleChange関数を追加

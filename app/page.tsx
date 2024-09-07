@@ -7,6 +7,8 @@ import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { Box } from "@mui/material";
 
+
+
 export default function Index() {
   return (
     <Box>
@@ -41,7 +43,7 @@ export default function Index() {
         </Box>
 
         {/* アプリ情報情報 */}
-        <Box sx={{flex: 4}}>
+        <Box sx={{ flex: 4 }}>
           <TopBar />
           <TimeDisplay />
           <DiaryInput />
