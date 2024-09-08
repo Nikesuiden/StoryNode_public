@@ -1,36 +1,34 @@
-import { PrismaClient } from "@prisma/client/extension";
-import { NextApiRequest, NextApiResponse } from "next";
+// app/api/diaryPost/route.ts
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default async function DiaryPostHander(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "GET") {
-    const { id } = req.query;
+// GETリクエスト用のハンドラをエクスポート
+export async function GET() {
+  try {
+    const diaryPosts = await prisma.diaryPost.findMany();
+    return NextResponse.json(diaryPosts, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error fetching diary posts" },
+      { status: 500 }
+    );
+  }
+}
 
-    // 全てのDiaryPostを取得する
-    try {
-      const diaryPosts = await prisma.diaryPosts.findMany();
-      res.status(200).json(diaryPosts);
-    } catch (error) {
-      res.status(500).json({ error: "Error fetching diary posts" });
-    }
-  } else if (req.method === "POST") {
-    // 新しいDiaryPostの作成
-    const { content, emotion } = req.body;
-    try {
-      const newdiaryPost = await prisma.diaryPosts.create({
-        data: { content, emotion },
-      });
-      res.status(201).json(newdiaryPost);
-    } catch (error) {
-      res.status(500).json({ error: "Error creating diary post" });
-    }
-  } else {
-    // その他のHTTPメソッドは許可しない
-    res.setHeader("Allow", ["GET", "POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+// POSTリクエスト用のハンドラをエクスポート
+export async function POST(req: Request) {
+  try {
+    const { content, emotion } = await req.json();
+    const newDiaryPost = await prisma.diaryPost.create({
+      data: { content, emotion },
+    });
+    return NextResponse.json(newDiaryPost, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error creating diary post" },
+      { status: 500 }
+    );
   }
 }

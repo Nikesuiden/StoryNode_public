@@ -49,7 +49,7 @@ export default function DiaryInput() {
     }
     console.log('2')
     try {
-      const response = await fetch("../api/diaryPost", {
+      const response = await fetch("/api/diaryPost", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: diaryInput, emotion: inputEmotion }),
