@@ -17,6 +17,7 @@ model DiaryPost {
   id Int @default(autoincrement()) @id
   content String
   emotion String
+  createdAt DateTime @default(now())
 }
 
 model ToDo {

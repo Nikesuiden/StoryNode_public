@@ -129,6 +129,7 @@ export default function DiaryInput() {
           label="日記を記入してください"
           variant="outlined"
           multiline
+          value={diaryInput}
           rows={4}
           style={{
             backgroundColor: "white",
@@ -142,8 +143,8 @@ export default function DiaryInput() {
           記録する
         </Button>
 
-        <Typography>{diaryInput}</Typography>
-        <Typography>{inputEmotion}</Typography>
+        {/* <Typography>{diaryInput}</Typography>
+        <Typography>{inputEmotion}</Typography> */}
       </Box>
     </Box>
   );

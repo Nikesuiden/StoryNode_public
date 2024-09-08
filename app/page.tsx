@@ -11,7 +11,7 @@ import { Box } from "@mui/material";
 
 export default function Index() {
   return (
-    <Box>
+    <Box sx={{paddingBottom : '60px'}}>
       <Box
         sx={{
           margin: 2,
