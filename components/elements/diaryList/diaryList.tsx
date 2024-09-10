@@ -47,6 +47,10 @@ export default function DiaryList() {
     setAnchorEl(null);
   };
 
+  const clickClose = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(null);
+  }
+
   const handleEdit = async () => {
     if (selectedPost) {
       try {
@@ -128,6 +132,56 @@ export default function DiaryList() {
         </Select>
       </FormControl>
 
+      {/* 編集用のフォーム */}
+      {selectedPost && (
+        <Box
+          sx={{
+            marginTop: 2,
+            border: "1px solid gray",
+            borderRadius: 1,
+            padding: 2,
+            backgroundColor: "white",
+          }}
+        >
+          <Typography variant="h6">編集フォーム</Typography>
+          <br />
+
+          <FormControl fullWidth sx={{ marginBottom: 2, width: "30%" }}>
+            <InputLabel>Emotion</InputLabel>
+            <Select
+              value={editEmotion}
+              onChange={(e) => setEditEmotion(e.target.value as string)}
+            >
+              <MenuItem value={"none"}>--未設定--</MenuItem>
+              <MenuItem value={"grad"}>嬉しい</MenuItem>
+              <MenuItem value={"Funny"}>楽しみ</MenuItem>
+              <MenuItem value={"expectations"}>期待</MenuItem>
+              <MenuItem value={"happy"}>幸せ</MenuItem>
+              <MenuItem value={"surprise"}>驚き</MenuItem>
+              <MenuItem value={"sad"}>悲しい</MenuItem>
+              <MenuItem value={"angry"}>怒り</MenuItem>
+              <MenuItem value={"anxiety"}>不安</MenuItem>
+            </Select>
+          </FormControl>
+
+          <TextField
+            fullWidth
+            label="Content"
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+            sx={{ marginBottom: 2 }}
+          />
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Button variant="contained" onClick={handleEdit}>
+              編集を保存
+            </Button>
+            <Button variant="contained" onClick={handleClose} sx={{backgroundColor : "gray"}}>
+              閉じる
+            </Button>
+          </Box>
+        </Box>
+      )}
+
       {/* 日記一覧の表示 */}
       {diaryPosts
         .filter((post) =>
@@ -158,59 +212,10 @@ export default function DiaryList() {
         ))}
 
       {/* 編集・削除メニューの表示 */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={clickClose}>
         <MuiMenuItem onClick={handleEdit}>編集</MuiMenuItem>
         <MuiMenuItem onClick={handleDelete}>削除</MuiMenuItem>
       </Menu>
-
-      {/* 編集用のフォーム */}
-      {selectedPost && (
-        <Box
-          sx={{
-            marginTop: 2,
-            border: "1px solid gray",
-            borderRadius: 1,
-            padding: 2,
-            backgroundColor: "white",
-          }}
-        >
-          <Typography variant="h6">Edit Diary Post</Typography>
-          <TextField
-            fullWidth
-            label="Content"
-            value={editContent}
-            onChange={(e) => setEditContent(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          <FormControl fullWidth sx={{ marginBottom: 2 }}>
-            <InputLabel>Emotion</InputLabel>
-            <Select
-              value={editEmotion}
-              onChange={(e) => setEditEmotion(e.target.value as string)}
-            >
-              <MenuItem value={"none"}>--未設定--</MenuItem>
-              <MenuItem value={"grad"}>嬉しい</MenuItem>
-              <MenuItem value={"Funny"}>楽しみ</MenuItem>
-              <MenuItem value={"expectations"}>期待</MenuItem>
-              <MenuItem value={"happy"}>幸せ</MenuItem>
-              <MenuItem value={"surprise"}>驚き</MenuItem>
-              <MenuItem value={"sad"}>悲しい</MenuItem>
-              <MenuItem value={"angry"}>怒り</MenuItem>
-              <MenuItem value={"anxiety"}>不安</MenuItem>
-            </Select>
-          </FormControl>
-          <Button
-            variant="contained"
-            onClick={handleEdit}
-          >
-            Save Changes
-          </Button>
-        </Box>
-      )}
     </Box>
   );
 }

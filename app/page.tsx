@@ -7,16 +7,17 @@ import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { Box } from "@mui/material";
 
-
-
 export default function Index() {
   return (
-    <Box sx={{paddingBottom : '60px'}}>
+    <Box>
       <Box
         sx={{
           margin: 2,
           "@media screen and (min-width:700px)": {
             display: "flex",
+          },
+          "@media screen and (max-width:700px)": {
+            paddingBottom: "60px",
           },
         }}
       >
