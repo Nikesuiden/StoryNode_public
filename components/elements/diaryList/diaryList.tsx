@@ -31,6 +31,8 @@ export default function DiaryList() {
   const [editContent, setEditContent] = useState<string>("");
   const [editEmotion, setEditEmotion] = useState<string>("none");
 
+  
+
   // メニューの表示制御
   const handleClick = (event: MouseEvent<HTMLElement>, post: DiaryPost) => {
     setAnchorEl(event.currentTarget);
@@ -47,11 +49,16 @@ export default function DiaryList() {
     setAnchorEl(null);
   };
 
-  const clickClose = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(null);
-  }
+  const handleEditOpen = () => {
+    if (selectedPost) {
+      setEditContent(selectedPost.content);
+      setEditEmotion(selectedPost.emotion);
+    }
+    handleClose(); // メニューを閉じる
+  };
 
   const handleEdit = async () => {
+    console.log('1')
     if (selectedPost) {
       try {
         const response = await fetch(`/api/diaryPost/${selectedPost.id}`, {
@@ -59,11 +66,14 @@ export default function DiaryList() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ content: editContent, emotion: editEmotion }),
         });
+        console.log('2')
         if (response.ok) {
+          console.log('3')
           fetchDiaryPosts(); // 日記一覧を再取得
         } else {
           console.error("Failed to update diary post");
         }
+        console.log('4')
       } catch (error) {
         console.error("Error updating diary post:", error);
       }
@@ -147,7 +157,15 @@ export default function DiaryList() {
           <br />
 
           <FormControl fullWidth sx={{ marginBottom: 2, width: "30%" }}>
-            <InputLabel>Emotion</InputLabel>
+            <InputLabel
+              style={{
+                backgroundColor: "white",
+                paddingLeft: "5px",
+                paddingRight: "5px",
+              }}
+            >
+              Emotion
+            </InputLabel>
             <Select
               value={editEmotion}
               onChange={(e) => setEditEmotion(e.target.value as string)}
@@ -175,7 +193,10 @@ export default function DiaryList() {
             <Button variant="contained" onClick={handleEdit}>
               編集を保存
             </Button>
-            <Button variant="contained" onClick={handleClose} sx={{backgroundColor : "gray"}}>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "gray" }}
+            >
               閉じる
             </Button>
           </Box>
@@ -212,10 +233,10 @@ export default function DiaryList() {
         ))}
 
       {/* 編集・削除メニューの表示 */}
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={clickClose}>
-        <MuiMenuItem onClick={handleEdit}>編集</MuiMenuItem>
-        <MuiMenuItem onClick={handleDelete}>削除</MuiMenuItem>
-      </Menu>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+      <MuiMenuItem onClick={handleEdit}>編集</MuiMenuItem>
+      <MuiMenuItem onClick={handleDelete}>削除</MuiMenuItem>
+    </Menu>
     </Box>
   );
 }
