@@ -12,7 +12,6 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { createStyles, makeStyles, Theme, styled } from "@mui/material/styles";
 
 interface DiaryPost {
   id: number;
@@ -20,7 +19,11 @@ interface DiaryPost {
   emotion: string;
 }
 
-export default function DiaryInput() {
+interface DiaryInputProps {
+  onAction: () => void; // ボタンがクリックされたら親の関数を呼ぶ
+}
+
+const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
   const d_maxLength: number = 200; /// 入力上限定義
   const [diaryInput, setDiaryInput] = useState<string>("");
   const [inputEmotion, setInputEmotion] = useState<string>("none");
@@ -40,33 +43,30 @@ export default function DiaryInput() {
 
   /// フォーム送信時の処理
   const handleSubmit = async () => {
-
-    console.log('1')
-
     if (!diaryInput) {
       alert("日記の内容を記入してください。");
       return;
     }
-    console.log('2')
     try {
       const response = await fetch("/api/diaryPost", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: diaryInput, emotion: inputEmotion }),
       });
-      console.log('3')
+
       if (response.ok) {
         setDiaryInput("");
         setInputEmotion("none"); // 初期化
+        onAction() // DB保存が成功した場合のみ発動
+        console.log('ここも発動したなそうに決まってる')
       } else {
         alert("エラーが発生しました。もう一度お試しください。");
       }
     } catch (error) {
-      console.log('送信エラー')
+      console.log("送信エラー");
       console.error("Error creating diary post:", error);
       alert("サーバーとの通信中にエラーが発生しました。");
     }
-    console.log('4')
   };
 
   return (
@@ -138,7 +138,12 @@ export default function DiaryInput() {
             maxLength: d_maxLength, // 300文字までしか入力できないように設定
           }}
         ></TextField>
-        <Button variant="contained" type="button" sx={{ marginTop: 2, height: "40px" }} onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          type="button"
+          sx={{ marginTop: 2, height: "40px" }}
+          onClick={handleSubmit}
+        >
           記録する
         </Button>
 
@@ -148,3 +153,5 @@ export default function DiaryInput() {
     </Box>
   );
 }
+
+export default DiaryInput;

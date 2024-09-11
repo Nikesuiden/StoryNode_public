@@ -15,6 +15,7 @@ import {
   MenuItem as MuiMenuItem,
   IconButton,
 } from "@mui/material";
+
 import { useState, useEffect, MouseEvent } from "react";
 
 interface DiaryPost {
@@ -24,7 +25,11 @@ interface DiaryPost {
   createdAt: string;
 }
 
-export default function DiaryList() {
+interface DiaryListProps {
+  initialData: DiaryPost[] | null;
+}
+
+const DiaryList: React.FC<DiaryListProps> = ({ initialData }) => {
   const [listEmotion, setListEmotion] = useState<string>("all");
   const [diaryPosts, setDiaryPosts] = useState<DiaryPost[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -133,10 +138,14 @@ export default function DiaryList() {
     }
   };
 
-  // コンポーネントの初回レンダリング時に日記の一覧を取得
+  // initialData を使って日記データの初期値をセット
   useEffect(() => {
-    fetchDiaryPosts();
-  }, []);
+    if (initialData) {
+      setDiaryPosts(initialData); // initialData が存在する場合にセット
+    }
+  }, [initialData]);
+
+
 
   return (
     <Box sx={{ mt: 1.5 }}>
@@ -263,4 +272,6 @@ export default function DiaryList() {
       </Menu>
     </Box>
   );
-}
+};
+
+export default DiaryList;
