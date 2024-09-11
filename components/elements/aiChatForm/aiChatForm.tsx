@@ -1,5 +1,6 @@
 "use client";
 
+import { Stream } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -12,12 +13,65 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useState } from "react";
-import { createStyles, makeStyles, Theme, styled } from "@mui/material/styles";
 
 export default function AiChatForm() {
   const d_maxLength: number = 4000; /// 入力上限定義
   const [chatPrompt, setChatPrompt] = useState<string>("");
   const [period, setPeriod] = useState<number>(-1);
+
+  // ここからGPTのAPI~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  const [prompt, setPrompt] = useState<string>("");
+  const [response, setResponse] = useState<string>("");
+
+  const handleSubmit = async () => {
+    setResponse(""); // 初期化
+
+    // API呼び出し
+    const res = await fetch("/api/chatGPT", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt }),
+    });
+
+    const reader = res.body?.getReader();
+    const decoder = new TextDecoder();
+
+    if (reader) {
+      let done = false;
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+
+        const chunk = decoder.decode(value, { stream: true });
+
+        // 'data: ' で始まる行だけを処理
+        const lines = chunk
+          .split("\n")
+          .filter((line) => line.startsWith("data: "));
+
+        for (const line of lines) {
+          const jsonString = line.replace("data: ", "").trim(); // 'data: 'を削除
+
+          if (jsonString !== "[DONE]") {
+            try {
+              const parsedChunk = JSON.parse(jsonString);
+              const content = parsedChunk.choices[0]?.delta?.content;
+
+              if (content) {
+                setResponse((prev) => prev + content);
+              }
+            } catch (error) {
+              console.error("Error parsing JSON:", error);
+            }
+          }
+        }
+      }
+    }
+  };
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // handleChange関数を追加
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,18 +139,29 @@ export default function AiChatForm() {
           variant="outlined"
           multiline
           rows={4}
+          value={prompt}
           style={{
             backgroundColor: "white",
           }}
-          onChange={handleChange}
+          onChange={(e) => {
+            setPrompt(e.target.value);
+          }}
           inputProps={{
             maxLength: d_maxLength, // 300文字までしか入力できないように設定
           }}
         ></TextField>
-        <Button variant="contained" sx={{ marginTop: 2, height: "40px" }}>
+        <Button
+          variant="contained"
+          sx={{ marginTop: 2, height: "40px" }}
+          onClick={handleSubmit}
+        >
           質問
         </Button>
         <Typography>{period}</Typography>
+      </Box>
+      <Box>
+        <Typography>Response:</Typography>
+        <Typography>{response}</Typography>
       </Box>
     </Box>
   );

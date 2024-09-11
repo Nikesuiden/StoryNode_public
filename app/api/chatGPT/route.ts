@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
 
 export async function POST(request: Request) {
   const { prompt } = await request.json();
@@ -10,22 +9,35 @@ export async function POST(request: Request) {
   }
 
   try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-4o',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 100,
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
       },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-        },
-      }
-    );
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        // max_tokens: 100,
+        stream: true, // ストリームを有効にする
+      }),
+    });
 
-    return NextResponse.json(response.data);
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
+    const stream = new ReadableStream({
+      async pull(controller) {
+        const { done, value } = await reader!.read();
+        if (done) {
+          controller.close();
+          return;
+        }
+        controller.enqueue(value);
+      },
+    });
+
+    const streamResponse = new Response(stream);
+    return streamResponse;
   } catch (error) {
     return NextResponse.json({ error: 'Error fetching response' }, { status: 500 });
   }
