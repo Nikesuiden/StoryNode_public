@@ -57,8 +57,8 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
       if (response.ok) {
         setDiaryInput("");
         setInputEmotion("none"); // 初期化
-        onAction() // DB保存が成功した場合のみ発動
-        console.log('ここも発動したなそうに決まってる')
+        onAction(); // DB保存が成功した場合のみ発動
+        console.log("ここも発動したなそうに決まってる");
       } else {
         alert("エラーが発生しました。もう一度お試しください。");
       }
@@ -152,6 +152,6 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
       </Box>
     </Box>
   );
-}
+};
 
 export default DiaryInput;
