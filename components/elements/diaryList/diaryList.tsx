@@ -31,7 +31,7 @@ export default function DiaryList() {
   const [editContent, setEditContent] = useState<string>("");
   const [editEmotion, setEditEmotion] = useState<string>("none");
 
-  
+
 
   // メニューの表示制御
   const handleClick = (event: MouseEvent<HTMLElement>, post: DiaryPost) => {
@@ -57,29 +57,36 @@ export default function DiaryList() {
     handleClose(); // メニューを閉じる
   };
 
-  const handleEdit = async () => {
-    console.log('1')
-    if (selectedPost) {
-      try {
-        const response = await fetch(`/api/diaryPost/${selectedPost.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: editContent, emotion: editEmotion }),
-        });
-        console.log('2')
-        if (response.ok) {
-          console.log('3')
-          fetchDiaryPosts(); // 日記一覧を再取得
-        } else {
-          console.error("Failed to update diary post");
-        }
-        console.log('4')
-      } catch (error) {
-        console.error("Error updating diary post:", error);
+ const handleEdit = async () => {
+  console.log('1');
+  
+  if (selectedPost) {
+    try {
+      const response = await fetch(`/api/diaryPost/${selectedPost.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: editContent, emotion: editEmotion }),
+      });
+
+      console.log('2'); // リクエストが送信された後のログ
+
+      if (response.ok) {
+        console.log('3'); // 正常に更新された場合のログ
+        await fetchDiaryPosts(); // 日記一覧を再取得
+      } else {
+        const errorMessage = await response.text();
+        console.error("Failed to update diary post:", response.status, errorMessage);
       }
+
+      console.log('4'); // fetchDiaryPosts()の後に表示
+
+    } catch (error) {
+      console.error("Error updating diary post:", error);
     }
-    handleClose();
-  };
+  }
+
+  handleClose();
+};
 
   const handleDelete = async () => {
     if (selectedPost) {
