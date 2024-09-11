@@ -21,6 +21,7 @@ interface DiaryPost {
   id: number;
   content: string;
   emotion: string;
+  createdAt: string;
 }
 
 export default function DiaryList() {
@@ -31,7 +32,13 @@ export default function DiaryList() {
   const [editContent, setEditContent] = useState<string>("");
   const [editEmotion, setEditEmotion] = useState<string>("none");
 
-
+  // 時間と分を抽出する関数
+  const hourAndMinutes = (dateTimeString: string) => {
+    const date = new Date(dateTimeString); // 文字列をDateオブジェクトに変換
+    const hours = date.getHours().toString().padStart(2, "0"); // 時間を取得
+    const minutes = date.getMinutes().toString().padStart(2, "0"); // 分を取得
+    return `${hours}:${minutes}`; // "HH:MM"の形式で返す
+  };
 
   // メニューの表示制御
   const handleClick = (event: MouseEvent<HTMLElement>, post: DiaryPost) => {
@@ -57,36 +64,39 @@ export default function DiaryList() {
     handleClose(); // メニューを閉じる
   };
 
- const handleEdit = async () => {
-  console.log('1');
-  
-  if (selectedPost) {
-    try {
-      const response = await fetch(`/api/diaryPost/${selectedPost.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: editContent, emotion: editEmotion }),
-      });
+  const handleEdit = async () => {
+    console.log("1");
 
-      console.log('2'); // リクエストが送信された後のログ
+    if (selectedPost) {
+      try {
+        const response = await fetch(`/api/diaryPost/${selectedPost.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: editContent, emotion: editEmotion }),
+        });
 
-      if (response.ok) {
-        console.log('3'); // 正常に更新された場合のログ
-        await fetchDiaryPosts(); // 日記一覧を再取得
-      } else {
-        const errorMessage = await response.text();
-        console.error("Failed to update diary post:", response.status, errorMessage);
+        console.log("2"); // リクエストが送信された後のログ
+
+        if (response.ok) {
+          console.log("3"); // 正常に更新された場合のログ
+          await fetchDiaryPosts(); // 日記一覧を再取得
+        } else {
+          const errorMessage = await response.text();
+          console.error(
+            "Failed to update diary post:",
+            response.status,
+            errorMessage
+          );
+        }
+
+        console.log("4"); // fetchDiaryPosts()の後に表示
+      } catch (error) {
+        console.error("Error updating diary post:", error);
       }
-
-      console.log('4'); // fetchDiaryPosts()の後に表示
-
-    } catch (error) {
-      console.error("Error updating diary post:", error);
     }
-  }
 
-  handleClose();
-};
+    handleClose();
+  };
 
   const handleDelete = async () => {
     if (selectedPost) {
@@ -200,10 +210,7 @@ export default function DiaryList() {
             <Button variant="contained" onClick={handleEdit}>
               編集を保存
             </Button>
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: "gray" }}
-            >
+            <Button variant="contained" sx={{ backgroundColor: "gray" }}>
               閉じる
             </Button>
           </Box>
@@ -231,19 +238,29 @@ export default function DiaryList() {
               <Typography variant="body2">感情: {post.emotion}</Typography>
               <Typography variant="h6">{post.content}</Typography>
             </Box>
-            <Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                ml: "2px",
+              }}
+            >
               <IconButton onClick={(event) => handleClick(event, post)}>
                 <MoreHoriz />
               </IconButton>
+              <Typography variant="body2">
+                {hourAndMinutes(post.createdAt)}
+              </Typography>
             </Box>
           </Box>
         ))}
 
       {/* 編集・削除メニューの表示 */}
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-      <MuiMenuItem onClick={handleEdit}>編集</MuiMenuItem>
-      <MuiMenuItem onClick={handleDelete}>削除</MuiMenuItem>
-    </Menu>
+        <MuiMenuItem onClick={handleEdit}>編集</MuiMenuItem>
+        <MuiMenuItem onClick={handleDelete}>削除</MuiMenuItem>
+      </Menu>
     </Box>
   );
 }

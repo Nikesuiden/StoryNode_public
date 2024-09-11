@@ -56,7 +56,6 @@ export default function DiaryInput() {
       });
       console.log('3')
       if (response.ok) {
-        alert("日記が記録されました！");
         setDiaryInput("");
         setInputEmotion("none"); // 初期化
       } else {
