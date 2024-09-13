@@ -26,6 +26,11 @@ const AiChatForm: React.FC = () => {
     setResponse(""); // 初期化
     setIsComplete(false); // ストリーミング開始
 
+    if (prompt === "") {
+      alert("プロンプトを入力してください。");
+      return;
+    }
+
     // API呼び出し
     const res = await fetch("/api/chatGPT", {
       method: "POST",
