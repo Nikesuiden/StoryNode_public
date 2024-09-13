@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -13,14 +13,59 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
+interface DiaryPost {
+  id: number;
+  content: string;
+  emotion: string;
+  createdAt: string;
+}
+
 const AiChatForm: React.FC = () => {
   const d_maxLength: number = 4000; // 入力上限定義
-  const [chatPrompt, setChatPrompt] = useState<string>("");
+
   const [period, setPeriod] = useState<number>(-1);
 
   const [prompt, setPrompt] = useState<string>("");
   const [response, setResponse] = useState<string>("");
   const [isComplete, setIsComplete] = useState<boolean>(false); // ストリーミングが完了したかどうか
+
+  const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
+
+  // 日記データをフォーマットする関数
+  function formatDiaryPosts(diaryPosts: DiaryPost[]): string {
+    const entriesByYear: { [year: string]: { [monthDay: string]: { emotion: string; content: string }[] } } = {};
+
+    diaryPosts.forEach((post) => {
+      const createdAt = new Date(post.createdAt);
+      const year = createdAt.getFullYear().toString();
+      const monthDay = `${createdAt.getMonth() + 1}/${createdAt.getDate()}`;
+
+      if (!entriesByYear[year]) {
+        entriesByYear[year] = {};
+      }
+      if (!entriesByYear[year][monthDay]) {
+        entriesByYear[year][monthDay] = [];
+      }
+      entriesByYear[year][monthDay].push({
+        emotion: post.emotion,
+        content: post.content,
+      });
+    });
+
+    let result = '';
+
+    for (const year in entriesByYear) {
+      result += `${year}{\n`;
+      for (const date in entriesByYear[year]) {
+        entriesByYear[year][date].forEach((entry) => {
+          result += `  ${date}: (${entry.emotion}, ${entry.content}),\n`;
+        });
+      }
+      result += '}\n';
+    }
+
+    return result;
+  }
 
   const handleSubmit = async () => {
     setResponse(""); // 初期化
@@ -31,13 +76,16 @@ const AiChatForm: React.FC = () => {
       return;
     }
 
+    // 最新の prompt を使用して SystemPrompt を定義
+    const SystemPrompt: string = `ユーザーの日記から要望に応じたアドバイスを返信し、同じトピックや人物に関する日記があった場合、要約にまとめてください。回答の構成は、日記情報の内容に沿った上でユーザの質問や相談内容に対する返事のみです。また回答で日記情報を活用する際にはその内容を具体的に記載してください。ただし全ての質問に対して単なる日記の書き写しは厳禁です。日記情報は[日付,内容)]の形式です。日記: ${diaryToPrompt} 質問: ${prompt}`;
+
     // API呼び出し
     const res = await fetch("/api/chatGPT", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ prompt: SystemPrompt }), // キー名を修正
     });
 
     const reader = res.body?.getReader();
@@ -95,6 +143,24 @@ const AiChatForm: React.FC = () => {
     }
   };
 
+  // APIから日記の一覧を取得する関数
+  const fetchDiaryPosts = async () => {
+    try {
+      const response = await fetch("/api/diaryPost", {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data: DiaryPost[] = await response.json();
+        const formattedDiary = formatDiaryPosts(data);
+        setDiaryToPrompt(formattedDiary);
+      } else {
+        console.error("Failed to fetch diary posts");
+      }
+    } catch (error) {
+      console.error("Error fetching diary posts:", error);
+    }
+  };
+
   // ChatHistoryをDBに保存する関数
   const saveChatHistory = async (
     prompt: string,
@@ -133,13 +199,18 @@ const AiChatForm: React.FC = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     if (inputValue.length <= d_maxLength) {
-      setChatPrompt(inputValue);
+      setPrompt(inputValue);
     }
   };
 
   const periodChange = (event: SelectChangeEvent<number>) => {
     setPeriod(Number(event.target.value as string));
   };
+
+  // 最初に日記データを取得します。
+  useEffect(() => {
+    fetchDiaryPosts();
+  }, []);
 
   return (
     <Box sx={{ borderColor: "gray", borderRadius: 1, marginBottom: 2, mt: 2 }}>
@@ -168,12 +239,12 @@ const AiChatForm: React.FC = () => {
         <Typography
           sx={{
             fontSize: 15,
-            color: chatPrompt?.length === d_maxLength ? "red" : "inherit",
+            color: prompt?.length === d_maxLength ? "red" : "inherit",
             marginBottom: 1,
             marginTop: 2,
           }}
         >
-          入力文字制限: {chatPrompt === "" ? "0" : chatPrompt?.length} /{" "}
+          入力文字制限: {prompt === "" ? "0" : prompt?.length} /{" "}
           {d_maxLength}文字
         </Typography>
         <TextField
