@@ -18,6 +18,9 @@ export default function Aichat() {
           "@media screen and (min-width:700px)": {
             display: "flex",
           },
+          "@media screen and (max-width:700px)": {
+            paddingBottom: "60px",
+          },
         }}
       >
         {/* スマホレスポンシブ */}
@@ -45,10 +48,14 @@ export default function Aichat() {
         {/* アプリ情報情報 */}
         <Box sx={{ flex: 4 }}>
           <TopBar />
-          <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
-            AI Chat
-          </Typography>
-
+          <Box sx={{display: "flex", justifyContent: "space-between"}}>
+            <Typography
+              style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}
+            >
+              AI Chat
+            </Typography>
+            <ChatHistory />
+          </Box>
           <AiChatForm />
         </Box>
       </Box>

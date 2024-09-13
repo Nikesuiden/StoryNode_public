@@ -1,6 +1,6 @@
 "use client";
 
-import { Stream } from "@mui/icons-material";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -12,19 +12,19 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
 
-export default function AiChatForm() {
-  const d_maxLength: number = 4000; /// 入力上限定義
+const AiChatForm: React.FC = () => {
+  const d_maxLength: number = 4000; // 入力上限定義
   const [chatPrompt, setChatPrompt] = useState<string>("");
   const [period, setPeriod] = useState<number>(-1);
 
-  // ここからGPTのAPI~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   const [prompt, setPrompt] = useState<string>("");
   const [response, setResponse] = useState<string>("");
+  const [isComplete, setIsComplete] = useState<boolean>(false); // ストリーミングが完了したかどうか
 
   const handleSubmit = async () => {
     setResponse(""); // 初期化
+    setIsComplete(false); // ストリーミング開始
 
     // API呼び出し
     const res = await fetch("/api/chatGPT", {
@@ -40,43 +40,93 @@ export default function AiChatForm() {
 
     if (reader) {
       let done = false;
+      let incompleteChunk = ""; // 不完全なチャンクを一時的に保持
+
       while (!done) {
         const { value, done: readerDone } = await reader.read();
         done = readerDone;
 
         const chunk = decoder.decode(value, { stream: true });
 
+        // 不完全なチャンクが前のチャンクの最後と繋がる可能性があるため、それを追加
+        incompleteChunk += chunk;
+
         // 'data: ' で始まる行だけを処理
-        const lines = chunk
+        const lines = incompleteChunk
           .split("\n")
           .filter((line) => line.startsWith("data: "));
 
         for (const line of lines) {
-          const jsonString = line.replace("data: ", "").trim(); // 'data: 'を削除
+          const jsonString = line.replace("data: ", "").trim();
 
-          if (jsonString !== "[DONE]") {
-            try {
-              const parsedChunk = JSON.parse(jsonString);
-              const content = parsedChunk.choices[0]?.delta?.content;
+          if (jsonString === "[DONE]") {
+            // ストリーミングが完了した場合
+            setIsComplete(true); // 完了フラグを立てる
+            break;
+          }
 
-              if (content) {
-                setResponse((prev) => prev + content);
-              }
-            } catch (error) {
-              console.error("Error parsing JSON:", error);
+          try {
+            // JSONとして有効か確認
+            const parsedChunk = JSON.parse(jsonString);
+            const content = parsedChunk.choices[0]?.delta?.content;
+
+            if (content) {
+              // チャンクごとにレスポンスを追加
+              setResponse((prev) => prev + content);
             }
+          } catch (error) {
+            // JSONが未完了の場合は、次のチャンクで処理を続ける
+            console.error(
+              "Error parsing JSON (ignoring incomplete chunk):",
+              error
+            );
+            continue;
           }
         }
+
+        // 最後の行が不完全だった場合、次のチャンクと繋げるため保存
+        incompleteChunk = incompleteChunk.split("\n").slice(-1)[0];
       }
     }
   };
 
-  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ChatHistoryをDBに保存する関数
+  const saveChatHistory = async (
+    prompt: string,
+    response: string,
+    period: number
+  ) => {
+    try {
+      const res = await fetch("/api/chatHistory", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt, response, period }),
+      });
 
-  // handleChange関数を追加
+      if (!res.ok) {
+        const errorText = await res.text(); // エラー詳細を取得
+        console.error(`Error details: ${errorText}`);
+        throw new Error(
+          `Failed to save chat history: ${res.status} ${res.statusText}`
+        );
+      }
+
+      console.log("Chat history saved successfully");
+    } catch (error) {
+      console.error("Error saving chat history:", error);
+    }
+  };
+
+  // ストリーミングが完了したら保存
+  if (isComplete && response) {
+    saveChatHistory(prompt, response, period);
+    setIsComplete(false); // 一度保存したら完了フラグをリセット
+  }
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
-    // 300文字を超えない場合のみ状態を更新する
     if (inputValue.length <= d_maxLength) {
       setChatPrompt(inputValue);
     }
@@ -88,21 +138,8 @@ export default function AiChatForm() {
 
   return (
     <Box sx={{ borderColor: "gray", borderRadius: 1, marginBottom: 2, mt: 2 }}>
-      <Box
-        component="form"
-        sx={{
-          "& > *": {
-            width: "100%",
-          },
-        }}
-        noValidate
-      >
-        <FormControl
-          sx={{
-            minWidth: 120,
-          }}
-          fullWidth
-        >
+      <Box component="form" sx={{ "& > *": { width: "100%" } }} noValidate>
+        <FormControl sx={{ minWidth: 120 }} fullWidth>
           <InputLabel
             style={{
               backgroundColor: "white",
@@ -147,7 +184,7 @@ export default function AiChatForm() {
             setPrompt(e.target.value);
           }}
           inputProps={{
-            maxLength: d_maxLength, // 300文字までしか入力できないように設定
+            maxLength: d_maxLength,
           }}
         ></TextField>
         <Button
@@ -157,12 +194,13 @@ export default function AiChatForm() {
         >
           質問
         </Button>
-        <Typography>{period}</Typography>
       </Box>
+      <br />
       <Box>
-        <Typography>Response:</Typography>
         <Typography>{response}</Typography>
       </Box>
     </Box>
   );
-}
+};
+
+export default AiChatForm;

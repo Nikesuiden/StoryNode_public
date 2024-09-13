@@ -27,7 +27,8 @@ model ToDo {
 
 model ChatHistory {
   id Int @default(autoincrement()) @id
-  priod String
+  period Int
   prompt String
   response String
+  createdAt DateTime @default(now())
 }

@@ -1,19 +1,23 @@
-import { Flex } from "@chakra-ui/react";
+"use client";
+
 import { History } from "@mui/icons-material";
-import { Box, Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function ChatHistory() {
+  const router = useRouter();
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
   return (
-    <Box sx={{ display: "flex", alignItems: "center"}}>
-      <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>AI Chat</Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ justifyContent: "center" }}
-      >
-        <History style={{ marginRight: 8 }} />
-        チャット履歴
-      </Button>
-    </Box>
+    <Button
+      variant="contained"
+      color="primary"
+      sx={{ justifyContent: "center" }}
+      onClick={() => handleNavigation("/chatHistory")}
+    >
+      <History style={{ marginRight: 8 }} />
+      チャット履歴
+    </Button>
   );
 }

@@ -13,6 +13,9 @@ export default function ToDoList() {
           "@media screen and (min-width:700px)": {
             display: "flex",
           },
+          "@media screen and (max-width:700px)": {
+            paddingBottom: "60px",
+          },
         }}
       >
         {/* スマホレスポンシブ */}

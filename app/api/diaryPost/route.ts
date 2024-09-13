@@ -1,8 +1,6 @@
 // app/api/diaryPost/route.ts
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { OrderedList } from "@chakra-ui/react";
-import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
