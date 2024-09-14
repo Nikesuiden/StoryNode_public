@@ -115,9 +115,10 @@ export default function ChatHistory() {
                     }}
                   >
                     <Typography variant="h6">Prompt: {chat.prompt}</Typography>
-                    <Typography variant="body1">
+                    <Typography variant="body1" sx={{ mt: 1 }}>
                       Response: {chat.response}
                     </Typography>
+                    <ToDoInput />
                   </Box>
                 )
               )

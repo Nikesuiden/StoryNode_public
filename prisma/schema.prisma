@@ -20,15 +20,19 @@ model DiaryPost {
   createdAt DateTime @default(now())
 }
 
-model ToDo {
-  id Int @default(autoincrement()) @id
-  todo String
+model ChatHistory {
+  id        Int       @id @default(autoincrement())
+  period    Int
+  prompt    String
+  response  String
+  createdAt DateTime  @default(now())
+  todos     ToDo[]    // 1対多の関係
 }
 
-model ChatHistory {
-  id Int @default(autoincrement()) @id
-  period Int
-  prompt String
-  response String
-  createdAt DateTime @default(now())
+model ToDo {
+  id        Int       @id @default(autoincrement())
+  todo      String
+  createdAt DateTime  @default(now())  // 作成日時を追加
+  chat      ChatHistory? @relation(fields: [chatId], references: [id]) // SET_NULL を表現
+  chatId    Int?        // 外部キーを追加
 }

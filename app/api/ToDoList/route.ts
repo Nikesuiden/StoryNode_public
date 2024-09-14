@@ -11,6 +11,9 @@ export async function GET() {
       orderBy: {
         id: "desc",
       },
+      include: {
+        chat: true,
+      }
     });
     return NextResponse.json(todos, { status: 200 });
   } catch (error) {
@@ -24,9 +27,12 @@ export async function GET() {
 // POSTリクエスト用ハンドラ
 export async function POST(req: Request) {
   try {
-    const { todo } = await req.json();
+    const { todo, chatId } = await req.json();
     const newToDo = await prisma.toDo.create({
-      data: { todo },
+      data: {
+        todo,
+        chatId: chatId || null, // chatIdが提供されていない場合、nullを設定},
+      },
     });
     return NextResponse.json(newToDo, { status: 201 });
   } catch (error) {

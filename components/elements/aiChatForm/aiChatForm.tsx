@@ -12,6 +12,7 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
+import { keyframes } from "@mui/system";
 
 interface DiaryPost {
   id: number;
@@ -19,6 +20,12 @@ interface DiaryPost {
   emotion: string;
   createdAt: string;
 }
+
+const rainbowAnimation = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
 
 const AiChatForm: React.FC = () => {
   const d_maxLength: number = 4000; // 入力上限定義
@@ -28,17 +35,29 @@ const AiChatForm: React.FC = () => {
   const [prompt, setPrompt] = useState<string>("");
   const [response, setResponse] = useState<string>("");
   const [isComplete, setIsComplete] = useState<boolean>(false); // ストリーミングが完了したかどうか
+  const [isGenerating, setIsGenerating] = useState<boolean>(false); // GPT応答生成中かどうか
 
   const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
 
   // 日記データをフォーマットする関数
   function formatDiaryPosts(diaryPosts: DiaryPost[]): string {
-    const entriesByYear: { [year: string]: { [monthDay: string]: { emotion: string; content: string }[] } } = {};
+    const entriesByYear: {
+      [year: string]: {
+        [monthDay: string]: {
+          emotion: string;
+          content: string;
+          time: string;
+        }[];
+      };
+    } = {};
 
     diaryPosts.forEach((post) => {
       const createdAt = new Date(post.createdAt);
       const year = createdAt.getFullYear().toString();
       const monthDay = `${createdAt.getMonth() + 1}/${createdAt.getDate()}`;
+      const hours = String(createdAt.getHours()).padStart(2, "0"); // 時間を2桁にフォーマット
+      const minutes = String(createdAt.getMinutes()).padStart(2, "0"); // 分を2桁にフォーマット
+      const time = `${hours}:${minutes}`; // HH:MM形式に変換
 
       if (!entriesByYear[year]) {
         entriesByYear[year] = {};
@@ -48,33 +67,48 @@ const AiChatForm: React.FC = () => {
       }
       entriesByYear[year][monthDay].push({
         emotion: post.emotion,
-        content: post.content,
+        content: post.content.replace(/\n/g, ""), // 改行コードを削除
+        time: time, // 時間を追加
       });
     });
 
-    let result = '';
+    let result = "";
 
     for (const year in entriesByYear) {
-      result += `${year}{\n`;
+      result += `"${year}": {`; // 年を追加
       for (const date in entriesByYear[year]) {
-        entriesByYear[year][date].forEach((entry) => {
-          result += `  ${date}: (${entry.emotion}, ${entry.content}),\n`;
+        result += `"${date}": [`; // 月日を追加
+        entriesByYear[year][date].forEach((entry, index) => {
+          result += `(${entry.emotion}, ${entry.content}, ${entry.time})`; // (感情, 内容, 時間)
+          if (index < entriesByYear[year][date].length - 1) {
+            result += ", "; // 最後のエントリでない場合はカンマを追加
+          }
         });
+        result += "]"; // 月日エントリを閉じる
+        result += ", "; // 次の月日が続くためカンマを追加
       }
-      result += '}\n';
+      result = result.slice(0, -2); // 最後の余分なカンマを削除
+      result += "}, "; // 年エントリを閉じる
     }
 
+    result = result.slice(0, -2); // 最後の余分なカンマを削除
     return result;
   }
 
   const handleSubmit = async () => {
-    setResponse(""); // 初期化
-    setIsComplete(false); // ストリーミング開始
+    if (period === -1) {
+      alert("日記収集期間を選択してください。");
+      return;
+    }
 
     if (prompt === "") {
       alert("プロンプトを入力してください。");
       return;
     }
+
+    setResponse(""); // 初期化
+    setIsComplete(false); // ストリーミング開始
+    setIsGenerating(true); // 応答生成開始
 
     // 最新の prompt を使用して SystemPrompt を定義
     const SystemPrompt: string = `ユーザーの日記から要望に応じたアドバイスを返信し、同じトピックや人物に関する日記があった場合、要約にまとめてください。回答の構成は、日記情報の内容に沿った上でユーザの質問や相談内容に対する返事のみです。また回答で日記情報を活用する際にはその内容を具体的に記載してください。ただし全ての質問に対して単なる日記の書き写しは厳禁です。日記情報は[日付,内容)]の形式です。日記: ${diaryToPrompt} 質問: ${prompt}`;
@@ -115,6 +149,7 @@ const AiChatForm: React.FC = () => {
           if (jsonString === "[DONE]") {
             // ストリーミングが完了した場合
             setIsComplete(true); // 完了フラグを立てる
+            setIsGenerating(false); // 応答生成完了
             break;
           }
 
@@ -145,8 +180,13 @@ const AiChatForm: React.FC = () => {
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = async () => {
+    if (period === -1) {
+      setDiaryToPrompt(""); // 期間が未設定の場合、日記情報をクリア
+      return;
+    }
+
     try {
-      const response = await fetch("/api/diaryPost", {
+      const response = await fetch(`/api/diaryPost?period=${period}`, {
         method: "GET",
       });
       if (response.ok) {
@@ -191,10 +231,12 @@ const AiChatForm: React.FC = () => {
   };
 
   // ストリーミングが完了したら保存
-  if (isComplete && response) {
-    saveChatHistory(prompt, response, period);
-    setIsComplete(false); // 一度保存したら完了フラグをリセット
-  }
+  useEffect(() => {
+    if (isComplete && response) {
+      saveChatHistory(prompt, response, period);
+      setIsComplete(false); // 一度保存したら完了フラグをリセット
+    }
+  }, [isComplete, response]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
@@ -207,10 +249,10 @@ const AiChatForm: React.FC = () => {
     setPeriod(Number(event.target.value as string));
   };
 
-  // 最初に日記データを取得します。
+  // 期間が変更されたら日記データを取得します。
   useEffect(() => {
     fetchDiaryPosts();
-  }, []);
+  }, [period]);
 
   return (
     <Box sx={{ borderColor: "gray", borderRadius: 1, marginBottom: 2, mt: 2 }}>
@@ -225,7 +267,12 @@ const AiChatForm: React.FC = () => {
           >
             日記の収集期間
           </InputLabel>
-          <Select sx={{ width: "40%" }} value={period} onChange={periodChange}>
+          <Select
+            sx={{ width: "40%" }}
+            value={period}
+            onChange={periodChange}
+            label="日記の収集期間"
+          >
             <MenuItem value={-1}>--未設定--</MenuItem>
             <MenuItem value={0}>今日</MenuItem>
             <MenuItem value={1}>昨日</MenuItem>
@@ -244,8 +291,8 @@ const AiChatForm: React.FC = () => {
             marginTop: 2,
           }}
         >
-          入力文字制限: {prompt === "" ? "0" : prompt?.length} /{" "}
-          {d_maxLength}文字
+          入力文字制限: {prompt === "" ? "0" : prompt?.length} / {d_maxLength}
+          文字
         </Typography>
         <TextField
           label="プロンプトを入力して下さい"
@@ -256,19 +303,30 @@ const AiChatForm: React.FC = () => {
           style={{
             backgroundColor: "white",
           }}
-          onChange={(e) => {
-            setPrompt(e.target.value);
-          }}
+          onChange={handleChange}
           inputProps={{
             maxLength: d_maxLength,
           }}
         ></TextField>
         <Button
           variant="contained"
-          sx={{ marginTop: 2, height: "40px" }}
+          sx={{
+            marginTop: 2,
+            height: "40px",
+            borderRadius: "30px",
+            ...(isGenerating && {
+              animation: `${rainbowAnimation} 3s linear infinite`,
+              background:
+                "linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3)",
+              backgroundSize: "400% 400%",
+              color: "white",
+              borderRadius: "30px",
+            }),
+          }}
           onClick={handleSubmit}
+          disabled={isGenerating} // 生成中はボタンを無効化
         >
-          質問
+          {!isGenerating && "質問"}
         </Button>
       </Box>
       <br />

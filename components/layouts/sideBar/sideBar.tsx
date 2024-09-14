@@ -28,7 +28,6 @@ export default function SideBar() {
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
-    console.log("ヒカキンマニア");
     router.push(path);
   };
 

@@ -1,13 +1,39 @@
+"use client";
+
 import ToDoInput from "@/components/elements/todoInput/todoInput";
 import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import { useEffect, useState } from "react";
+import ToDoList from "@/components/elements/todoList/todoList";
 
+interface ToDo {
+  id: number;
+  todo: string;
+  chatId?: number | null;
+}
 
+export default function ToDo() {
+  const [todoData, setToDoData] = useState<ToDo[] | null>(null); // TODOデータを型定義
 
-export default function ToDoList() {
+  // ToDoリストを取得（GET）
+  useEffect(() => {
+    const fetchToDoList = async () => {
+      try {
+        const res = await fetch("/api/ToDoList");
+        if (!res.ok) {
+          throw new Error("Failed to fetch ToDo list");
+        }
+        const data = await res.json();
+        setToDoData(data);
+      } catch (error) {
+        console.error("ToDoの取得中にエラーが発生しました:", error);
+      }
+    };
+
+    fetchToDoList();
+  }, []);
 
   return (
     <Box>
@@ -52,6 +78,7 @@ export default function ToDoList() {
           </Typography>
 
           <ToDoInput />
+          <ToDoList />
         </Box>
       </Box>
     </Box>
