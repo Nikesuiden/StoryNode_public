@@ -238,6 +238,8 @@ const AiChatForm: React.FC = () => {
     }
   }, [isComplete, response]);
 
+
+  // 文字数カウント
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     if (inputValue.length <= d_maxLength) {
@@ -317,7 +319,7 @@ const AiChatForm: React.FC = () => {
             ...(isGenerating && {
               animation: `${rainbowAnimation} 3s linear infinite`,
               background:
-                "linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3)",
+                "linear-gradient(270deg, #fe6d6d, #ffbf7f, #ffff7f, #7cff7c, #7a7aff, #ce89ff, #cb5dfa)",
               backgroundSize: "400% 400%",
               color: "white",
               borderRadius: "30px",
