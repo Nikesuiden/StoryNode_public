@@ -9,7 +9,11 @@ interface ToDo {
   todo: string;
 }
 
-export default function ToDoInput() {
+interface ToDoListProps {
+  onAction: () => void;
+}
+
+const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
   const [todoInput, setTodoInput] = useState<string>("");
 
   const t_maxLength: number = 40; // ToDo入力制限を課す。
@@ -49,13 +53,12 @@ export default function ToDoInput() {
       .then((data) => {
         setTodos([data, ...todos]);
         setTodoInput("");
+        onAction();
       })
       .catch((error) =>
         console.error("ToDoの追加中にエラーが発生しました:", error)
       );
   };
-
-
 
   return (
     <Box>
@@ -104,4 +107,6 @@ export default function ToDoInput() {
       </Box>
     </Box>
   );
-}
+};
+
+export default ToDoInput;

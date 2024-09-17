@@ -8,7 +8,11 @@ interface ToDo {
   todo: string;
 }
 
-export default function ToDoList() {
+interface ToDoListProps {
+  initialData: ToDo[] | null;
+}
+
+const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
   const [todos, setTodos] = useState<ToDo[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
@@ -56,6 +60,13 @@ export default function ToDoList() {
         console.error("ToDoの削除中にエラーが発生しました:", error)
       );
   };
+
+  // initialData を使ってToDoデータの初期値をセット
+  useEffect(() => {
+    if (initialData) {
+      setTodos(initialData);
+    }
+  }, [initialData]);
 
   return (
     <Box mt={4}>
@@ -118,4 +129,6 @@ export default function ToDoList() {
       ))}
     </Box>
   );
-}
+};
+
+export default ToDoList;

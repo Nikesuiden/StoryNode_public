@@ -5,7 +5,7 @@ import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ToDoList from "@/components/elements/todoList/todoList";
 
 interface ToDo {
@@ -14,24 +14,24 @@ interface ToDo {
   chatId?: number | null;
 }
 
-export default function ToDo() {
+const ToDo: React.FC = () => {
   const [todoData, setToDoData] = useState<ToDo[] | null>(null); // TODOデータを型定義
+
+  const fetchToDoList = async () => {
+    try {
+      const res = await fetch("/api/ToDoList");
+      if (!res.ok) {
+        throw new Error("Failed to fetch ToDo list");
+      }
+      const data = await res.json();
+      setToDoData(data);
+    } catch (error) {
+      console.error("ToDoの取得中にエラーが発生しました:", error);
+    }
+  };
 
   // ToDoリストを取得（GET）
   useEffect(() => {
-    const fetchToDoList = async () => {
-      try {
-        const res = await fetch("/api/ToDoList");
-        if (!res.ok) {
-          throw new Error("Failed to fetch ToDo list");
-        }
-        const data = await res.json();
-        setToDoData(data);
-      } catch (error) {
-        console.error("ToDoの取得中にエラーが発生しました:", error);
-      }
-    };
-
     fetchToDoList();
   }, []);
 
@@ -77,10 +77,12 @@ export default function ToDo() {
             ToDoList
           </Typography>
 
-          <ToDoInput />
-          <ToDoList />
+          <ToDoInput onAction={fetchToDoList} />
+          <ToDoList initialData={todoData} />
         </Box>
       </Box>
     </Box>
   );
-}
+};
+
+export default ToDo;

@@ -21,8 +21,6 @@ const Index: React.FC = () => {
       if (response.ok) {
         const data = await response.json(); // データを子コンポーネントに送信しなきゃいけない
         setDiaryData(data);
-        console.log('下品だなそうに決まってる')
-        console.log("リストの更新が完了しました");
       } else {
         console.error("Failed to fetch diary posts");
       }
