@@ -7,7 +7,6 @@ import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Button, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import { useEffect, useState } from "react";
-import { Butterfly_Kids } from "next/font/google";
 import { History } from "@mui/icons-material";
 
 interface ChatHistoryItem {
@@ -118,7 +117,6 @@ export default function ChatHistory() {
                     <Typography variant="body1" sx={{ mt: 1 }}>
                       Response: {chat.response}
                     </Typography>
-                    <ToDoInput />
                   </Box>
                 )
               )
