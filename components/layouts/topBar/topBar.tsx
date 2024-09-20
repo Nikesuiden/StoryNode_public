@@ -15,7 +15,7 @@ export default function TopBar() {
         <Typography style={{ fontSize: 30, fontWeight: "550" }}>
           StoryNode
         </Typography>
-        <Typography
+        {/* <Typography
           style={{
             fontSize: 16,
             marginLeft: 12,
@@ -24,7 +24,7 @@ export default function TopBar() {
           }}
         >
           Essential
-        </Typography>
+        </Typography> */}
       </Box>
       <hr />
     </Box>

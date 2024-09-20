@@ -120,7 +120,7 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
             marginTop: 2,
           }}
         >
-          入力文字制限: {diaryInput === "" ? "0" : diaryInput?.length} /{" "}
+          入力制限: {diaryInput === "" ? "0" : diaryInput?.length} /{" "}
           {d_maxLength}文字
         </Typography>
         {/* <Typography>{inputEmotion}</Typography> */}
