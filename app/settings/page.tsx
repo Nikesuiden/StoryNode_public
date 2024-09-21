@@ -1,13 +1,21 @@
+"use client";
+
+import LogoutButton from "@/components/elements/LogoutButton/LogoutButton";
 import ToDoInput from "@/components/elements/todoInput/todoInput";
 import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { Box } from "@chakra-ui/react";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function Settings() {
+  const router = useRouter();
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
   return (
-    <Box sx={{margin: 2}}>
+    <Box sx={{ margin: 2 }}>
       <Box
         sx={{
           margin: 2,
@@ -44,7 +52,15 @@ export default function Settings() {
           <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
             Settings
           </Typography>
+          <Button onClick={() => handleNavigation("/signin")}>
+            サインイン
+          </Button>
+          <Button onClick={() => handleNavigation("/signup")}>
+            サインアップ
+          </Button>
 
+          <LogoutButton />
+          
         </Box>
       </Box>
     </Box>
