@@ -1,5 +1,6 @@
 "use client";
 
+import { supabase } from "@/lib/supabaseClient";
 import { MoreHoriz } from "@mui/icons-material";
 import {
   Box,
@@ -23,11 +24,7 @@ interface DiaryPost {
   createdAt: string;
 }
 
-interface DiaryListProps {
-  initialData: DiaryPost[] | null;
-}
-
-const DiaryList: React.FC<DiaryListProps> = ({ initialData }) => {
+const DiaryList: React.FC = () => {
   const [listEmotion, setListEmotion] = useState<string>("all");
   const [diaryPosts, setDiaryPosts] = useState<DiaryPost[]>([]);
   const [editingPostId, setEditingPostId] = useState<number | null>(null);
@@ -128,27 +125,38 @@ const DiaryList: React.FC<DiaryListProps> = ({ initialData }) => {
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = async () => {
-    try {
-      const response = await fetch("/api/diaryPost", {
-        method: "GET",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setDiaryPosts(data);
-      } else {
-        console.error("Failed to fetch diary posts");
-      }
-    } catch (error) {
-      console.error("Error fetching diary posts:", error);
+    // Supabaseからセッション情報を取得
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.access_token) {
+      alert("ログインが必要です。");
+      return;
+    }
+
+    // 認証情報をヘッダーに含めてリクエストを送信
+    const response = await fetch("/api/diaryPost", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`, // JWTトークンをヘッダーに追加
+      },
+    });
+
+    if (response.ok) {
+      const diaryPostsData = await response.json();
+      // 取得したデータを状態にセット
+      setDiaryPosts(diaryPostsData);
+    } else {
+      alert("日記の取得に失敗しました。");
     }
   };
 
-  // initialData を使って日記データの初期値をセット
+  // コンポーネントのマウント時にデータを取得
   useEffect(() => {
-    if (initialData) {
-      setDiaryPosts(initialData);
-    }
-  }, [initialData]);
+    fetchDiaryPosts();
+  }, []);
 
   return (
     <Box sx={{ mt: 1.5 }}>

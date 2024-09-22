@@ -52,15 +52,8 @@ export default function Settings() {
           <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
             Settings
           </Typography>
-          <Button onClick={() => handleNavigation("/signin")}>
-            サインイン
-          </Button>
-          <Button onClick={() => handleNavigation("/signup")}>
-            サインアップ
-          </Button>
 
           <LogoutButton />
-          
         </Box>
       </Box>
     </Box>

@@ -1,5 +1,6 @@
 "use client";
 
+import { supabase } from "@/lib/supabaseClient";
 import {
   Box,
   Button,
@@ -48,17 +49,27 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
       return;
     }
     try {
+      // Supabase からセッション情報を取得
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.access_token) {
+        alert("ログインが必要です。");
+        return;
+      }
+  
       const response = await fetch("/api/diaryPost", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`, // JWT トークンを Authorization ヘッダーに追加
+        },
         body: JSON.stringify({ content: diaryInput, emotion: inputEmotion }),
       });
-
+  
       if (response.ok) {
         setDiaryInput("");
         setInputEmotion("none"); // 初期化
         onAction(); // DB保存が成功した場合のみ発動
-        console.log("ここも発動したなそうに決まってる");
       } else {
         alert("エラーが発生しました。もう一度お試しください。");
       }

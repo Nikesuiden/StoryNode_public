@@ -15,7 +15,7 @@ export default function LogoutButton() {
       console.error("ログアウト中にエラーが発生しました:", error.message);
     } else {
       console.log("ログアウトに成功しました");
-      handleNavigation('/')
+      handleNavigation('/opening')
     }
   };
 

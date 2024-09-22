@@ -27,7 +27,7 @@ model DiaryPost {
   content   String
   emotion   String
   createdAt DateTime   @default(now())
-  user      User?       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 }
 
@@ -38,7 +38,7 @@ model ChatHistory {
   response  String
   createdAt DateTime   @default(now())
   todos     ToDo[]     // 1対多の関係
-  user      User?       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 }
 
@@ -46,9 +46,9 @@ model ToDo {
   id        Int          @id @default(autoincrement())
   todo      String
   createdAt DateTime     @default(now())
-  chat      ChatHistory  @relation(fields: [chatId], references: [id])
+  chat      ChatHistory?  @relation(fields: [chatId], references: [id], onDelete: Cascade)
   chatId    Int
-  user      User?         @relation(fields: [userId], references: [id])
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 }
 
