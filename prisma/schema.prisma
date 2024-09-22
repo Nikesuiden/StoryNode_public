@@ -29,6 +29,8 @@ model DiaryPost {
   createdAt DateTime   @default(now())
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+
+  @@index([userId])
 }
 
 model ChatHistory {
@@ -40,6 +42,8 @@ model ChatHistory {
   todos     ToDo[]     // 1対多の関係
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+  
+  @@index([userId])
 }
 
 model ToDo {
@@ -50,5 +54,7 @@ model ToDo {
   chatId    Int
   user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+
+  @@index([userId])
 }
 

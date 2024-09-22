@@ -24,7 +24,11 @@ interface DiaryPost {
   createdAt: string;
 }
 
-const DiaryList: React.FC = () => {
+interface DiaryPostProps {
+  initialData: DiaryPost[] | null;
+}
+
+const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
   const [listEmotion, setListEmotion] = useState<string>("all");
   const [diaryPosts, setDiaryPosts] = useState<DiaryPost[]>([]);
   const [editingPostId, setEditingPostId] = useState<number | null>(null);
@@ -72,13 +76,24 @@ const DiaryList: React.FC = () => {
     }
   };
 
-  // 編集を保存
   const handleEdit = async () => {
     if (editingPostId !== null) {
       try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!session?.access_token) {
+          alert("ログインが必要です。");
+          return;
+        }
+
         const response = await fetch(`/api/diaryPost/${editingPostId}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
           body: JSON.stringify({ content: editContent, emotion: editEmotion }),
         });
 
@@ -108,9 +123,23 @@ const DiaryList: React.FC = () => {
   const handleDelete = async () => {
     if (selectedPostId !== null) {
       try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!session?.access_token) {
+          alert("ログインが必要です。");
+          return;
+        }
+
         const response = await fetch(`/api/diaryPost/${selectedPostId}`, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
         });
+
         if (response.ok) {
           fetchDiaryPosts(); // 日記一覧を再取得
         } else {
@@ -157,6 +186,13 @@ const DiaryList: React.FC = () => {
   useEffect(() => {
     fetchDiaryPosts();
   }, []);
+
+  // initialData を使ってToDoデータの初期値をセット
+  useEffect(() => {
+    if (initialData) {
+      setDiaryPosts(initialData);
+    }
+  }, [initialData]);
 
   return (
     <Box sx={{ mt: 1.5 }}>
@@ -271,7 +307,9 @@ const DiaryList: React.FC = () => {
                   ml: "2px",
                 }}
               >
-                <IconButton onClick={(event) => handleMenuClick(event, post.id)}>
+                <IconButton
+                  onClick={(event) => handleMenuClick(event, post.id)}
+                >
                   <MoreHoriz />
                 </IconButton>
                 <Typography variant="body2">

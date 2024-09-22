@@ -1,16 +1,39 @@
 // app/api/diaryPost/[id]/route.ts
 
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 
-const prisma = new PrismaClient();
+/**
+ * ユーザーの存在確認と作成を行う関数
+ * @param userId ユーザーID
+ * @param email ユーザーのメールアドレス
+ * @returns 存在するユーザーまたは新規作成されたユーザー
+ */
+
+async function findOrCreateUser(userId: string, email?: string) {
+  let user = await prisma.user.findUnique({ where: { id: userId } });
+
+  if (!user) {
+    if (!email) {
+      throw new Error('User email is missing');
+    }
+    user = await prisma.user.create({
+      data: {
+        id: userId,
+        email: email,
+      },
+    });
+  }
+
+  return user;
+}
 
 /**
  * PUTリクエスト: 日記投稿を更新
  */
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -20,6 +43,14 @@ export async function PUT(
         { error: 'Unauthorized' },
         { status: 401 }
       );
+    }
+
+    // ユーザーの存在確認と必要なら作成
+    let existingUser;
+    try {
+      existingUser = await findOrCreateUser(user.id, user.email);
+    } catch (error: any) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     const id = Number(params.id);
@@ -44,7 +75,7 @@ export async function PUT(
       where: { id: id },
     });
 
-    if (!existingPost || existingPost.userId !== user.id) {
+    if (!existingPost || existingPost.userId !== existingUser.id) {
       return NextResponse.json(
         { error: 'Diary post not found or not authorized' },
         { status: 404 }
@@ -70,7 +101,7 @@ export async function PUT(
  * DELETEリクエスト: 日記投稿を削除
  */
 export async function DELETE(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -80,6 +111,14 @@ export async function DELETE(
         { error: 'Unauthorized' },
         { status: 401 }
       );
+    }
+
+    // ユーザーの存在確認と必要なら作成
+    let existingUser;
+    try {
+      existingUser = await findOrCreateUser(user.id, user.email);
+    } catch (error: any) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     const postId = Number(params.id);
@@ -95,7 +134,7 @@ export async function DELETE(
       where: { id: postId },
     });
 
-    if (!post || post.userId !== user.id) {
+    if (!post || post.userId !== existingUser.id) {
       return NextResponse.json(
         { error: 'Diary post not found or not authorized' },
         { status: 404 }
