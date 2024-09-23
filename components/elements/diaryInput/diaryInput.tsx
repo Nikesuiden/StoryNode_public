@@ -50,22 +50,24 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
     }
     try {
       // Supabase からセッション情報を取得
-      const { data: { session } } = await supabase.auth.getSession();
-      
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       if (!session?.access_token) {
         alert("ログインが必要です。");
         return;
       }
-  
+
       const response = await fetch("/api/diaryPost", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.access_token}`, // JWT トークンを Authorization ヘッダーに追加
+          Authorization: `Bearer ${session.access_token}`, // JWT トークンを Authorization ヘッダーに追加
         },
         body: JSON.stringify({ content: diaryInput, emotion: inputEmotion }),
       });
-  
+
       if (response.ok) {
         setDiaryInput("");
         setInputEmotion("none"); // 初期化

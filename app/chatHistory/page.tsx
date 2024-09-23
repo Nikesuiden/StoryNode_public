@@ -8,6 +8,7 @@ import { Box, Button, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import { useEffect, useState } from "react";
 import { History } from "@mui/icons-material";
+import { supabase } from "@/lib/supabaseClient";
 
 interface ChatHistoryItem {
   id: number;
@@ -23,9 +24,22 @@ export default function ChatHistory() {
   useEffect(() => {
     const fetchChatHistory = async () => {
       try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+          alert("ログインが必要です。");
+          return;
+        }
+
         const res = await fetch("/api/chatHistory", {
           method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
         });
+
         if (!res.ok) throw new Error("Failed to fetch chat history");
 
         const data = await res.json();

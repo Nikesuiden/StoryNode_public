@@ -13,6 +13,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
+import { supabase } from "@/lib/supabaseClient";
 
 interface DiaryPost {
   id: number;
@@ -113,11 +114,21 @@ const AiChatForm: React.FC = () => {
     // 最新の prompt を使用して SystemPrompt を定義
     const SystemPrompt: string = `ユーザーの日記から要望に応じたアドバイスを返信し、同じトピックや人物に関する日記があった場合、要約にまとめてください。回答の構成は、日記情報の内容に沿った上でユーザの質問や相談内容に対する返事のみです。また回答で日記情報を活用する際にはその内容を具体的に記載してください。ただし全ての質問に対して単なる日記の書き写しは厳禁です。日記情報は[日付,内容)]の形式です。日記: ${diaryToPrompt} 質問: ${prompt}`;
 
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.access_token) {
+      alert("ログインが必要です。");
+      return;
+    }
+
     // API呼び出し
     const res = await fetch("/api/chatGPT", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`, // JWTトークンをヘッダーに追加
       },
       body: JSON.stringify({ prompt: SystemPrompt }), // キー名を修正
     });
@@ -180,6 +191,15 @@ const AiChatForm: React.FC = () => {
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.access_token) {
+      alert("ログインが必要です。");
+      return;
+    }
+
     if (period === -1) {
       setDiaryToPrompt(""); // 期間が未設定の場合、日記情報をクリア
       return;
@@ -188,7 +208,12 @@ const AiChatForm: React.FC = () => {
     try {
       const response = await fetch(`/api/diaryPost?period=${period}`, {
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`, // JWTトークンをヘッダーに追加
+        },
       });
+
       if (response.ok) {
         const data: DiaryPost[] = await response.json();
         const formattedDiary = formatDiaryPosts(data);
@@ -208,10 +233,19 @@ const AiChatForm: React.FC = () => {
     period: number
   ) => {
     try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        alert("ログインが必要です。");
+        return;
+      }
       const res = await fetch("/api/chatHistory", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`, // JWT トークンを Authorization ヘッダーに追加
         },
         body: JSON.stringify({ prompt, response, period }),
       });
@@ -237,7 +271,6 @@ const AiChatForm: React.FC = () => {
       setIsComplete(false); // 一度保存したら完了フラグをリセット
     }
   }, [isComplete, response]);
-
 
   // 文字数カウント
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -293,7 +326,7 @@ const AiChatForm: React.FC = () => {
             marginTop: 2,
           }}
         >
-          入力制限: {prompt === "" ? "0" : prompt?.length} / {d_maxLength}
+          入力文字制限: {prompt === "" ? "0" : prompt?.length} / {d_maxLength}
           文字
         </Typography>
         <TextField
