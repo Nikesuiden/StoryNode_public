@@ -17,9 +17,9 @@ interface ChatHistoryItem {
   response: string;
 }
 
+
 export default function ChatHistory() {
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
-
   // 初回レンダリング時にチャット履歴を取得
   useEffect(() => {
     const fetchChatHistory = async () => {

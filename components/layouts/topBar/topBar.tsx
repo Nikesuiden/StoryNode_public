@@ -1,31 +1,37 @@
+"use client";
+
 import { supabase } from "@/lib/supabaseClient";
-import { Flex } from "@chakra-ui/react";
 import { Box, Typography } from "@mui/material";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
 
-const TpoBar: React.FC = () => {
+const TopBar: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
+
+  const fetchUser = async () => {
+    try {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+      if (error) throw error;
+      setUser(session?.user ?? null);
+      if (!session) {
+        router.replace('/opening'); // リダイレクト先のページパス
+      }
+    } catch (error) {
+      console.error('ユーザー取得エラー:', error);
+      setUser(null);
+      router.replace('/opening'); // エラー時もリダイレクト
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // 現在のユーザーセッションを取得する関数
-    const fetchUser = async () => {
-      try {
-        const {
-          data: { session },
-          error,
-        } = await supabase.auth.getSession();
-        if (error) throw error;
-        setUser(session?.user ?? null);
-      } catch (error) {
-        console.error("ユーザー取得エラー:", error);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUser();
 
     // 認証状態の変更を監視するリスナーを設定
@@ -69,4 +75,4 @@ const TpoBar: React.FC = () => {
   );
 };
 
-export default TpoBar;
+export default TopBar;
