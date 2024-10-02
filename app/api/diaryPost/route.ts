@@ -1,9 +1,10 @@
-// app/api/diaryPost/route.ts
-
 import { NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth';
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
+
+// 必要に応じてランタイムを 'nodejs' に設定
+export const runtime = 'nodejs';
 
 /**
  * GETリクエスト: 日記投稿の一覧を取得
@@ -49,9 +50,7 @@ export async function GET(
   }
 }
 
-/**
- * POSTリクエスト: 新しい日記投稿を作成
- */
+// POSTリクエストの部分も同様に修正
 export async function POST(
   req: NextRequest,
   { params }: { params: { id?: string } }

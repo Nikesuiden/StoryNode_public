@@ -15,17 +15,15 @@ const Index: React.FC = () => {
 
   // 日記情報を更新するAPIを実行
   const fetchDiaryPosts = async () => {
-    // Supabaseからセッション情報を取得
     const {
       data: { session },
     } = await supabase.auth.getSession();
-
+  
     if (!session?.access_token) {
       alert("ログインが必要です。");
       return;
     }
-
-    // 認証情報をヘッダーに含めてリクエストを送信
+  
     const response = await fetch("/api/diaryPost", {
       method: "GET",
       headers: {
@@ -33,15 +31,15 @@ const Index: React.FC = () => {
         Authorization: `Bearer ${session.access_token}`, // JWTトークンをヘッダーに追加
       },
     });
-
+  
     if (response.ok) {
       const diaryPostsData = await response.json();
-      // 取得したデータを状態にセット
       setDiaryData(diaryPostsData);
     } else {
       alert("日記の取得に失敗しました。");
     }
   };
+  
   // コンポーネントの初回レンダリング時に日記の一覧を取得
   useEffect(() => {
     fetchDiaryPosts();
