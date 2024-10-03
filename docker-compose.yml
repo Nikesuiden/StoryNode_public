@@ -1,0 +1,34 @@
+services:
+  app:
+    # アプリケーションのビルド
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # ホストのポート3000をコンテナのポート3000にマッピング
+    ports:
+      - "3000:3000"
+    environment:
+      # 環境変数の設定（本番環境を指定）
+      - NODE_ENV=production
+    # ボリュームの設定（ホストのファイル変更をコンテナに反映）
+    volumes:
+      - .:/app
+    # このサービスはpostgres_dbに依存している
+    depends_on:
+      - postgres_db
+
+  postgres_db:
+    # PostgreSQLのイメージを使用
+    image: postgres:14-alpine
+    # データベースの設定（ユーザー、パスワード、データベース名）
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    # データ永続化のためにボリュームをマウント
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# ボリュームの設定（データベースデータの永続化）
+volumes:
+  postgres_data:

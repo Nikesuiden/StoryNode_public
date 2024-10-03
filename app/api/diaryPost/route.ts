@@ -59,9 +59,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(newDiaryPost, { status: 201 });
   } catch (error) {
-    console.error('Error creating diary post:', error);
+    console.error('日記作成中にエラーが出ました:', error);
     return NextResponse.json(
-      { error: 'Error creating diary post' },
+      { error: '日記作成中にエラーが出ました' },
       { status: 500 }
     );
   }
