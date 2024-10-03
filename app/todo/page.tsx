@@ -7,6 +7,7 @@ import { Box, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import React, { useEffect, useState } from "react";
 import ToDoList from "@/components/elements/todoList/todoList";
+import { supabase } from "@/lib/supabaseClient";
 
 interface ToDo {
   id: number;
@@ -19,18 +20,34 @@ const ToDo: React.FC = () => {
 
   const fetchToDoList = async () => {
     try {
-      const res = await fetch("/api/ToDoList");
-      if (!res.ok) {
-        throw new Error("Failed to fetch ToDo list");
+      const {
+        data: { session },
+      } = await supabase.auth.getSession(); // Supabaseからセッションを取得
+
+      if (!session?.access_token) {
+        throw new Error("ユーザーが認証されていません");
       }
+
+      const res = await fetch("/api/ToDoList", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`, // JWTトークンをヘッダーに追加
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("ToDoリストの取得に失敗しました");
+      }
+
       const data = await res.json();
-      setToDoData(data);
+      setToDoData(data); // 取得したデータをステートに保存
     } catch (error) {
       console.error("ToDoの取得中にエラーが発生しました:", error);
-    }
+    } 
   };
 
-  // ToDoリストを取得（GET）
+  // コンポーネントのマウント時にToDoリストを取得
   useEffect(() => {
     fetchToDoList();
   }, []);
