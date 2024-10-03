@@ -1,9 +1,7 @@
 // app/api/ToDoList/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import { getUserFromRequest } from "@/lib/auth";
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 // GETリクエスト用ハンドラ
 export async function GET(req: NextRequest) {
@@ -18,9 +16,9 @@ export async function GET(req: NextRequest) {
       orderBy: {
         id: "desc",
       },
-      include: {
-        chat: true,
-      },
+      // include: {
+      //   chat: true,
+      // },
     });
     return NextResponse.json(todos, { status: 200 });
   } catch (error) {

@@ -56,7 +56,7 @@ export default function SignUp() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          サインアップ
+          新規登録
         </Typography>
         <TextField
           fullWidth

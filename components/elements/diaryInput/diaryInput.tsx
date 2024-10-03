@@ -71,7 +71,7 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
       if (response.ok) {
         setDiaryInput("");
         setInputEmotion("none"); // 初期化
-        onAction(); // DB保存が成功した場合のみ発動
+        await onAction(); // DB保存が成功した場合のみ発動
       } else {
         alert("エラーが発生しました。もう一度お試しください。");
       }

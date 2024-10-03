@@ -60,7 +60,7 @@ export default function SignIn() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          サインイン
+          ログイン
         </Typography>
         <TextField
           fullWidth
