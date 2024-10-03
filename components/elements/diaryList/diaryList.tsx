@@ -84,7 +84,6 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
         } = await supabase.auth.getSession();
 
         if (!session?.access_token) {
-          alert("ログインが必要です。");
           return;
         }
 
@@ -128,7 +127,6 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
         } = await supabase.auth.getSession();
 
         if (!session?.access_token) {
-          alert("ログインが必要です。");
           return;
         }
 
@@ -159,7 +157,6 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
     } = await supabase.auth.getSession();
   
     if (!session?.access_token) {
-      alert("ログインが必要です。");
       return;
     }
   

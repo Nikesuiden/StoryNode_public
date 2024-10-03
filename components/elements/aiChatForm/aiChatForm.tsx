@@ -196,7 +196,6 @@ const AiChatForm: React.FC = () => {
     } = await supabase.auth.getSession();
 
     if (!session?.access_token) {
-      alert("ログインが必要です。");
       return;
     }
 
@@ -238,7 +237,6 @@ const AiChatForm: React.FC = () => {
       } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
-        alert("ログインが必要です。");
         return;
       }
       const res = await fetch("/api/chatHistory", {
