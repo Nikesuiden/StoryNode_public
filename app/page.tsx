@@ -12,18 +12,20 @@ import { useEffect, useState } from "react";
 
 const Index: React.FC = () => {
   const [diaryData, setDiaryData] = useState(null); // 保存された日記をリストを親で保持。
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 初期ローディングを感知する機能
 
   // 日記情報を更新するAPIを実行
   const fetchDiaryPosts = async () => {
+    setIsLoading(true);
     const {
       data: { session },
     } = await supabase.auth.getSession();
-  
+
     if (!session?.access_token) {
       alert("ログインが必要です。");
       return;
     }
-  
+
     const response = await fetch("/api/diaryPost", {
       method: "GET",
       headers: {
@@ -31,15 +33,16 @@ const Index: React.FC = () => {
         Authorization: `Bearer ${session.access_token}`, // JWTトークンをヘッダーに追加
       },
     });
-  
+
     if (response.ok) {
       const diaryPostsData = await response.json();
       setDiaryData(diaryPostsData);
+      setIsLoading(false);
     } else {
       alert("日記の取得に失敗しました。");
     }
   };
-  
+
   // コンポーネントの初回レンダリング時に日記の一覧を取得
   useEffect(() => {
     fetchDiaryPosts();
@@ -86,7 +89,7 @@ const Index: React.FC = () => {
           <TimeDisplay />
           <DiaryInput onAction={fetchDiaryPosts} />
           <hr />
-          <DiaryList initialData={diaryData} />
+          <DiaryList initialData={{ data: diaryData, isLoading }} />
         </Box>
       </Box>
     </Box>

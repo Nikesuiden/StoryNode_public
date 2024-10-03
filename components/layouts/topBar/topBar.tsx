@@ -64,7 +64,7 @@ const TopBar: React.FC = () => {
 
         <Typography style={{ fontSize: 15 }}>
           {loading
-            ? "読み込み中..."
+            ? "Loading..."
             : user
             ? `${user.email}`
             : "ログインしていません"}

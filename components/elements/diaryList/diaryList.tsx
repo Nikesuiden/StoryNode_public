@@ -25,12 +25,15 @@ interface DiaryPost {
 }
 
 interface DiaryPostProps {
-  initialData: DiaryPost[] | null;
+  initialData: {
+    data: DiaryPost[] | null;
+    isLoading: boolean;
+  };
 }
 
 const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
   const [listEmotion, setListEmotion] = useState<string>("all");
-  const [diaryPosts, setDiaryPosts] = useState<DiaryPost[]>([]);
+  const [diaryPosts, setDiaryPosts] = useState<DiaryPost[]>(initialData.data || []);
   const [editingPostId, setEditingPostId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState<string>("");
   const [editEmotion, setEditEmotion] = useState<string>("none");
@@ -38,6 +41,8 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
   // メニューの表示制御のための状態
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+
+  const { data, isLoading } = initialData;
 
   // 時間と分を抽出する関数
   const hourAndMinutes = (dateTimeString: string) => {
@@ -155,11 +160,11 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
-  
+
     if (!session?.access_token) {
       return;
     }
-  
+
     const response = await fetch("/api/diaryPost", {
       method: "GET",
       headers: {
@@ -167,7 +172,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
         Authorization: `Bearer ${session.access_token}`, // JWTトークンをヘッダーに追加
       },
     });
-  
+
     if (response.ok) {
       const diaryPostsData = await response.json();
       setDiaryPosts(diaryPostsData);
@@ -175,19 +180,11 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
       alert("日記の取得に失敗しました。");
     }
   };
-  
 
   // コンポーネントのマウント時にデータを取得
   useEffect(() => {
     fetchDiaryPosts();
   }, []);
-
-  // initialData を使ってToDoデータの初期値をセット
-  useEffect(() => {
-    if (initialData) {
-      setDiaryPosts(initialData);
-    }
-  }, [initialData]);
 
   return (
     <Box sx={{ mt: 1.5 }}>
@@ -211,109 +208,113 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
       </FormControl>
 
       {/* 日記一覧の表示 */}
-      {diaryPosts
-        .filter((post) =>
-          listEmotion === "all" ? true : post.emotion === listEmotion
-        )
-        .map((post) =>
-          editingPostId === post.id ? (
-            // 編集フォームの表示
-            <Box
-              key={post.id}
-              sx={{
-                marginTop: 2,
-                border: "1px solid gray",
-                borderRadius: 1,
-                padding: 2,
-                backgroundColor: "white",
-              }}
-            >
-              <Typography variant="h6">編集フォーム</Typography>
-              <br />
-
-              <FormControl fullWidth sx={{ marginBottom: 2, width: "30%" }}>
-                <InputLabel
-                  style={{
-                    backgroundColor: "white",
-                    paddingLeft: "5px",
-                    paddingRight: "5px",
-                  }}
-                >
-                  Emotion
-                </InputLabel>
-                <Select
-                  value={editEmotion}
-                  onChange={(e) => setEditEmotion(e.target.value as string)}
-                >
-                  <MenuItem value={"none"}>--未設定--</MenuItem>
-                  <MenuItem value={"grad"}>嬉しい</MenuItem>
-                  <MenuItem value={"Funny"}>楽しみ</MenuItem>
-                  <MenuItem value={"expectations"}>期待</MenuItem>
-                  <MenuItem value={"happy"}>幸せ</MenuItem>
-                  <MenuItem value={"surprise"}>驚き</MenuItem>
-                  <MenuItem value={"sad"}>悲しい</MenuItem>
-                  <MenuItem value={"angry"}>怒り</MenuItem>
-                  <MenuItem value={"anxiety"}>不安</MenuItem>
-                </Select>
-              </FormControl>
-
-              <TextField
-                fullWidth
-                label="Content"
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-                sx={{ marginBottom: 2 }}
-              />
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Button variant="contained" onClick={handleEdit}>
-                  編集を保存
-                </Button>
-                <Button
-                  variant="contained"
-                  sx={{ backgroundColor: "gray" }}
-                  onClick={handleCloseEdit}
-                >
-                  閉じる
-                </Button>
-              </Box>
-            </Box>
-          ) : (
-            // 通常の投稿表示
-            <Box
-              key={post.id}
-              sx={{
-                border: "1px solid gray",
-                borderRadius: 1,
-                padding: 2,
-                marginTop: 1,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <Box>
-                <Typography variant="body2">感情: {post.emotion}</Typography>
-                <Typography variant="h6">{post.content}</Typography>
-              </Box>
+      {!isLoading ? (
+        diaryPosts
+          .filter((post) =>
+            listEmotion === "all" ? true : post.emotion === listEmotion
+          )
+          .map((post) =>
+            editingPostId === post.id ? (
+              // 編集フォームの表示
               <Box
+                key={post.id}
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  ml: "2px",
+                  marginTop: 2,
+                  border: "1px solid gray",
+                  borderRadius: 1,
+                  padding: 2,
+                  backgroundColor: "white",
                 }}
               >
-                <IconButton
-                  onClick={(event) => handleMenuClick(event, post.id)}
-                >
-                  <MoreHoriz />
-                </IconButton>
-                <Typography variant="body2">
-                  {hourAndMinutes(post.createdAt)}
-                </Typography>
+                <Typography variant="h6">編集フォーム</Typography>
+                <br />
+
+                <FormControl fullWidth sx={{ marginBottom: 2, width: "30%" }}>
+                  <InputLabel
+                    style={{
+                      backgroundColor: "white",
+                      paddingLeft: "5px",
+                      paddingRight: "5px",
+                    }}
+                  >
+                    Emotion
+                  </InputLabel>
+                  <Select
+                    value={editEmotion}
+                    onChange={(e) => setEditEmotion(e.target.value as string)}
+                  >
+                    <MenuItem value={"none"}>--未設定--</MenuItem>
+                    <MenuItem value={"grad"}>嬉しい</MenuItem>
+                    <MenuItem value={"Funny"}>楽しみ</MenuItem>
+                    <MenuItem value={"expectations"}>期待</MenuItem>
+                    <MenuItem value={"happy"}>幸せ</MenuItem>
+                    <MenuItem value={"surprise"}>驚き</MenuItem>
+                    <MenuItem value={"sad"}>悲しい</MenuItem>
+                    <MenuItem value={"angry"}>怒り</MenuItem>
+                    <MenuItem value={"anxiety"}>不安</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <TextField
+                  fullWidth
+                  label="Content"
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  sx={{ marginBottom: 2 }}
+                />
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Button variant="contained" onClick={handleEdit}>
+                    編集を保存
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "gray" }}
+                    onClick={handleCloseEdit}
+                  >
+                    閉じる
+                  </Button>
+                </Box>
               </Box>
-            </Box>
+            ) : (
+              // 通常の投稿表示
+              <Box
+                key={post.id}
+                sx={{
+                  border: "1px solid gray",
+                  borderRadius: 1,
+                  padding: 2,
+                  marginTop: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Box>
+                  <Typography variant="body2">感情: {post.emotion}</Typography>
+                  <Typography variant="h6">{post.content}</Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    ml: "2px",
+                  }}
+                >
+                  <IconButton
+                    onClick={(event) => handleMenuClick(event, post.id)}
+                  >
+                    <MoreHoriz />
+                  </IconButton>
+                  <Typography variant="body2">
+                    {hourAndMinutes(post.createdAt)}
+                  </Typography>
+                </Box>
+              </Box>
+            )
           )
-        )}
+      ) : (
+        <Typography sx={{m: 2}}>Loading...</Typography>
+      )}
 
       {/* 編集・削除メニューの表示 */}
       <Menu
