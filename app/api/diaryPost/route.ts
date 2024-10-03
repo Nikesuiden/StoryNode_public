@@ -3,40 +3,19 @@ import { getUserFromRequest } from '@/lib/auth';
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 
-// 必要に応じてランタイムを 'nodejs' に設定
-export const runtime = 'nodejs';
-
 /**
  * GETリクエスト: 日記投稿の一覧を取得
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id?: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    // ユーザーの存在確認
-    const existingUser = await prisma.user.findUnique({
-      where: { id: user.id },
-    });
-
-    if (!existingUser) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // 日記投稿を取得
     const diaryPosts = await prisma.diaryPost.findMany({
-      where: { userId: existingUser.id },
+      where: { userId: user.id },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -50,18 +29,14 @@ export async function GET(
   }
 }
 
-// POSTリクエストの部分も同様に修正
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id?: string } }
-) {
+/**
+ * POSTリクエスト: 新しい日記投稿を作成
+ */
+export async function POST(req: NextRequest) {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { content, emotion } = await req.json();
@@ -73,24 +48,12 @@ export async function POST(
       );
     }
 
-    // ユーザーの存在確認
-    const existingUser = await prisma.user.findUnique({
-      where: { id: user.id },
-    });
-
-    if (!existingUser) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
-    }
-
     // 新しい日記投稿を作成
     const newDiaryPost = await prisma.diaryPost.create({
       data: {
         content,
         emotion,
-        userId: existingUser.id,
+        userId: user.id,
       },
     });
 
