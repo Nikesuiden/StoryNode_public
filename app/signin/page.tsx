@@ -3,7 +3,7 @@
 import { useState, ChangeEvent } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/navigation';
-import { Button } from '@mui/material';
+import { Button, Box, Typography, TextField } from '@mui/material';
 
 export default function SignIn() {
   const [email, setEmail] = useState<string>('');
@@ -37,24 +37,67 @@ export default function SignIn() {
   };
 
   return (
-    <div>
-      <h1>サインイン</h1>
-      <input
-        type="email"
-        placeholder="メールアドレス"
-        value={email}
-        onChange={handleChangeEmail}
-      />
-      <input
-        type="password"
-        placeholder="パスワード"
-        value={password}
-        onChange={handleChangePassword}
-      />
-      <button onClick={handleSignIn}>サインイン</button>
-      <Button onClick={() => handleNavigation("/passwordReset")}>
-            パスワードをリセットする
-          </Button>
-    </div>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5", // 背景色
+        padding: 3,
+      }}
+    >
+      <Box
+        sx={{
+          backgroundColor: "white", // フォームの背景
+          padding: 4,
+          borderRadius: 2,
+          boxShadow: 3,
+          maxWidth: 400,
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          サインイン
+        </Typography>
+        <TextField
+          fullWidth
+          label="メールアドレス"
+          variant="outlined"
+          margin="normal"
+          type="email"
+          value={email}
+          onChange={handleChangeEmail}
+        />
+        <TextField
+          fullWidth
+          label="パスワード"
+          variant="outlined"
+          margin="normal"
+          type="password"
+          value={password}
+          onChange={handleChangePassword}
+        />
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          onClick={handleSignIn}
+          sx={{ marginTop: 2 }}
+        >
+          サインイン
+        </Button>
+        <Button
+          fullWidth
+          variant="text"
+          onClick={() => handleNavigation("/passwordReset")}
+          sx={{ marginTop: 1 }}
+        >
+          パスワードをリセットする
+        </Button>
+      </Box>
+    </Box>
   );
-}
+};

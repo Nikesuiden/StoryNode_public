@@ -66,7 +66,7 @@ export default function SideBar() {
               disablePadding
               onClick={() => handleNavigation(urls[index])}
             >
-              <ListItemButton>
+              <ListItemButton sx={{marginTop: 1}}>
                 <ListItemIcon>
                   {cloneElement(icons[index].component, {
                     key: icons[index].key,
