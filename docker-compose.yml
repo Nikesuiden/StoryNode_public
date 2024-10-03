@@ -22,9 +22,7 @@ services:
     image: postgres:14-alpine
     # データベースの設定（ユーザー、パスワード、データベース名）
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
+      POSTGRES_URL: ${DATABASE_URL}
     # データ永続化のためにボリュームをマウント
     volumes:
       - postgres_data:/var/lib/postgresql/data
