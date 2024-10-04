@@ -6,7 +6,7 @@ import TimeDisplay from "@/components/elements/timeDisplay/timeDisplay";
 import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
-import { supabase } from "@/lib/supabaseClient";
+import supabase from "@/lib/supabaseClient";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 

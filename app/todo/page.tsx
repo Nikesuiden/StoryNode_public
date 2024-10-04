@@ -7,7 +7,7 @@ import { Box, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import React, { useEffect, useState } from "react";
 import ToDoList from "@/components/elements/todoList/todoList";
-import { supabase } from "@/lib/supabaseClient";
+import supabase from "@/lib/supabaseClient";
 
 interface ToDo {
   id: number;

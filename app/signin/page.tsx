@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, ChangeEvent } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { Button, Box, Typography, TextField } from "@mui/material";
 import { MeetingRoom } from "@mui/icons-material";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+import supabase from "@/lib/supabaseClient";
 
 export default function SignIn() {
   const [email, setEmail] = useState<string>("");
@@ -76,7 +78,12 @@ export default function SignIn() {
         <Typography variant="h4" gutterBottom>
           ログイン
         </Typography>
-        <TextField
+        <Auth
+          supabaseClient={supabase}
+          appearance={{ theme: ThemeSupa }}
+          providers={["google"]}
+        />
+        {/* <TextField
           fullWidth
           label="メールアドレス"
           variant="outlined"
@@ -110,7 +117,7 @@ export default function SignIn() {
           sx={{ marginTop: 1 }}
         >
           パスワードをリセットする
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   );

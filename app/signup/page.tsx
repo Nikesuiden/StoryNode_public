@@ -1,62 +1,42 @@
 "use client";
 
-import { supabase } from "@/lib/supabaseClient";
-import { useState, ChangeEvent } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useRouter } from "next/navigation";
+import supabase from "@/lib/supabaseClient";
+import { useEffect } from "react";
+import { Box, Typography } from "@mui/material";
 import { MeetingRoom } from "@mui/icons-material";
-import prisma from '@/lib/prisma';
+import { useRouter } from "next/navigation";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 export default function SignUp() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [password2, setPassword2] = useState<string>("");
-
   const router = useRouter();
   const handleNavigation = (path: string) => {
     router.push(path);
   };
 
-  const handleSignUp = async (): Promise<void> => {
-    if (password != password2) {
-      alert("パスワードが一致していません。");
-      return;
-    }
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === "SIGNED_IN" && session?.user) {
+          const user = session.user;
+          // サーバーにユーザー情報を送信してデータベースにユーザーを作成
+          await fetch("/api/auth/callback", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user }),
+          });
+          // ホームページにリダイレクト
+          router.push("/");
+        }
+      }
+    );
 
-    // 既に同じメールアドレスを持つユーザーがデータベースに存在するか確認
-    const existingUserByEmail = await prisma.user.findUnique({
-      where: { email: user.email },
-    });
-
-    if (existingUserByEmail) {
-      console.error("入力のメールアドレスはしでに登録されています。");
-      return { error: "入力のメールアドレスはしでに登録されています。" };
-    }
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      alert("サインアップに失敗しました: " + error.message);
-    } else {
-      handleNavigation("/confirm_email");
-    }
-  };
-
-  const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>): void => {
-    setEmail(e.target.value);
-  };
-
-  const handleChangePassword = (e: ChangeEvent<HTMLInputElement>): void => {
-    setPassword(e.target.value);
-  };
-
-  const handleChangePassword2 = (e: ChangeEvent<HTMLInputElement>): void => {
-    setPassword2(e.target.value);
-  };
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, [router]);
 
   return (
     <Box
@@ -66,27 +46,30 @@ export default function SignUp() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        backgroundColor: "#f5f5f5", // 背景色
+        backgroundColor: "#f5f5f5",
         padding: 3,
       }}
     >
       <Box
         sx={{
-          backgroundColor: "white", // フォームの背景
+          backgroundColor: "white",
           padding: 4,
           borderRadius: 2,
           boxShadow: 3,
           maxWidth: 400,
           width: "100%",
           textAlign: "center",
+          position: "relative",
         }}
       >
         <Box
           sx={{
             position: "absolute",
-            m: 0.5,
+            top: 16,
+            left: 16,
             display: "flex",
             flexDirection: "column",
+            alignItems: "center",
             cursor: "pointer",
           }}
           onClick={() => handleNavigation("/opening")}
@@ -97,43 +80,11 @@ export default function SignUp() {
         <Typography variant="h4" gutterBottom>
           新規登録
         </Typography>
-        <TextField
-          fullWidth
-          label="メールアドレス"
-          variant="outlined"
-          margin="normal"
-          type="email"
-          value={email}
-          onChange={handleChangeEmail}
+        <Auth
+          supabaseClient={supabase}
+          appearance={{ theme: ThemeSupa }}
+          providers={["google"]}
         />
-        <TextField
-          fullWidth
-          label="パスワード"
-          variant="outlined"
-          margin="normal"
-          type="password"
-          value={password}
-          onChange={handleChangePassword}
-        />
-        <TextField
-          fullWidth
-          label="パスワード確認"
-          variant="outlined"
-          margin="normal"
-          type="password"
-          value={password2}
-          onChange={handleChangePassword2}
-        />
-
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={handleSignUp}
-          sx={{ marginTop: 2 }}
-        >
-          サインアップ
-        </Button>
       </Box>
     </Box>
   );

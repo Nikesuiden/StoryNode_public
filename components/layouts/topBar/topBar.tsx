@@ -1,10 +1,10 @@
 "use client";
 
-import { supabase } from "@/lib/supabaseClient";
 import { Box, Typography } from "@mui/material";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+import supabase from "@/lib/supabaseClient";
 
 const TopBar: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);

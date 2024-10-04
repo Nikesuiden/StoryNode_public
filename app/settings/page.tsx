@@ -5,8 +5,7 @@ import ToDoInput from "@/components/elements/todoInput/todoInput";
 import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
-import { Box } from "@chakra-ui/react";
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function Settings() {
@@ -15,7 +14,7 @@ export default function Settings() {
     router.push(path);
   };
   return (
-    <Box sx={{ margin: 2 }}>
+    <Box>
       <Box
         sx={{
           margin: 2,

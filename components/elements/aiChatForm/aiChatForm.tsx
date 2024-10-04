@@ -13,7 +13,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
-import { supabase } from "@/lib/supabaseClient";
+import supabase from "@/lib/supabaseClient";
 
 interface DiaryPost {
   id: number;

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, ChangeEvent } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { Button, Box, Typography, TextField } from "@mui/material";
 import { MeetingRoom } from "@mui/icons-material";
 import Image from "next/image";
+import supabase from "@/lib/supabaseClient";
 
 export default function SignIn() {
   const [email, setEmail] = useState<string>("");

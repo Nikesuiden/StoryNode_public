@@ -8,7 +8,9 @@ import { Box, Button, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import { useEffect, useState } from "react";
 import { History } from "@mui/icons-material";
-import { supabase } from "@/lib/supabaseClient";
+import supabase from "@/lib/supabaseClient";
+
+
 
 interface ChatHistoryItem {
   id: number;
