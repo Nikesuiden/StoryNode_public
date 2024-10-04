@@ -87,12 +87,12 @@ const Index: React.FC = () => {
         <Box sx={{ flex: 4 }}>
           <TopBar />
           <TimeDisplay />
-          <DiaryInput onAction={fetchDiaryPosts} />
-          <hr />
-          <DiaryList initialData={{ data: diaryData, isLoading }} />
+            <DiaryInput  onAction={fetchDiaryPosts} />
+            <hr />
+            <DiaryList initialData={{ data: diaryData, isLoading }} />
+          </Box>
         </Box>
       </Box>
-    </Box>
   );
 };
 
