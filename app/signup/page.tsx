@@ -65,11 +65,9 @@ export default function SignUp() {
         <Box
           sx={{
             position: "absolute",
-            top: 16,
-            left: 16,
+            m: 0.5,
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
             cursor: "pointer",
           }}
           onClick={() => handleNavigation("/opening")}

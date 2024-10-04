@@ -9,16 +9,10 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import supabase from "@/lib/supabaseClient";
 
 export default function SignIn() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const router = useRouter();
 
   const handleNavigation = (path: string) => {
     router.push(path);
-  };
-
-  const handleChangePassword = (e: ChangeEvent<HTMLInputElement>): void => {
-    setPassword(e.target.value);
   };
 
   return (
@@ -65,41 +59,6 @@ export default function SignIn() {
           appearance={{ theme: ThemeSupa }}
           providers={["google"]}
         />
-        {/* <TextField
-          fullWidth
-          label="メールアドレス"
-          variant="outlined"
-          margin="normal"
-          type="email"
-          value={email}
-          onChange={handleChangeEmail}
-        />
-        <TextField
-          fullWidth
-          label="パスワード"
-          variant="outlined"
-          margin="normal"
-          type="password"
-          value={password}
-          onChange={handleChangePassword}
-        />
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={handleSignIn}
-          sx={{ marginTop: 2 }}
-        >
-          サインイン
-        </Button>
-        <Button
-          fullWidth
-          variant="text"
-          onClick={() => handleNavigation("/passwordReset")}
-          sx={{ marginTop: 1 }}
-        >
-          パスワードをリセットする
-        </Button> */}
       </Box>
     </Box>
   );

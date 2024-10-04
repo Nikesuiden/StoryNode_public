@@ -3,6 +3,9 @@
 import supabase from "@/lib/supabaseClient";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import React from "react";
+
+
  // supabaseClientをインポート
 
 interface ToDo {
