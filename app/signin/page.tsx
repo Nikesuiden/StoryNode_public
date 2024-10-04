@@ -17,24 +17,6 @@ export default function SignIn() {
     router.push(path);
   };
 
-  const handleSignIn = async (): Promise<void> => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      alert("サインインに失敗しました: " + error.message);
-    } else {
-      alert("サインインに成功しました。");
-      router.push("/"); // サインイン後のリダイレクト先
-    }
-  };
-
-  const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>): void => {
-    setEmail(e.target.value);
-  };
-
   const handleChangePassword = (e: ChangeEvent<HTMLInputElement>): void => {
     setPassword(e.target.value);
   };

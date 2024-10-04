@@ -20,7 +20,7 @@ export default function SignUp() {
         if (event === "SIGNED_IN" && session?.user) {
           const user = session.user;
           // サーバーにユーザー情報を送信してデータベースにユーザーを作成
-          await fetch("/api/auth/callback", {
+          await fetch("/lib/callback", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
