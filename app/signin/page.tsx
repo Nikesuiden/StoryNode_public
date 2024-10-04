@@ -1,18 +1,33 @@
 "use client";
 
-import { useState, ChangeEvent } from "react";
-import { useRouter } from "next/navigation";
-import { Button, Box, Typography, TextField } from "@mui/material";
-import { MeetingRoom } from "@mui/icons-material";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
 import supabase from "@/lib/supabaseClient";
+import { useEffect, useState } from "react";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { MeetingRoom } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+import SignInWithGoogle from "@/components/elements/signinWithGoogle/signinWithGoogle";
+import { Center } from "@chakra-ui/react";
 
 export default function SignIn() {
   const router = useRouter();
-
   const handleNavigation = (path: string) => {
     router.push(path);
+  };
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState<string>("");
+
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("ログイン成功！");
+    }
   };
 
   return (
@@ -23,19 +38,20 @@ export default function SignIn() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        backgroundColor: "#f5f5f5", // 背景色
+        backgroundColor: "#f5f5f5",
         padding: 3,
       }}
     >
       <Box
         sx={{
-          backgroundColor: "white", // フォームの背景
+          backgroundColor: "white",
           padding: 4,
           borderRadius: 2,
           boxShadow: 3,
           maxWidth: 400,
           width: "100%",
           textAlign: "center",
+          position: "relative",
         }}
       >
         <Box
@@ -54,11 +70,31 @@ export default function SignIn() {
         <Typography variant="h4" gutterBottom>
           ログイン
         </Typography>
-        <Auth
-          supabaseClient={supabase}
-          appearance={{ theme: ThemeSupa }}
-          providers={["google"]}
+        {/* <TextField
+          type="email"
+          placeholder="メールアドレス"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
+        <TextField
+          type="email"
+          placeholder="パスワード"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button onClick={handleLogin}>ログイン</Button> */}
+        <Box
+          sx={{
+            display: "flex", // ここを追加
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center", // ここで水平方向の中央揃え
+            width: "100%", // 幅を100%に設定
+            marginTop: 2, // 適宜余白を追加
+          }}
+        >
+          <SignInWithGoogle />
+        </Box>
       </Box>
     </Box>
   );

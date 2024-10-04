@@ -1,12 +1,13 @@
 "use client";
 
 import supabase from "@/lib/supabaseClient";
-import { useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { MeetingRoom } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
+import SignUpWithGoogle from "@/components/elements/signUpWithGoogle/signUpWithGoogle";
 
 export default function SignUp() {
   const router = useRouter();
@@ -14,29 +15,28 @@ export default function SignUp() {
     router.push(path);
   };
 
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === "SIGNED_IN" && session?.user) {
-          const user = session.user;
-          // サーバーにユーザー情報を送信してデータベースにユーザーを作成
-          await fetch("/lib/callback", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ user }),
-          });
-          // ホームページにリダイレクト
-          router.push("/");
-        }
-      }
-    );
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState<string>("");
 
-    return () => {
-      authListener?.subscription.unsubscribe();
-    };
-  }, [router]);
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("ログイン成功！");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    if (error) alert(error.message);
+  };
 
   return (
     <Box
@@ -78,11 +78,31 @@ export default function SignUp() {
         <Typography variant="h4" gutterBottom>
           新規登録
         </Typography>
-        <Auth
-          supabaseClient={supabase}
-          appearance={{ theme: ThemeSupa }}
-          providers={["google"]}
+        {/* <TextField
+          type="email"
+          placeholder="メールアドレス"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
+        <TextField
+          type="email"
+          placeholder="パスワード"
+          value={email}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button onClick={handleLogin}>ログイン</Button> */}
+        <Box
+          sx={{
+            display: "flex", // ここを追加
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center", // ここで水平方向の中央揃え
+            width: "100%", // 幅を100%に設定
+            marginTop: 2, // 適宜余白を追加
+          }}
+        >
+          <SignUpWithGoogle />
+        </Box>
       </Box>
     </Box>
   );
