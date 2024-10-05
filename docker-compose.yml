@@ -16,6 +16,8 @@ services:
     # このサービスはpostgres_dbに依存している
     depends_on:
       - postgres_db
+    command: sh -c "npx prisma migrate deploy && npm run start"
+
 
   postgres_db:
     # PostgreSQLのイメージを使用

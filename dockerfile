@@ -1,33 +1,26 @@
-# ステージ1: アプリケーションのビルド
-FROM node:18-alpine AS builder
+# ベースイメージとして公式の Node.js イメージを使用
+FROM node:16-alpine
 
 # 作業ディレクトリを設定
 WORKDIR /app
+
+# パッケージファイルをコピー
+COPY package.json package-lock.json ./
 
 # 依存関係をインストール
-COPY package.json package-lock.json ./
 RUN npm install
 
-# アプリケーションのソースコードをコピー
+# アプリケーションの全ファイルをコピー
 COPY . .
 
-# Next.jsアプリケーションをビルド
+# Prisma クライアントを生成
+RUN npx prisma generate
+
+# Next.js アプリケーションをビルド
 RUN npm run build
 
-# ステージ2: 本番環境用のイメージ
-FROM node:18-alpine AS runner
-
-# 作業ディレクトリを設定
-WORKDIR /app
-
-# ビルドステージからビルド済みのアプリケーションをコピー
-COPY --from=builder /app/.next /app/.next
-COPY --from=builder /app/public /app/public
-COPY --from=builder /app/package.json /app/package.json
-COPY --from=builder /app/node_modules /app/node_modules
-
-# Next.jsのポートを公開
+# ポートを公開
 EXPOSE 3000
 
-# Next.jsアプリケーションを起動
-CMD ["npm", "run", "dev"]
+# アプリケーションを起動
+CMD ["npm", "run", "start"]
