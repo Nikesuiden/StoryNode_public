@@ -1,26 +1,44 @@
-# ベースイメージとして公式の Node.js イメージを使用
-FROM node:18-alpine
+# base ステージ
+FROM node:18-alpine AS base
 
-# 作業ディレクトリを設定
+# deps ステージ
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# パッケージファイルをコピー
-COPY package.json package-lock.json ./
+COPY package*.json ./
+RUN npm ci
 
-# 依存関係をインストール
-RUN npm install
-
-# アプリケーションの全ファイルをコピー
+# builder ステージ
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Prisma クライアントを生成
 RUN npx prisma generate
-
-# Next.js アプリケーションをビルド
 RUN npm run build
 
-# ポートを公開
+# runner ステージ
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
 EXPOSE 3000
 
-# アプリケーションを起動
-CMD ["npm", "run", "start"]
+ENV PORT 3000
+
+CMD HOSTNAME="0.0.0.0" node server.js
