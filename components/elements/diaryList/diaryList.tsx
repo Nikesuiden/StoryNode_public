@@ -186,7 +186,6 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
       const diaryPostsData = await response.json();
       setDiaryPosts(diaryPostsData);
     } else {
-      alert("情報の取得に失敗しました。タイトル画面に戻ります。");
       handleNavigation("/opening");
     }
   };
