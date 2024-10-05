@@ -55,7 +55,6 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
       } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
-        alert("ログインが必要です。");
         return;
       }
 
