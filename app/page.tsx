@@ -8,11 +8,18 @@ import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import supabase from "@/lib/supabaseClient";
 import { Box } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Index: React.FC = () => {
   const [diaryData, setDiaryData] = useState(null); // 保存された日記をリストを親で保持。
   const [isLoading, setIsLoading] = useState<boolean>(true); // 初期ローディングを感知する機能
+
+  // ページ遷移機能
+  const router = useRouter();
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
 
   // 日記情報を更新するAPIを実行
   const fetchDiaryPosts = async () => {
@@ -38,7 +45,8 @@ const Index: React.FC = () => {
       setDiaryData(diaryPostsData);
       setIsLoading(false);
     } else {
-      alert("日記の取得に失敗しました。");
+      alert("情報の取得に失敗しました。タイトル画面に戻ります。");
+      handleNavigation('/opening')
     }
   };
 
@@ -86,12 +94,12 @@ const Index: React.FC = () => {
         <Box sx={{ flex: 4 }}>
           <TopBar />
           <TimeDisplay />
-            <DiaryInput  onAction={fetchDiaryPosts} />
-            <hr />
-            <DiaryList initialData={{ data: diaryData, isLoading }} />
-          </Box>
+          <DiaryInput onAction={fetchDiaryPosts} />
+          <hr />
+          <DiaryList initialData={{ data: diaryData, isLoading }} />
         </Box>
       </Box>
+    </Box>
   );
 };
 

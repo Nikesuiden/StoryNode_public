@@ -37,7 +37,7 @@ const ToDo: React.FC = () => {
       });
 
       if (!res.ok) {
-        throw new Error("ToDoリストの取得に失敗しました");
+        throw new Error("情報の取得に失敗しました");
       }
 
       const data = await res.json();

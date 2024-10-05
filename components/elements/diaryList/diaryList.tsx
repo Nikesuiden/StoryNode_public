@@ -15,6 +15,7 @@ import {
   Menu,
   IconButton,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, MouseEvent } from "react";
 
 interface DiaryPost {
@@ -33,7 +34,9 @@ interface DiaryPostProps {
 
 const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
   const [listEmotion, setListEmotion] = useState<string>("all");
-  const [diaryPosts, setDiaryPosts] = useState<DiaryPost[]>(initialData.data || []);
+  const [diaryPosts, setDiaryPosts] = useState<DiaryPost[]>(
+    initialData.data || []
+  );
   const [editingPostId, setEditingPostId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState<string>("");
   const [editEmotion, setEditEmotion] = useState<string>("none");
@@ -43,6 +46,12 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   const { data, isLoading } = initialData;
+
+  // ページ移動
+  const router = useRouter();
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
 
   // 時間と分を抽出する関数
   const hourAndMinutes = (dateTimeString: string) => {
@@ -177,7 +186,8 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
       const diaryPostsData = await response.json();
       setDiaryPosts(diaryPostsData);
     } else {
-      alert("日記の取得に失敗しました。");
+      alert("情報の取得に失敗しました。タイトル画面に戻ります。");
+      handleNavigation("/opening");
     }
   };
 
@@ -313,7 +323,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
             )
           )
       ) : (
-        <Typography sx={{m: 2}}>Loading...</Typography>
+        <Typography sx={{ m: 2 }}>Loading...</Typography>
       )}
 
       {/* 編集・削除メニューの表示 */}
