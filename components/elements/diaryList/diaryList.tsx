@@ -186,7 +186,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
       const diaryPostsData = await response.json();
       setDiaryPosts(diaryPostsData);
     } else {
-      handleNavigation("/opening");
+      handleNavigation("/signin");
     }
   };
 
