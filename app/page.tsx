@@ -46,7 +46,7 @@ const Index: React.FC = () => {
       setIsLoading(false);
     } else {
       alert("情報の取得に失敗しました。タイトル画面に戻ります。");
-      handleNavigation('/opening')
+      handleNavigation('/singin')
     }
   };
 
