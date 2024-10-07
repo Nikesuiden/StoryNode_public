@@ -137,7 +137,7 @@ export default function Speech() {
         },
         body: JSON.stringify({
           prompt,
-          diaryToPrompt
+          diaryToPrompt,
         }),
       });
       if (!res.ok) {
@@ -239,8 +239,8 @@ export default function Speech() {
           音声対話
         </Typography>
 
-        <Box component="form" sx={{ "& > *": { width: "100%" } }} noValidate>
-          <FormControl sx={{ minWidth: 120 }} fullWidth>
+        <Box component="form" sx={{ "& > *": { width: "40%" } }} noValidate>
+          <FormControl sx={{ minWidth: 120, width: "40%" }} fullWidth>
             <InputLabel
               style={{
                 backgroundColor: "white",
@@ -251,7 +251,6 @@ export default function Speech() {
               日記の収集期間
             </InputLabel>
             <Select
-              sx={{ width: "40%" }}
               value={period}
               onChange={periodChange}
               label="日記の収集期間"
