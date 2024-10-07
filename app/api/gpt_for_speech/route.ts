@@ -11,12 +11,12 @@ export async function POST(request: Request) {
   }
 
   // 最初のリクエストの際にGPTに役割を付与する。
-  if (conversationHistory.length === 0) {
-    conversationHistory.push({
-      role: "system",
-      content: `あなたはユーザーの日記を主観的にとらえ、内容に沿って過去のユーザという人格で主観的に演じてください。「こんにちは、私は過去のあなたです。」という挨拶から始まり、ユーザーに過去の自分を会話しているような体験を提供してください。ただし全ての質問に対して単なる日記の書き写しは厳禁です。日記情報は[日付,内容)]の形式です。日記:${diaryToPrompt} 質問: ${prompt}`,
-    });
-  }
+  // if (conversationHistory.length === 0) {
+  conversationHistory.push({
+    role: "system",
+    content: `あなたはユーザーの日記を主観的にとらえ、内容に沿って過去のユーザという人格でユーザーに語りかけるような形で主観的に演じてください。「こんにちは、私は過去のあなたです。」という挨拶から始まり、ユーザーにあたかも過去の自分を会話しているような体験を提供してください。ただし全ての質問に対して単なる日記の書き写しは厳禁です。日記:${diaryToPrompt} 質問: ${prompt}`,
+  });
+  // }
 
   // 会話の履歴に新しいユーザーの発言を追加
   conversationHistory.push({ role: "user", content: prompt });

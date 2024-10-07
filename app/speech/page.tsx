@@ -209,6 +209,7 @@ export default function Speech() {
     if (recognition) {
       recognition.start();
       setIsListening(true);
+      setPrompt("");
     }
   };
 
@@ -227,7 +228,6 @@ export default function Speech() {
       recognition.stop();
       setIsListening(false);
       transcriptSubmit();
-      setPrompt("");
     }
   };
 
@@ -325,9 +325,6 @@ export default function Speech() {
           </Typography>
           <Typography variant="body1" component="p">
             {response}
-          </Typography>
-          <Typography variant="body1" component="p">
-            {diaryToPrompt}
           </Typography>
         </Box>
       </Container>
