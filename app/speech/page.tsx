@@ -238,16 +238,16 @@ export default function Speech() {
 
   return (
     <Box>
-      <Box
-        sx={{ position: "absolute", m: 3 }}
-        onClick={() => handleNavigation("/aichat")}
-      >
-        <PhoneDisabled sx={{ fontSize: 25 }} />
-      </Box>
       <Box sx={{ m: 2 }}>
         <TopBar />
       </Box>
       <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
+        <Box
+          sx={{ position: "absolute", m: 3 }}
+          onClick={() => handleNavigation("/aichat")}
+        >
+          <PhoneDisabled sx={{ fontSize: 25 }} />
+        </Box>
         <Typography variant="h3" component="h1" gutterBottom>
           音声対話
         </Typography>
