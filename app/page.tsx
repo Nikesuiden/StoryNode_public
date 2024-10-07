@@ -51,7 +51,7 @@ const fetchDiaryPosts = useCallback(async () => {
 
 useEffect(() => {
   fetchDiaryPosts();
-}, [fetchDiaryPosts]);  // fetchDiaryPostsを依存配列に追加
+}, []);  // fetchDiaryPostsを依存配列に追加
 
 
   return (
