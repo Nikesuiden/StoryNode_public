@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import supabase from "@/lib/supabaseClient";
+import { PhoneInTalk } from "@mui/icons-material";
 
 interface DiaryPost {
   id: number;
@@ -340,6 +341,7 @@ const AiChatForm: React.FC = () => {
             maxLength: d_maxLength,
           }}
         ></TextField>
+        <PhoneInTalk sx={{fontSize: 60}}/>
         <Button
           variant="contained"
           sx={{
