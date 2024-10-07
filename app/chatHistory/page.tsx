@@ -6,7 +6,7 @@ import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Button, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { History } from "@mui/icons-material";
 import supabase from "@/lib/supabaseClient";
 
@@ -23,35 +23,36 @@ interface ChatHistoryItem {
 export default function ChatHistory() {
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
   // 初回レンダリング時にチャット履歴を取得
-  useEffect(() => {
-    const fetchChatHistory = async () => {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        if (!session?.access_token) {
-          return;
-        }
+  const fetchChatHistory = useCallback(async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-        const res = await fetch("/api/chatHistory", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch chat history");
-
-        const data = await res.json();
-        setChatHistory(data);
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
+      if (!session?.access_token) {
+        return;
       }
-    };
 
+      const res = await fetch("/api/chatHistory", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch chat history");
+
+      const data = await res.json();
+      setChatHistory(data);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+    }
+  }, [supabase]);  // supabaseに依存するため、依存配列に追加
+
+  useEffect(() => {
     fetchChatHistory();
-  }, []);
+  }, [fetchChatHistory]);  // fetchChatHistoryを依存配列に追加
 
   const router = useRouter();
   const handleNavigation = (path: string) => {

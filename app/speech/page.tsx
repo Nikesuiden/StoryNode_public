@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Container,
   Box,
@@ -35,7 +35,7 @@ export default function Speech() {
   const [period, setPeriod] = useState<number>(-1);
 
   // APIから日記の一覧を取得する関数
-  const fetchDiaryPosts = async () => {
+  const fetchDiaryPosts = useCallback(async () => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -69,7 +69,7 @@ export default function Speech() {
     } catch (error) {
       console.error("Error fetching diary posts:", error);
     }
-  };
+  }, [period]);
 
   // 日記データをフォーマットする関数
   function formatDiaryPosts(diaryPosts: DiaryPost[]): string {
@@ -231,7 +231,6 @@ export default function Speech() {
 
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
-        <></>
       <Typography variant="h3" component="h1" gutterBottom>
         音声対話
       </Typography>
