@@ -341,7 +341,7 @@ const AiChatForm: React.FC = () => {
             maxLength: d_maxLength,
           }}
         ></TextField>
-        <PhoneInTalk sx={{fontSize: 60}}/>
+
         <Button
           variant="contained"
           sx={{
