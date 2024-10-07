@@ -5,11 +5,42 @@ import { Container, Box, Typography, Button } from "@mui/material";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const [transcript, setTranscript] = useState<string>("");
+  const [prompt, setPrompt] = useState<string>("");
   const [isListening, setIsListening] = useState<boolean>(false);
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(
     null
   );
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [response, setResponse] = useState<string>("");
+  const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
+
+  // gpt呼び出し 手動で入力
+  const transcriptSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/gpt_for_speech", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+        }),
+      });
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || "送信に失敗しました。");
+      }
+
+      const { completion } = await res.json();
+      setResponse(completion);
+    } catch (error: any) {
+      alert(error.message || "レスポンス取得に失敗しました。");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -28,7 +59,7 @@ export default function Home() {
           for (let i = event.resultIndex; i < event.results.length; i++) {
             const transcriptPart = event.results[i][0].transcript;
             if (event.results[i].isFinal) {
-              setTranscript((prev) => prev + transcriptPart);
+              setPrompt((prev) => prev + transcriptPart);
             } else {
               interimTranscript += transcriptPart;
             }
@@ -40,6 +71,7 @@ export default function Home() {
     }
   }, []);
 
+  // 収録開始時のアクション
   const handleStartListening = () => {
     if (recognition) {
       recognition.start();
@@ -47,18 +79,20 @@ export default function Home() {
     }
   };
 
+  // 収録終了時のアクション
   const handleStopListening = () => {
     if (recognition) {
       recognition.stop();
       setIsListening(false);
-      setTranscript("")
+      transcriptSubmit();
+      setPrompt("");
     }
   };
 
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
       <Typography variant="h3" component="h1" gutterBottom>
-        リアルタイム音声文字起こし
+        音声対話
       </Typography>
 
       <Box sx={{ mt: 3 }}>
@@ -95,10 +129,17 @@ export default function Home() {
         sx={{ mt: 4 }}
       >
         <Typography variant="h5" component="h2" gutterBottom>
-          文字起こし結果:
+          〜 文字起こし結果 〜
         </Typography>
         <Typography variant="body1" component="p">
-          {transcript}
+          {prompt}
+        </Typography>
+        <br />
+        <Typography variant="h5" component="h2" gutterBottom>
+          〜 GPTの返答 〜
+        </Typography>
+        <Typography variant="body1" component="p">
+          {response}
         </Typography>
       </Box>
     </Container>

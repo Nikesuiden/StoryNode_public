@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 let conversationHistory: Array<{ role: string; content: string }> = [];
 
 export async function POST(request: Request) {
-  const { prompt, diaryToPrompt } = await request.json();
+  const { prompt } = await request.json();
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   if (conversationHistory.length === 0) {
     conversationHistory.push({
       role: "system",
-      content: `あなたはユーザーの日記を主観的にとらえ、内容に沿って過去のユーザを主観的に演じてください。「私は過去のあなたです。」という挨拶から始まり、ユーザーに過去の自分を会話しているような体験を提供してください。ただし全ての質問に対して単なる日記の書き写しは厳禁です。日記情報は[日付,内容)]の形式です。日記: ${diaryToPrompt} 質問: ${prompt}`,
+      content: `あなたはユーザーの日記を主観的にとらえ、内容に沿って過去のユーザという人格で主観的に演じてください。「私は過去のあなたです。」という挨拶から始まり、ユーザーに過去の自分を会話しているような体験を提供してください。ただし全ての質問に対して単なる日記の書き写しは厳禁です。日記情報は[日付,内容)]の形式です。日記: 質問: ${prompt}`,
     });
   }
 
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-4",
+        model: "gpt-4o-mini",
         messages: conversationHistory, // これまでの会話履歴を含める
       }),
     });
