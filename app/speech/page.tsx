@@ -230,7 +230,9 @@ export default function Speech() {
 
   return (
     <Box>
-      <TopBar />
+      <Box sx={{ m: 2 }}>
+        <TopBar />
+      </Box>
       <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
         <Typography variant="h3" component="h1" gutterBottom>
           音声対話
