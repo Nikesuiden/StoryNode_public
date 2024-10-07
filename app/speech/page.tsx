@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import supabase from "@/lib/supabaseClient";
+import TopBar from "@/components/layouts/topBar/topBar";
 
 interface DiaryPost {
   id: number;
@@ -25,9 +26,7 @@ interface DiaryPost {
 export default function Speech() {
   const [prompt, setPrompt] = useState<string>("");
   const [isListening, setIsListening] = useState<boolean>(false);
-  const [recognition, setRecognition] = useState<any>(
-    null
-  );
+  const [recognition, setRecognition] = useState<any>(null);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<string>("");
@@ -230,10 +229,12 @@ export default function Speech() {
   }, [period]);
 
   return (
-    <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
-      <Typography variant="h3" component="h1" gutterBottom>
-        音声対話
-      </Typography>
+    <Box>
+      <TopBar />
+      <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
+        <Typography variant="h3" component="h1" gutterBottom>
+          音声対話
+        </Typography>
 
         <Box component="form" sx={{ "& > *": { width: "100%" } }} noValidate>
           <FormControl sx={{ minWidth: 120 }} fullWidth>
@@ -264,55 +265,56 @@ export default function Speech() {
           </FormControl>
         </Box>
 
-      <Box sx={{ mt: 3 }}>
-        {!isListening ? (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleStartListening}
-            component={motion.div}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            マイクを開始
-          </Button>
-        ) : (
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleStopListening}
-            component={motion.div}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            マイクを停止
-          </Button>
-        )}
-      </Box>
+        <Box sx={{ mt: 3 }}>
+          {!isListening ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleStartListening}
+              component={motion.div}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              マイクを開始
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleStopListening}
+              component={motion.div}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              マイクを停止
+            </Button>
+          )}
+        </Box>
 
-      <Box
-        component={motion.div}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        sx={{ mt: 4 }}
-      >
-        <Typography variant="h5" component="h2" gutterBottom>
-          〜 文字起こし結果 〜
-        </Typography>
-        <Typography variant="body1" component="p">
-          {prompt}
-        </Typography>
-        <br />
-        <Typography variant="h5" component="h2" gutterBottom>
-          〜 GPTの返答 〜
-        </Typography>
-        <Typography variant="body1" component="p">
-          {response}
-        </Typography>
-        <Typography>{period}</Typography>
-        <Typography>{diaryToPrompt}</Typography>
-      </Box>
-    </Container>
+        <Box
+          component={motion.div}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          sx={{ mt: 4 }}
+        >
+          <Typography variant="h5" component="h2" gutterBottom>
+            〜 文字起こし結果 〜
+          </Typography>
+          <Typography variant="body1" component="p">
+            {prompt}
+          </Typography>
+          <br />
+          <Typography variant="h5" component="h2" gutterBottom>
+            〜 GPTの返答 〜
+          </Typography>
+          <Typography variant="body1" component="p">
+            {response}
+          </Typography>
+          <Typography>{period}</Typography>
+          <Typography>{diaryToPrompt}</Typography>
+        </Box>
+      </Container>
+    </Box>
   );
 }
