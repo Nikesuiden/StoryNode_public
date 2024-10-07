@@ -243,7 +243,7 @@ export default function Speech() {
       </Box>
       <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
         <Box
-          sx={{ position: "absolute", m: 3 }}
+          sx={{ position: "absolute", m: 3 , cursor : "pointer"}}
           onClick={() => handleNavigation("/aichat")}
         >
           <PhoneDisabled sx={{ fontSize: 25 }} />
@@ -325,6 +325,9 @@ export default function Speech() {
           </Typography>
           <Typography variant="body1" component="p">
             {response}
+          </Typography>
+          <Typography variant="body1" component="p">
+            {diaryToPrompt}
           </Typography>
         </Box>
       </Container>

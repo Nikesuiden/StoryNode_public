@@ -50,7 +50,7 @@ export default function Aichat() {
           <TopBar />
           <Box sx={{display: "flex", justifyContent: "space-between"}}>
             <Typography
-              style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}
+              style={{ flexGrow: 1, fontSize: 25, fontWeight: "550" }}
             >
               AI Chat
             </Typography>
