@@ -25,7 +25,7 @@ interface DiaryPost {
 export default function Speech() {
   const [prompt, setPrompt] = useState<string>("");
   const [isListening, setIsListening] = useState<boolean>(false);
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(
+  const [recognition, setRecognition] = useState<any>(
     null
   );
 
