@@ -15,6 +15,8 @@ import {
 import { motion } from "framer-motion";
 import supabase from "@/lib/supabaseClient";
 import TopBar from "@/components/layouts/topBar/topBar";
+import { PhoneDisabled } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 interface DiaryPost {
   id: number;
@@ -32,6 +34,11 @@ export default function Speech() {
   const [response, setResponse] = useState<string>("");
   const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
   const [period, setPeriod] = useState<number>(-1);
+
+  const router = useRouter();
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = useCallback(async () => {
@@ -231,6 +238,12 @@ export default function Speech() {
 
   return (
     <Box>
+      <Box
+        sx={{ position: "absolute", m: 3 }}
+        onClick={() => handleNavigation("/aichat")}
+      >
+        <PhoneDisabled sx={{ fontSize: 25 }} />
+      </Box>
       <Box sx={{ m: 2 }}>
         <TopBar />
       </Box>
