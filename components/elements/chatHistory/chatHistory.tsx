@@ -10,8 +10,10 @@ export default function ChatHistory() {
     router.push(path);
   };
   return (
-    <Box sx={{display: "flex"}}>
-      <PhoneInTalk sx={{fontSize: 50, cursor: 'pointer'}}/>
+    <Box sx={{ display: "flex" }}>
+      <Box onClick={() => handleNavigation("/speech")}>
+        <PhoneInTalk sx={{ fontSize: 50, cursor: "pointer" }} />
+      </Box>
       <Button
         variant="contained"
         color="primary"
