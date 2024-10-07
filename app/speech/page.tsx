@@ -137,6 +137,7 @@ export default function Speech() {
         },
         body: JSON.stringify({
           prompt,
+          diaryToPrompt
         }),
       });
       if (!res.ok) {
@@ -313,8 +314,6 @@ export default function Speech() {
           <Typography variant="body1" component="p">
             {response}
           </Typography>
-          <Typography>{period}</Typography>
-          <Typography>{diaryToPrompt}</Typography>
         </Box>
       </Container>
     </Box>
