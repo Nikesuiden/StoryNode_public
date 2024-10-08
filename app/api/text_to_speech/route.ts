@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     voice: {
       languageCode: "ja-JP",
       name: "ja-JP-Standard-A",
-      ssmlGender: "MALE",
+      ssmlGender: "FEMALE",
     },
     audioConfig: {
       audioEncoding: "MP3",
