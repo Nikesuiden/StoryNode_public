@@ -87,7 +87,7 @@ export default function Speech() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ response }),
+      body: JSON.stringify({ text: response }),
     });
     const data = await res.json();
 
