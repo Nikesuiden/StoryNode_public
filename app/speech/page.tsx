@@ -97,7 +97,7 @@ export default function Speech() {
       const audio = new Audio(audioSrc);
       audio.play(); // 自動再生
     } else {
-      alert("音声の再生に失敗しました。");
+      // alert("音声の再生に失敗しました。");
       return;
     }
   };
