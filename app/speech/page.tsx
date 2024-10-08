@@ -253,7 +253,6 @@ export default function Speech() {
       recognition.stop();
       setIsListening(false);
       transcriptSubmit();
-      handleTextToSpeech();
     }
   };
 
@@ -261,6 +260,10 @@ export default function Speech() {
   useEffect(() => {
     fetchDiaryPosts();
   }, [period]);
+
+  useEffect(() => {
+    handleTextToSpeech()
+  }, [response])
 
   return (
     <Box>
