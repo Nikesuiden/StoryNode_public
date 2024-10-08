@@ -31,6 +31,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: conversationHistory, // これまでの会話履歴を含める
+        max_token: 300
       }),
     });
 
