@@ -17,6 +17,7 @@ import supabase from "@/lib/supabaseClient";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { PhoneDisabled } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import { text } from "stream/consumers";
 
 interface DiaryPost {
   id: number;
@@ -34,6 +35,8 @@ export default function Speech() {
   const [response, setResponse] = useState<string>("");
   const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
   const [period, setPeriod] = useState<number>(-1);
+
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
@@ -76,6 +79,28 @@ export default function Speech() {
       console.error("Error fetching diary posts:", error);
     }
   }, [period]);
+
+  // TTS呼び出し関数
+  const handleTextToSpeech = async () => {
+    const res = await fetch("/api/text_to_speech", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ response }),
+    });
+    const data = await res.json();
+
+    if (data.audioContent) {
+      const audioSrc = `data:audio/mp3;base64,${data.audioContent}`;
+      setAudioUrl(audioSrc); // Base64エンコードされたMP3データをURLとして設定
+      const audio = new Audio(audioSrc);
+      audio.play(); // 自動再生
+    } else {
+      alert("音声の再生に失敗しました。");
+      return;
+    }
+  };
 
   // 日記データをフォーマットする関数
   function formatDiaryPosts(diaryPosts: DiaryPost[]): string {
@@ -228,6 +253,7 @@ export default function Speech() {
       recognition.stop();
       setIsListening(false);
       transcriptSubmit();
+      handleTextToSpeech();
     }
   };
 
@@ -243,7 +269,7 @@ export default function Speech() {
       </Box>
       <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
         <Box
-          sx={{ position: "absolute", m: 3 , cursor : "pointer"}}
+          sx={{ position: "absolute", m: 3, cursor: "pointer" }}
           onClick={() => handleNavigation("/aichat")}
         >
           <PhoneDisabled sx={{ fontSize: 25 }} />
@@ -326,6 +352,12 @@ export default function Speech() {
           <Typography variant="body1" component="p">
             {response}
           </Typography>
+          {audioUrl && (
+            <audio controls autoPlay>
+              <source src={audioUrl} type="audio/mp3" />
+              Your browser does not support the audio element.
+            </audio>
+          )}
         </Box>
       </Container>
     </Box>
