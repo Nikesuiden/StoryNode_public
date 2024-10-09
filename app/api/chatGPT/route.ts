@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
-        // max_tokens: 100,
+        max_tokens: 400,
         stream: true, // ストリームを有効にする
       }),
     });
