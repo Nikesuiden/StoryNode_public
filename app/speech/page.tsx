@@ -17,7 +17,7 @@ import supabase from "@/lib/supabaseClient";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { PhoneDisabled } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import { text } from "stream/consumers";
+
 
 interface DiaryPost {
   id: number;
@@ -37,6 +37,7 @@ export default function Speech() {
   const [period, setPeriod] = useState<number>(-1);
 
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
@@ -255,6 +256,17 @@ export default function Speech() {
       transcriptSubmit();
     }
   };
+
+  /// openai tts
+
+
+
+
+
+
+
+
+  ///
 
   // 期間が変更されたら日記データを取得します。
   useEffect(() => {
