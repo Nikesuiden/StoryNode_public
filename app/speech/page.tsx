@@ -257,17 +257,6 @@ export default function Speech() {
     }
   };
 
-  /// openai tts
-
-
-
-
-
-
-
-
-  ///
-
   // 期間が変更されたら日記データを取得します。
   useEffect(() => {
     fetchDiaryPosts();

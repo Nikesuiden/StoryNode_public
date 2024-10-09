@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   // if (conversationHistory.length === 0) {
   conversationHistory.push({
     role: "system",
-    content: `あなたはユーザーの日記を主観的にとらえ、内容に沿って過去のユーザという人格でユーザーに語りかけるような形で自分事のように。「こんにちは、私は過去のあなたです。」という挨拶から始まり、ユーザーにあたかも過去の自分を会話しているような体験を提供してください。ただし全ての質問に対して単なる日記の書き写しは厳禁です。回答は400文字以内とします。日記:${diaryToPrompt} 質問: ${prompt}`,
+    content: `あなたはユーザーの日記を主観的にとらえ、内容に沿って過去のユーザという人格でユーザーに語りかけるような形で自分事のように。「こんにちは、私は過去のあなたです。」という挨拶から始まり、ユーザーにあたかも過去の自分を会話しているような体験を提供してください。ただし全ての質問に対して単なる日記の書き写しは厳禁です。回答は100文字以内とします。日記:${diaryToPrompt} 質問: ${prompt}`,
   });
   // }
 
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: conversationHistory, // これまでの会話履歴を含める
-        max_tokens: 300
+        max_tokens: 100
       }),
     });
 
