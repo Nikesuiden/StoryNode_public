@@ -195,6 +195,10 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
     fetchDiaryPosts();
   }, []);
 
+  useEffect(() => {
+    setDiaryPosts(initialData.data || []);
+  }, [initialData]);
+
   return (
     <Box sx={{ mt: 1.5 }}>
       <FormControl sx={{ minWidth: 120 }} fullWidth>
