@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Container,
   Box,
@@ -36,10 +36,7 @@ export default function Speech() {
   const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
   const [period, setPeriod] = useState<number>(-1);
 
-  // const [audioUrl, setAudioUrl] = useState<string | null>(null);
-
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
@@ -193,36 +190,6 @@ export default function Speech() {
     setPeriod(Number(event.target.value as string));
   };
 
-  /// openai_tts のAPI
-  const handleTTSSubmit = async () => {
-    if (!text) return;
-
-    const res = await fetch("/api/openai_tts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text: response }),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      setAudioUrl(data.audioUrl);
-    } else {
-      console.error("音声生成に失敗しました");
-    }
-  };
-
-  // audioUrlが変更されたら自動再生
-  useEffect(() => {
-    if (audioUrl && audioRef.current) {
-      audioRef.current.play().catch((error) => {
-        console.error("自動再生エラー:", error);
-      });
-    }
-  }, [audioUrl]);
-  ////////////////////////////////////////
-
   // 期間が変更されたら日記データを取得します。
   useEffect(() => {
     fetchDiaryPosts();
@@ -285,8 +252,7 @@ export default function Speech() {
     if (recognition) {
       recognition.stop();
       setIsListening(false);
-      // transcriptSubmit();
-      handleTTSSubmit();
+      transcriptSubmit();
     }
   };
 
@@ -296,8 +262,8 @@ export default function Speech() {
   }, [period]);
 
   useEffect(() => {
-    handleTextToSpeech();
-  }, [response]);
+    handleTextToSpeech()
+  }, [response])
 
   return (
     <Box>
@@ -389,7 +355,12 @@ export default function Speech() {
           <Typography variant="body1" component="p">
             {response}
           </Typography>
-          {audioUrl && <audio ref={audioRef} src={audioUrl} controls />}
+          {audioUrl && (
+            <audio controls autoPlay>
+              <source src={audioUrl} type="audio/mp3" />
+              Your browser does not support the audio element.
+            </audio>
+          )}
         </Box>
       </Container>
     </Box>
