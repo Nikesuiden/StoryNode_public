@@ -327,7 +327,7 @@ const AiChatForm: React.FC = () => {
             marginTop: 2,
           }}
         >
-          入力文字制限: {totalPrompt === "" ? "0" : prompt?.length} / {d_maxLength}
+          入力文字制限: {totalPrompt === "" ? "0" : totalPrompt?.length} / {d_maxLength}
           文字
         </Typography>
         <TextField
