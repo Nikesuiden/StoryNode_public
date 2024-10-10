@@ -41,6 +41,8 @@ const AiChatForm: React.FC = () => {
 
   const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
 
+  const [totalPrompt, setTotalPrompt] = useState<string>("");
+
   // 日記データをフォーマットする関数
   function formatDiaryPosts(diaryPosts: DiaryPost[]): string {
     const entriesByYear: {
@@ -171,7 +173,7 @@ const AiChatForm: React.FC = () => {
 
             if (content) {
               // チャンクごとにレスポンスを追加
-              setResponse((prev) => prev + content);
+              setResponse((prev) => prev + content);;
             }
           } catch (error) {
             // JSONが未完了の場合は、次のチャンクで処理を続ける
@@ -217,6 +219,7 @@ const AiChatForm: React.FC = () => {
         const data: DiaryPost[] = await response.json();
         const formattedDiary = formatDiaryPosts(data);
         setDiaryToPrompt(formattedDiary);
+        setTotalPrompt(prompt + diaryToPrompt);
       } else {
         console.error("Failed to fetch diary posts");
       }
@@ -319,12 +322,12 @@ const AiChatForm: React.FC = () => {
         <Typography
           sx={{
             fontSize: 15,
-            color: prompt?.length === d_maxLength ? "red" : "inherit",
+            color: totalPrompt?.length === d_maxLength ? "red" : "inherit",
             marginBottom: 1,
             marginTop: 2,
           }}
         >
-          入力文字制限: {prompt === "" ? "0" : prompt?.length} / {d_maxLength}
+          入力文字制限: {totalPrompt === "" ? "0" : prompt?.length} / {d_maxLength}
           文字
         </Typography>
         <TextField
