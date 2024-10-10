@@ -276,7 +276,8 @@ const AiChatForm: React.FC = () => {
   // 文字数カウント
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
-    if (inputValue.length <= d_maxLength) {
+  
+    if ((inputValue.length + diaryToPrompt.length) <= d_maxLength) {
       setPrompt(inputValue);
     }
   };
