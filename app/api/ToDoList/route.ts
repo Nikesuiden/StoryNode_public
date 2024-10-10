@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
+
 // GETリクエスト用ハンドラ
 export async function GET(req: NextRequest) {
   try {
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
     const todos = await prisma.toDo.findMany({
       where: { userId: user.id },
       orderBy: {
-        id: "desc",
+        createdAt: "desc",
       },
       // include: {
       //   chat: true,

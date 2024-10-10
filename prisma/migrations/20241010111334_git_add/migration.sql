@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ToDo" ALTER COLUMN "chatId" DROP NOT NULL;
