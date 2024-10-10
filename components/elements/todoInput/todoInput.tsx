@@ -39,8 +39,6 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
       console.log("認証状態を確認");
     }
 
-    if (!todoInput.trim()) return;
-
     const response = await fetch("/api/ToDoList", {
       method: "POST",
       headers: {
@@ -49,14 +47,16 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
       },
       body: JSON.stringify({ todo: todoInput }),
     });
+    
     if (response.ok) {
       setTodoInput("");
       await onAction();
       alert("保存に成功しました。");
     } else {
+      const errorData = await response.json();
+      console.error("エラー詳細:", errorData);
       alert("エラーが発生しました。もう一度お試しください。");
     }
-  };
   return (
     <Box>
       <Box>
