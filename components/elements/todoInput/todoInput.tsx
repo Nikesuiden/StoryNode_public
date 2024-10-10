@@ -1,5 +1,6 @@
 "use client";
 
+import supabase from "@/lib/supabaseClient";
 import { flexbox } from "@chakra-ui/react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -41,25 +42,32 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
   }, []);
 
   // 新しいToDoを追加（POST）
-  const addTodo = () => {
+  const addTodo = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.access_token) {
+      return;
+    }
+
     if (!todoInput.trim()) return;
 
-    fetch("/api/ToDoList", {
+    const response = await fetch("/api/ToDoList", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
       body: JSON.stringify({ todo: todoInput }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setTodos([data, ...todos]);
-        setTodoInput("");
-        onAction();
-      })
-      .catch((error) =>
-        console.error("ToDoの追加中にエラーが発生しました:", error)
-      );
+    });
+    if (response.ok) {
+      setTodoInput("");
+      await onAction();
+    } else {
+      alert("エラーが発生しました。もう一度お試しください。");
+    }
   };
-
   return (
     <Box>
       <Box>

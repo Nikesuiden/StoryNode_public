@@ -1,6 +1,5 @@
 "use client";
 
-import ToDoInput from "@/components/elements/todoInput/todoInput";
 import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Typography } from "@mui/material";
@@ -8,6 +7,7 @@ import SideBar from "@/components/layouts/sideBar/sideBar";
 import React, { useEffect, useState } from "react";
 import ToDoList from "@/components/elements/todoList/todoList";
 import supabase from "@/lib/supabaseClient";
+import ToDoInput from "@/components/elements/todoInput/todoInput";
 
 interface ToDo {
   id: number;
@@ -44,7 +44,7 @@ const ToDo: React.FC = () => {
       setToDoData(data); // 取得したデータをステートに保存
     } catch (error) {
       console.error("ToDoの取得中にエラーが発生しました:", error);
-    } 
+    }
   };
 
   // コンポーネントのマウント時にToDoリストを取得
