@@ -17,6 +17,7 @@ import supabase from "@/lib/supabaseClient";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { PhoneDisabled } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import RecommendOS from "@/components/elements/recommendOS/recommendOS";
 
 interface DiaryPost {
   id: number;
@@ -271,7 +272,11 @@ export default function Speech() {
       <Box sx={{ m: 2 }}>
         <TopBar />
       </Box>
+
       <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
+        <Box sx={{position : "absolute", top : 0, right: 0}}>
+          {/* <RecommendOS /> */}
+        </Box>
         <Box
           sx={{ position: "absolute", m: 3, cursor: "pointer" }}
           onClick={() => handleNavigation("/aichat")}

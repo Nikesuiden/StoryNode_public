@@ -13,9 +13,9 @@ export async function GET(req: NextRequest) {
 
     const todos = await prisma.toDo.findMany({
       where: { userId: user.id },
-      orderBy: {
-        id: "desc",
-      },
+      // orderBy: {
+      //   id: "desc",
+      // },
       // include: {
       //   chat: true,
       // },
