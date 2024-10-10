@@ -356,6 +356,7 @@ export default function Speech() {
           <Typography variant="body1" component="p">
             {response}
           </Typography>
+          <br />
           {audioUrl && (
             <audio controls autoPlay>
               <source src={audioUrl} type="audio/mp3" />
