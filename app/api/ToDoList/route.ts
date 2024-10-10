@@ -1,7 +1,7 @@
 // app/api/ToDoList/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
-import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 
 // GETリクエスト用ハンドラ
 export async function GET(req: NextRequest) {
@@ -13,9 +13,9 @@ export async function GET(req: NextRequest) {
 
     const todos = await prisma.toDo.findMany({
       where: { userId: user.id },
-      // orderBy: {
-      //   id: "desc",
-      // },
+      orderBy: {
+        id: "desc",
+      },
       // include: {
       //   chat: true,
       // },

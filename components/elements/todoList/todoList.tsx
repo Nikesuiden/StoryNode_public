@@ -111,7 +111,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
 
   // initialData を使ってToDoデータの初期値をセット
   useEffect(() => {
-    if (initialData && Array.isArray(initialData)) {
+    if (initialData) {
       setTodos(initialData);
     } else {
       console.error("初期データが無効です:", initialData);
