@@ -37,6 +37,8 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
       return;
     }
 
+    console.log("認証は通っている")
+
     if (!todoInput.trim()) return;
 
     const response = await fetch("/api/ToDoList", {
