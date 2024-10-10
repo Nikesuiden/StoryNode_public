@@ -37,15 +37,14 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
         const response = await fetch("/api/ToDoList", {
           method: "GET",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${session.access_token}`, // 認証トークンを追加
           },
         });
 
-        const data = await response.json();
-        if (Array.isArray(data)) {
+        if (response.ok) {
+          const data = await response.json();
           setTodos(data); // 配列の場合にのみセット
-        } else {
-          console.error("予期しないデータ形式:", data);
         }
       } catch (error) {
         console.error("ToDoの取得中にエラーが発生しました:", error);
