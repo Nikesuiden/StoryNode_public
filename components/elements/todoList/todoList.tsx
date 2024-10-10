@@ -5,8 +5,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import React from "react";
 
-
- // supabaseClientをインポート
+// supabaseClientをインポート
 
 interface ToDo {
   id: number;
@@ -26,7 +25,9 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
   useEffect(() => {
     const fetchToDos = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
         if (!session?.access_token) {
           console.error("ユーザーがログインしていません。");
@@ -59,7 +60,9 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
     if (!editingText.trim()) return;
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
         console.error("ユーザーがログインしていません。");
@@ -87,7 +90,9 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
   // ToDoを削除（DELETE）
   const deleteTodo = async (id: number) => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
         console.error("ユーザーがログインしていません。");
@@ -112,7 +117,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
   // initialData を使ってToDoデータの初期値をセット
   useEffect(() => {
     if (initialData) {
-      setTodos(initialData);
+      setTodos(initialData || []);
     } else {
       console.error("初期データが無効です:", initialData);
     }
