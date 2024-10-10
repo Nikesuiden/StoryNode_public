@@ -30,7 +30,7 @@ const rainbowAnimation = keyframes`
 `;
 
 const AiChatForm: React.FC = () => {
-  const d_maxLength: number = 4000; // 入力上限定義
+  const d_maxLength: number = 7000; // 入力上限定義
 
   const [period, setPeriod] = useState<number>(-1);
 
@@ -173,7 +173,7 @@ const AiChatForm: React.FC = () => {
 
             if (content) {
               // チャンクごとにレスポンスを追加
-              setResponse((prev) => prev + content);;
+              setResponse((prev) => prev + content);
             }
           } catch (error) {
             // JSONが未完了の場合は、次のチャンクで処理を続ける
@@ -219,7 +219,6 @@ const AiChatForm: React.FC = () => {
         const data: DiaryPost[] = await response.json();
         const formattedDiary = formatDiaryPosts(data);
         setDiaryToPrompt(formattedDiary);
-        setTotalPrompt(prompt + diaryToPrompt);
       } else {
         console.error("Failed to fetch diary posts");
       }
@@ -276,8 +275,8 @@ const AiChatForm: React.FC = () => {
   // 文字数カウント
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
-  
-    if ((inputValue.length + diaryToPrompt.length) <= d_maxLength) {
+
+    if (inputValue.length + diaryToPrompt.length <= d_maxLength) {
       setPrompt(inputValue);
     }
   };
@@ -285,6 +284,15 @@ const AiChatForm: React.FC = () => {
   const periodChange = (event: SelectChangeEvent<number>) => {
     setPeriod(Number(event.target.value as string));
   };
+
+  // 都度 total 値が更新されるよう設計
+  const totalPromptChange = () => {
+    setTotalPrompt(prompt + diaryToPrompt);
+  };
+
+  useEffect(() => {
+    totalPromptChange();
+  }, [prompt, diaryToPrompt])
 
   // 期間が変更されたら日記データを取得します。
   useEffect(() => {
@@ -328,7 +336,8 @@ const AiChatForm: React.FC = () => {
             marginTop: 2,
           }}
         >
-          入力文字制限: {totalPrompt === "" ? "0" : totalPrompt?.length} / {d_maxLength}
+          入力文字制限: {totalPrompt === "" ? "0" : totalPrompt?.length} /{" "}
+          {d_maxLength}
           文字
         </Typography>
         <TextField
