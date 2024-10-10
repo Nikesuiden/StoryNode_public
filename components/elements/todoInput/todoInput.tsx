@@ -35,9 +35,9 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
 
     if (!session?.access_token) {
       return;
+    } else {
+      console.log("認証は通っている");
     }
-
-    console.log("認証は通っている")
 
     if (!todoInput.trim()) return;
 
@@ -52,7 +52,7 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
     if (response.ok) {
       setTodoInput("");
       await onAction();
-      alert("保存に成功しました。")
+      alert("保存に成功しました。");
     } else {
       alert("エラーが発生しました。もう一度お試しください。");
     }
