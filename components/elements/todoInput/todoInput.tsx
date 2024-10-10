@@ -47,7 +47,7 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
       },
       body: JSON.stringify({ todo: todoInput }),
     });
-    
+
     if (response.ok) {
       setTodoInput("");
       await onAction();
@@ -57,6 +57,7 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
       console.error("エラー詳細:", errorData);
       alert("エラーが発生しました。もう一度お試しください。");
     }
+  };
   return (
     <Box>
       <Box>
