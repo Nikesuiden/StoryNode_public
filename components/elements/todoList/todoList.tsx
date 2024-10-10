@@ -17,7 +17,7 @@ interface ToDoListProps {
 }
 
 const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
-  const [todos, setTodos] = useState<ToDo[]>([]);
+  const [todos, setTodos] = useState<ToDo[]>(initialData || []);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
 
