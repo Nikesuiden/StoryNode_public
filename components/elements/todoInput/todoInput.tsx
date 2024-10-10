@@ -36,7 +36,7 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
     if (!session?.access_token) {
       return;
     } else {
-      console.log("認証は通っている");
+      console.log("認証状態を確認");
     }
 
     if (!todoInput.trim()) return;
