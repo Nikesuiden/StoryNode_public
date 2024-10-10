@@ -27,20 +27,6 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
     }
   };
 
-  const [todos, setTodos] = useState<ToDo[]>([]);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingText, setEditingText] = useState("");
-
-  // ToDoリストを取得（GET）
-  useEffect(() => {
-    fetch("/api/ToDoList")
-      .then((res) => res.json())
-      .then((data) => setTodos(data))
-      .catch((error) =>
-        console.error("ToDoの取得中にエラーが発生しました:", error)
-      );
-  }, []);
-
   // 新しいToDoを追加（POST）
   const addTodo = async () => {
     const {
