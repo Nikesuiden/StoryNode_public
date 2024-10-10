@@ -18,7 +18,6 @@ import TopBar from "@/components/layouts/topBar/topBar";
 import { PhoneDisabled } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
-
 interface DiaryPost {
   id: number;
   content: string;
@@ -36,8 +35,9 @@ export default function Speech() {
   const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
   const [period, setPeriod] = useState<number>(-1);
 
+  const [isIphone, setIsIphone] = useState<boolean>(false);
+
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
@@ -263,8 +263,8 @@ export default function Speech() {
   }, [period]);
 
   useEffect(() => {
-    handleTextToSpeech()
-  }, [response])
+    handleTextToSpeech();
+  }, [response]);
 
   return (
     <Box>

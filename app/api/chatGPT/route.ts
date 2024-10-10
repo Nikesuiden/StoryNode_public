@@ -24,7 +24,6 @@ export async function POST(request: Request) {
     });
 
     const reader = response.body?.getReader();
-    const decoder = new TextDecoder();
     const stream = new ReadableStream({
       async pull(controller) {
         const { done, value } = await reader!.read();
