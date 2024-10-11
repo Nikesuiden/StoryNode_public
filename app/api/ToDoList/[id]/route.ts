@@ -1,25 +1,32 @@
 // app/api/ToDoList/[id]/route.ts
 
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { getUserFromRequest } from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { getUserFromRequest } from "@/lib/auth";
 
-// PUT request handler (Update ToDo)
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+// ToDoの更新（PUTリクエスト）
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const id = parseInt(params.id);
     if (isNaN(id)) {
-      return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
     const { todo } = await req.json();
-    if (!todo) {
-      return NextResponse.json({ error: 'No todo provided' }, { status: 400 });
+
+    if (!todo || typeof todo !== "string") {
+      return NextResponse.json(
+        { error: "Invalid todo content" },
+        { status: 400 }
+      );
     }
 
     const existingToDo = await prisma.toDo.findUnique({
@@ -27,7 +34,10 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     });
 
     if (!existingToDo || existingToDo.userId !== user.id) {
-      return NextResponse.json({ error: 'ToDo not found or unauthorized' }, { status: 404 });
+      return NextResponse.json(
+        { error: "ToDo not found or unauthorized" },
+        { status: 404 }
+      );
     }
 
     const updatedToDo = await prisma.toDo.update({
@@ -37,22 +47,40 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
     return NextResponse.json(updatedToDo, { status: 200 });
   } catch (error) {
-    console.error('Error updating ToDo:', error);
-    return NextResponse.json({ error: 'Error updating ToDo' }, { status: 500 });
+    if (error instanceof Error) {
+      console.error(
+        "ToDo更新中にエラーが発生しました:",
+        error.message,
+        error.stack
+      );
+      return NextResponse.json(
+        { error: "ToDoの更新中にエラーが発生しました", details: error.message },
+        { status: 500 }
+      );
+    } else {
+      console.error("予期しないエラーが発生しました:", error);
+      return NextResponse.json(
+        { error: "予期しないエラーが発生しました" },
+        { status: 500 }
+      );
+    }
   }
 }
 
-// DELETE request handler (Delete ToDo)
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+// ToDoの削除（DELETEリクエスト）
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const id = parseInt(params.id);
     if (isNaN(id)) {
-      return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
     const existingToDo = await prisma.toDo.findUnique({
@@ -60,16 +88,34 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     });
 
     if (!existingToDo || existingToDo.userId !== user.id) {
-      return NextResponse.json({ error: 'ToDo not found or unauthorized' }, { status: 404 });
+      return NextResponse.json(
+        { error: "ToDo not found or unauthorized" },
+        { status: 404 }
+      );
     }
 
     await prisma.toDo.delete({
       where: { id },
     });
 
-    return NextResponse.json({ message: 'ToDo deleted' }, { status: 200 });
+    return NextResponse.json({ message: "ToDo deleted" }, { status: 200 });
   } catch (error) {
-    console.error('Error deleting ToDo:', error);
-    return NextResponse.json({ error: 'Error deleting ToDo' }, { status: 500 });
+    if (error instanceof Error) {
+      console.error(
+        "ToDo削除中にエラーが発生しました:",
+        error.message,
+        error.stack
+      );
+      return NextResponse.json(
+        { error: "ToDoの削除中にエラーが発生しました", details: error.message },
+        { status: 500 }
+      );
+    } else {
+      console.error("予期しないエラーが発生しました:", error);
+      return NextResponse.json(
+        { error: "予期しないエラーが発生しました" },
+        { status: 500 }
+      );
+    }
   }
 }

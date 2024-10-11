@@ -1,20 +1,16 @@
+// components/elements/todoInput/todoInput.tsx
+
 "use client";
 
 import supabase from "@/lib/supabaseClient";
-import { flexbox } from "@chakra-ui/react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-interface ToDo {
-  id: number;
-  todo: string;
-}
-
-interface ToDoListProps {
+interface ToDoInputProps {
   onAction: () => void;
 }
 
-const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
+const ToDoInput: React.FC<ToDoInputProps> = ({ onAction }) => {
   const [todoInput, setTodoInput] = useState<string>("");
 
   const t_maxLength: number = 40; // ToDo入力制限を課す。
@@ -35,8 +31,6 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
 
     if (!session?.access_token) {
       return;
-    } else {
-      console.log("認証状態を確認");
     }
 
     const response = await fetch("/api/ToDoList", {
@@ -58,6 +52,7 @@ const ToDoInput: React.FC<ToDoListProps> = ({ onAction }) => {
       alert("エラーが発生しました。もう一度お試しください。");
     }
   };
+
   return (
     <Box>
       <Box>

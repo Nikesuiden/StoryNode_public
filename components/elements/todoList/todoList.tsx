@@ -1,4 +1,4 @@
-// ToDoList.tsx
+// components/elements/todoList/todoList.tsx
 
 "use client";
 
@@ -14,7 +14,7 @@ interface ToDo {
 
 interface ToDoListProps {
   initialData: ToDo[] | null;
-  onAction: () => void; // Add this prop to trigger data refresh in parent
+  onAction: () => void; // データ更新時に親コンポーネントの関数を呼び出す
 }
 
 const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
@@ -22,14 +22,14 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
 
-  // Update todos when initialData changes
+  // initialData が変更されたときに todos を更新
   useEffect(() => {
     if (initialData) {
       setTodos(initialData);
     }
   }, [initialData]);
 
-  // Update ToDo (PUT)
+  // ToDoを更新（PUT）
   const updateTodo = async (id: number) => {
     if (!editingText.trim()) return;
 
@@ -39,7 +39,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
       } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
-        console.error("User is not logged in.");
+        console.error("ユーザーがログインしていません。");
         return;
       }
 
@@ -55,16 +55,16 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
       if (response.ok) {
         setEditingId(null);
         setEditingText("");
-        onAction(); // Refresh data in parent
+        onAction(); // データを再取得
       } else {
-        console.error("Error updating ToDo");
+        console.error("ToDoの更新中にエラーが発生しました");
       }
     } catch (error) {
-      console.error("Error updating ToDo:", error);
+      console.error("ToDoの更新中にエラーが発生しました:", error);
     }
   };
 
-  // Delete ToDo (DELETE)
+  // ToDoを削除（DELETE）
   const deleteTodo = async (id: number) => {
     try {
       const {
@@ -72,7 +72,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
       } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
-        console.error("User is not logged in.");
+        console.error("ユーザーがログインしていません。");
         return;
       }
 
@@ -84,12 +84,12 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
       });
 
       if (response.ok) {
-        onAction(); // Refresh data in parent
+        onAction(); // データを再取得
       } else {
-        console.error("Error deleting ToDo");
+        console.error("ToDoの削除中にエラーが発生しました");
       }
     } catch (error) {
-      console.error("Error deleting ToDo:", error);
+      console.error("ToDoの削除中にエラーが発生しました:", error);
     }
   };
 
@@ -112,14 +112,14 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                   onClick={() => updateTodo(todo.id)}
                   style={{ marginLeft: 8 }}
                 >
-                  Save
+                  保存
                 </Button>
                 <Button
                   variant="text"
                   onClick={() => setEditingId(null)}
                   style={{ marginLeft: 8 }}
                 >
-                  Cancel
+                  キャンセル
                 </Button>
               </>
             ) : (
@@ -137,7 +137,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                       }}
                       style={{ marginLeft: 8 }}
                     >
-                      Edit
+                      編集
                     </Button>
                     <Button
                       variant="text"
@@ -145,7 +145,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                       onClick={() => deleteTodo(todo.id)}
                       style={{ marginLeft: 8 }}
                     >
-                      Delete
+                      削除
                     </Button>
                   </Box>
                 </Box>
@@ -154,7 +154,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
           </Box>
         ))
       ) : (
-        <Typography>No ToDos</Typography>
+        <Typography>ToDoがありません</Typography>
       )}
     </Box>
   );

@@ -1,4 +1,4 @@
-// todo/page.tsx
+// app/todo/page.tsx
 
 "use client";
 
@@ -16,7 +16,7 @@ interface ToDo {
   todo: string;
 }
 
-const ToDo: React.FC = () => {
+const ToDoPage: React.FC = () => {
   const [todoData, setToDoData] = useState<ToDo[] | null>(null);
 
   const fetchToDoList = async () => {
@@ -26,7 +26,7 @@ const ToDo: React.FC = () => {
       } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
-        throw new Error("User is not authenticated");
+        throw new Error("ユーザーが認証されていません");
       }
 
       const res = await fetch("/api/ToDoList", {
@@ -38,14 +38,13 @@ const ToDo: React.FC = () => {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error("情報の取得に失敗しました");
       }
 
       const data = await res.json();
       setToDoData(data);
-      console.log('データの取得に成功しました。')
     } catch (error) {
-      console.error("Error fetching ToDo:", error);
+      console.error("ToDoの取得中にエラーが発生しました:", error);
     }
   };
 
@@ -88,19 +87,21 @@ const ToDo: React.FC = () => {
           <SideBar />
         </Box>
 
-        {/* アプリ情報情報 */}
+        {/* アプリ情報 */}
         <Box sx={{ flex: 4 }}>
           <TopBar />
-          <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
+          <Typography
+            style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}
+          >
             ToDoList
           </Typography>
 
           <ToDoInput onAction={fetchToDoList} />
-          <ToDoList initialData={todoData} onAction={fetchToDoList}/>
+          <ToDoList initialData={todoData} onAction={fetchToDoList} />
         </Box>
       </Box>
     </Box>
   );
 };
 
-export default ToDo;
+export default ToDoPage;
