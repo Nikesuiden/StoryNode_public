@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
         createdAt: "desc",
       },
     });
+    
     return NextResponse.json(todos, { status: 200 });
   } catch (error) {
     console.error("ToDoリストの取得中にエラーが発生しました:", error);

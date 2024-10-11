@@ -55,8 +55,6 @@ model ToDo {
   @@index([userId])
 }
 
-
-
 model Transcription {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
