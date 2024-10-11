@@ -44,6 +44,7 @@ const ToDo: React.FC = () => {
 
       const data = await res.json();
       setToDoData(data);
+      console.log('データの取得に成功しました。')
     } catch (error) {
       console.error("Error fetching ToDo:", error);
     }
