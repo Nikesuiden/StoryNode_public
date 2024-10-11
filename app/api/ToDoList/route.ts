@@ -39,15 +39,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid todo content" }, { status: 400 });
     }
 
-    if (chatId && typeof chatId !== "number") {
-      return NextResponse.json({ error: "Invalid chatId" }, { status: 400 });
-    }
-
-    // 新しいToDoを作成。chatIdの代わりにchatを使用
+    // Prismaクエリ実行時に `chatId` が `null` の場合はフィールドを省略
     const newToDo = await prisma.toDo.create({
       data: {
         todo,
-        chat: chatId ? { connect: { id: chatId } } : undefined,  // chatIdが存在する場合に接続
+        chat: chatId ? { connect: { id: chatId } } : undefined,  // chatIdがnullなら省略
         user: {
           connect: { id: user.id },
         },
@@ -57,7 +53,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(newToDo, { status: 201 });
 
   } catch (error) {
-    // エラー処理
+    // エラーハンドリング
     if (error instanceof Error) {
       console.error("ToDo作成中にエラーが発生しました:", error.message, error.stack);
       return NextResponse.json(

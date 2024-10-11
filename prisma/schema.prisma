@@ -51,12 +51,13 @@ model ToDo {
   todo      String
   createdAt DateTime     @default(now())
   chat      ChatHistory? @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  chatId    Int?
+  chatId    Int?         // `chatId` を `Int?` に変更（nullableにする）
   user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 
   @@index([userId])
 }
+
 
 
 model Transcription {
