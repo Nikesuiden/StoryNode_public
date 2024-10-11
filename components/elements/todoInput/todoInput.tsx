@@ -45,7 +45,6 @@ const ToDoInput: React.FC<ToDoInputProps> = ({ onAction }) => {
     if (response.ok) {
       setTodoInput("");
       await onAction();
-      alert("保存に成功しました。");
     } else {
       const errorData = await response.json();
       console.error("エラー詳細:", errorData);

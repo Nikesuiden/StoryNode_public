@@ -115,7 +115,7 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
           >
             <MenuItem value={"none"}>--未設定--</MenuItem>
             <MenuItem value={"grad"}>嬉しい</MenuItem>
-            <MenuItem value={"Funny"}>楽しみ</MenuItem>
+            <MenuItem value={"Funny"}>楽しい</MenuItem>
             <MenuItem value={"expectations"}>期待</MenuItem>
             <MenuItem value={"happy"}>幸せ</MenuItem>
             <MenuItem value={"surprise"}>驚き</MenuItem>

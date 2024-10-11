@@ -124,7 +124,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
               </>
             ) : (
               <>
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Box sx={{ flex: 4 }}>
                     <Typography>{todo.todo}</Typography>
                   </Box>

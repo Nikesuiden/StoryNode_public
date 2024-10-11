@@ -43,6 +43,7 @@ const ToDoPage: React.FC = () => {
 
       const data = await res.json();
       setToDoData(data);
+      console.log('情報の取得に成功しました。')
     } catch (error) {
       console.error("ToDoの取得中にエラーが発生しました:", error);
     }
