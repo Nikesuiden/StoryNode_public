@@ -14,7 +14,6 @@ import ToDoInput from "@/components/elements/todoInput/todoInput";
 interface ToDo {
   id: number;
   todo: string;
-  chatId?: number | null;
 }
 
 const ToDo: React.FC = () => {
