@@ -24,25 +24,32 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// ToDoの作成（POSTリクエスト）
+// POSTリクエスト用ハンドラ
 export async function POST(req: NextRequest) {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json({ error: "認証されていません" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { todo, chatId } = await req.json();
+
     const newToDo = await prisma.toDo.create({
       data: {
         todo,
-        chatId: chatId || null, // chatIdが提供されていない場合はnullにする
-        userId: user.id,
+        chatId: chatId || null,
+        user: {
+          connect: { id: user.id },
+        },
       },
     });
+
     return NextResponse.json(newToDo, { status: 201 });
   } catch (error) {
-    console.error("ToDoの作成中にエラーが発生しました:", error);
-    return NextResponse.json({ error: "ToDoの作成中にエラーが発生しました" }, { status: 500 });
+    console.error("ToDo作成中にエラーが発生しました:", error);
+    return NextResponse.json(
+      { error: "ToDoの作成中にエラーが発生しました" },
+      { status: 500 }
+    );
   }
 }
