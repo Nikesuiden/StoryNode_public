@@ -1,3 +1,5 @@
+// todo/page.tsx
+
 "use client";
 
 import BottomBar from "@/components/layouts/bottomBar/bottomBar";
@@ -16,38 +18,37 @@ interface ToDo {
 }
 
 const ToDo: React.FC = () => {
-  const [todoData, setToDoData] = useState<ToDo[] | null>(null); // TODOデータを型定義
+  const [todoData, setToDoData] = useState<ToDo[] | null>(null);
 
   const fetchToDoList = async () => {
     try {
       const {
         data: { session },
-      } = await supabase.auth.getSession(); // Supabaseからセッションを取得
+      } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
-        throw new Error("ユーザーが認証されていません");
+        throw new Error("User is not authenticated");
       }
 
       const res = await fetch("/api/ToDoList", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`, // JWTトークンをヘッダーに追加
+          Authorization: `Bearer ${session.access_token}`,
         },
       });
 
       if (!res.ok) {
-        throw new Error("情報の取得に失敗しました");
+        throw new Error("Failed to fetch data");
       }
 
       const data = await res.json();
-      setToDoData(data); // 取得したデータをステートに保存
+      setToDoData(data);
     } catch (error) {
-      console.error("ToDoの取得中にエラーが発生しました:", error);
+      console.error("Error fetching ToDo:", error);
     }
   };
 
-  // コンポーネントのマウント時にToDoリストを取得
   useEffect(() => {
     fetchToDoList();
   }, []);
@@ -95,7 +96,7 @@ const ToDo: React.FC = () => {
           </Typography>
 
           <ToDoInput onAction={fetchToDoList} />
-          <ToDoList initialData={todoData} />
+          <ToDoList initialData={todoData} onAction={fetchToDoList}/>
         </Box>
       </Box>
     </Box>

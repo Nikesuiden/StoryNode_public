@@ -1,15 +1,14 @@
-// app/api/ToDoList/route.ts
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth";
 
-// GETリクエスト用ハンドラ
+// ToDoリストの取得（GETリクエスト）
 export async function GET(req: NextRequest) {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "認証されていません" }, { status: 401 });
     }
 
     const todos = await prisma.toDo.findMany({
@@ -17,40 +16,33 @@ export async function GET(req: NextRequest) {
       orderBy: {
         createdAt: "desc",
       },
-      // include: {
-      //   chat: true,
-      // },
     });
     return NextResponse.json(todos, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: "ToDoの取得中にエラーが発生しました" },
-      { status: 500 }
-    );
+    console.error("ToDoリストの取得中にエラーが発生しました:", error);
+    return NextResponse.json({ error: "ToDoリストの取得中にエラーが発生しました" }, { status: 500 });
   }
 }
 
-// POSTリクエスト用ハンドラ
+// ToDoの作成（POSTリクエスト）
 export async function POST(req: NextRequest) {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "認証されていません" }, { status: 401 });
     }
 
     const { todo, chatId } = await req.json();
     const newToDo = await prisma.toDo.create({
       data: {
         todo,
-        chatId: chatId || null, // chatIdが提供されていない場合、nullを設定},
+        chatId: chatId || null, // chatIdが提供されていない場合はnullにする
         userId: user.id,
       },
     });
     return NextResponse.json(newToDo, { status: 201 });
   } catch (error) {
-    return NextResponse.json(
-      { error: "ToDoの作成中にエラーが発生しました" },
-      { status: 500 }
-    );
+    console.error("ToDoの作成中にエラーが発生しました:", error);
+    return NextResponse.json({ error: "ToDoの作成中にエラーが発生しました" }, { status: 500 });
   }
 }

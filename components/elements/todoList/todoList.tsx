@@ -1,11 +1,11 @@
+// ToDoList.tsx
+
 "use client";
 
 import supabase from "@/lib/supabaseClient";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import React from "react";
-
-// supabaseClientをインポート
 
 interface ToDo {
   id: number;
@@ -14,47 +14,22 @@ interface ToDo {
 
 interface ToDoListProps {
   initialData: ToDo[] | null;
+  onAction: () => void; // Add this prop to trigger data refresh in parent
 }
 
-const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
+const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
   const [todos, setTodos] = useState<ToDo[]>(initialData || []);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
 
-  // ログイン中のユーザーのToDoリストを取得（GET）
+  // Update todos when initialData changes
   useEffect(() => {
-    const fetchToDos = async () => {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+    if (initialData) {
+      setTodos(initialData);
+    }
+  }, [initialData]);
 
-        if (!session?.access_token) {
-          console.error("ユーザーがログインしていません。");
-          return;
-        }
-
-        const response = await fetch("/api/ToDoList", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`, // 認証トークンを追加
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setTodos(data); // 配列の場合にのみセット
-        }
-      } catch (error) {
-        console.error("ToDoの取得中にエラーが発生しました:", error);
-      }
-    };
-
-    fetchToDos();
-  }, []);
-
-  // ToDoを更新（PUT）
+  // Update ToDo (PUT)
   const updateTodo = async (id: number) => {
     if (!editingText.trim()) return;
 
@@ -64,7 +39,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
       } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
-        console.error("ユーザーがログインしていません。");
+        console.error("User is not logged in.");
         return;
       }
 
@@ -72,21 +47,24 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`, // 認証トークンを追加
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({ todo: editingText }),
       });
 
-      const data = await response.json();
-      setTodos(todos.map((todo) => (todo.id === id ? data : todo)));
-      setEditingId(null);
-      setEditingText("");
+      if (response.ok) {
+        setEditingId(null);
+        setEditingText("");
+        onAction(); // Refresh data in parent
+      } else {
+        console.error("Error updating ToDo");
+      }
     } catch (error) {
-      console.error("ToDoの更新中にエラーが発生しました:", error);
+      console.error("Error updating ToDo:", error);
     }
   };
 
-  // ToDoを削除（DELETE）
+  // Delete ToDo (DELETE)
   const deleteTodo = async (id: number) => {
     try {
       const {
@@ -94,33 +72,26 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
       } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
-        console.error("ユーザーがログインしていません。");
+        console.error("User is not logged in.");
         return;
       }
 
       const response = await fetch(`/api/ToDoList/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${session.access_token}`, // 認証トークンを追加
+          Authorization: `Bearer ${session.access_token}`,
         },
       });
 
       if (response.ok) {
-        setTodos(todos.filter((todo) => todo.id !== id));
+        onAction(); // Refresh data in parent
+      } else {
+        console.error("Error deleting ToDo");
       }
     } catch (error) {
-      console.error("ToDoの削除中にエラーが発生しました:", error);
+      console.error("Error deleting ToDo:", error);
     }
   };
-
-  // initialData を使ってToDoデータの初期値をセット
-  useEffect(() => {
-    if (initialData) {
-      setTodos(initialData || []);
-    } else {
-      console.error("初期データが無効です:", initialData);
-    }
-  }, [initialData]);
 
   return (
     <Box mt={4}>
@@ -141,14 +112,14 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
                   onClick={() => updateTodo(todo.id)}
                   style={{ marginLeft: 8 }}
                 >
-                  保存
+                  Save
                 </Button>
                 <Button
                   variant="text"
                   onClick={() => setEditingId(null)}
                   style={{ marginLeft: 8 }}
                 >
-                  キャンセル
+                  Cancel
                 </Button>
               </>
             ) : (
@@ -166,7 +137,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
                       }}
                       style={{ marginLeft: 8 }}
                     >
-                      編集
+                      Edit
                     </Button>
                     <Button
                       variant="text"
@@ -174,7 +145,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
                       onClick={() => deleteTodo(todo.id)}
                       style={{ marginLeft: 8 }}
                     >
-                      削除
+                      Delete
                     </Button>
                   </Box>
                 </Box>
@@ -183,7 +154,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData }) => {
           </Box>
         ))
       ) : (
-        <Typography>ToDoがありません</Typography>
+        <Typography>No ToDos</Typography>
       )}
     </Box>
   );

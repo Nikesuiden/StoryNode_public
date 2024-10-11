@@ -1,65 +1,75 @@
-// app/api/todo/[id]/route.ts
-import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+// app/api/ToDoList/[id]/route.ts
 
-const prisma = new PrismaClient();
+import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import { getUserFromRequest } from '@/lib/auth';
 
-// PUTリクエスト用のハンドラ (更新)
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const id = Number(params.id);
-  const { todo } = await req.json();
-
+// PUT request handler (Update ToDo)
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const user = await getUserFromRequest(req);
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const id = parseInt(params.id);
+    if (isNaN(id)) {
+      return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+    }
+
+    const { todo } = await req.json();
+    if (!todo) {
+      return NextResponse.json({ error: 'No todo provided' }, { status: 400 });
+    }
+
+    const existingToDo = await prisma.toDo.findUnique({
+      where: { id },
+    });
+
+    if (!existingToDo || existingToDo.userId !== user.id) {
+      return NextResponse.json({ error: 'ToDo not found or unauthorized' }, { status: 404 });
+    }
+
     const updatedToDo = await prisma.toDo.update({
-      where: { id: id },
+      where: { id },
       data: { todo },
     });
 
     return NextResponse.json(updatedToDo, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: "ToDoの更新中にエラーが発生しました" },
-      { status: 500 }
-    );
+    console.error('Error updating ToDo:', error);
+    return NextResponse.json({ error: 'Error updating ToDo' }, { status: 500 });
   }
 }
 
-// DELETEリクエスト用のハンドラ (削除)
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const id = Number(params.id);
-
+// DELETE request handler (Delete ToDo)
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    // 削除するToDoが存在するか確認
-    const toDoItem = await prisma.toDo.findUnique({
-      where: { id: id },
-    });
-
-    if (!toDoItem) {
-      return NextResponse.json(
-        { error: "ToDoが見つかりません" },
-        { status: 404 }
-      );
+    const user = await getUserFromRequest(req);
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // ToDoエントリを削除
-    await prisma.toDo.delete({
-      where: { id: id },
+    const id = parseInt(params.id);
+    if (isNaN(id)) {
+      return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+    }
+
+    const existingToDo = await prisma.toDo.findUnique({
+      where: { id },
     });
 
-    return NextResponse.json(
-      { message: "ToDoを正常に削除しました" },
-      { status: 200 }
-    );
+    if (!existingToDo || existingToDo.userId !== user.id) {
+      return NextResponse.json({ error: 'ToDo not found or unauthorized' }, { status: 404 });
+    }
+
+    await prisma.toDo.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ message: 'ToDo deleted' }, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: "ToDoの削除中にエラーが発生しました" },
-      { status: 500 }
-    );
+    console.error('Error deleting ToDo:', error);
+    return NextResponse.json({ error: 'Error deleting ToDo' }, { status: 500 });
   }
 }
