@@ -56,7 +56,6 @@ export async function POST(req: NextRequest) {
     const newToDo = await prisma.toDo.create({
       data: {
         todo,
-        chat: chatId ? { connect: { id: chatId } } : undefined, // chatIdがnullなら省略
         user: {
           connect: { id: user.id },
         },
