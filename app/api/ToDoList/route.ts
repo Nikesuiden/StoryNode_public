@@ -43,11 +43,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid chatId" }, { status: 400 });
     }
 
-    // データベースに新しいToDoを作成
+    // 新しいToDoを作成。chatIdの代わりにchatを使用
     const newToDo = await prisma.toDo.create({
       data: {
         todo,
-        chatId: chatId || null,
+        chat: chatId ? { connect: { id: chatId } } : undefined,  // chatIdが存在する場合に接続
         user: {
           connect: { id: user.id },
         },
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(newToDo, { status: 201 });
 
   } catch (error) {
-    // `error` が `unknown` 型なので、まず型アサーションを行う
+    // エラー処理
     if (error instanceof Error) {
       console.error("ToDo作成中にエラーが発生しました:", error.message, error.stack);
       return NextResponse.json(
@@ -65,7 +65,6 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     } else {
-      // `error` が予期しない型の場合のフォールバック
       console.error("予期しないエラーが発生しました:", error);
       return NextResponse.json(
         { error: "予期しないエラーが発生しました" },
