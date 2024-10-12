@@ -17,40 +17,40 @@ datasource db {
 model User {
   id            String        @id @default(uuid())
   email         String        @unique
-  diaryPosts    DiaryPost[]
   chatHistories ChatHistory[]
+  diaryPosts    DiaryPost[]
   ToDo          ToDo[]
 }
 
 model DiaryPost {
-  id        Int        @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   content   String
   emotion   String
-  createdAt DateTime   @default(now())
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
   userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 model ChatHistory {
-  id        Int        @id @default(autoincrement())
-  period    Int
+  id        Int      @id @default(autoincrement())
   prompt    String
   response  String
-  createdAt DateTime   @default(now())
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  period    Int
   userId    String
-  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }
 
 model ToDo {
-  id        Int          @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   todo      String
-  createdAt DateTime     @default(now())
-  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
   userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
