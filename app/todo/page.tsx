@@ -43,7 +43,7 @@ const ToDoPage: React.FC = () => {
 
       const data = await res.json();
       setToDoData(data);
-      console.log('情報の取得に成功しました。')
+      console.log("情報の取得に成功しました。");
     } catch (error) {
       console.error("ToDoの取得中にエラーが発生しました:", error);
     }
@@ -91,9 +91,7 @@ const ToDoPage: React.FC = () => {
         {/* アプリ情報 */}
         <Box sx={{ flex: 4 }}>
           <TopBar />
-          <Typography
-            style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}
-          >
+          <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
             ToDoList
           </Typography>
 

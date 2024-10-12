@@ -21,11 +21,16 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
   const [todos, setTodos] = useState<ToDo[]>(initialData || []);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // initialData が変更されたときに todos を更新
   useEffect(() => {
+    setIsLoading(true);
+    console.log(isLoading);
     if (initialData) {
       setTodos(initialData);
+      setIsLoading(false);
+      console.log(isLoading);
     }
   }, [initialData]);
 
@@ -95,9 +100,11 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
 
   return (
     <Box mt={4}>
-      {Array.isArray(todos) && todos.length > 0 ? (
+      {isLoading ? (
+        <Typography sx={{ ml: 1 }}>Loading...</Typography>
+      ) : Array.isArray(todos) && todos.length > 0 ? (
         todos.map((todo) => (
-          <Box key={todo.id} display="flex" alignItems="center" mb={2}>
+          <Box key={todo.id} display="flex" alignItems="center" mb={2} ml={1}>
             {editingId === todo.id ? (
               <>
                 <TextField
@@ -154,7 +161,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
           </Box>
         ))
       ) : (
-        <Typography>ToDoがありません</Typography>
+        <Typography sx={{ ml: 1 }}>ToDoがありません</Typography>
       )}
     </Box>
   );

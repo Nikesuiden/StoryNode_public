@@ -10,8 +10,6 @@ import { useCallback, useEffect, useState } from "react";
 import { History } from "@mui/icons-material";
 import supabase from "@/lib/supabaseClient";
 
-
-
 interface ChatHistoryItem {
   id: number;
   period: string;
@@ -19,11 +17,12 @@ interface ChatHistoryItem {
   response: string;
 }
 
-
 export default function ChatHistory() {
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   // 初回レンダリング時にチャット履歴を取得
   const fetchChatHistory = useCallback(async () => {
+    setIsLoading(true);
     try {
       const {
         data: { session },
@@ -45,14 +44,15 @@ export default function ChatHistory() {
 
       const data = await res.json();
       setChatHistory(data);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching chat history:", error);
     }
-  }, [supabase]);  // supabaseに依存するため、依存配列に追加
+  }, [supabase]); // supabaseに依存するため、依存配列に追加
 
   useEffect(() => {
     fetchChatHistory();
-  }, [fetchChatHistory]);  // fetchChatHistoryを依存配列に追加
+  }, [fetchChatHistory]); // fetchChatHistoryを依存配列に追加
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
@@ -115,10 +115,14 @@ export default function ChatHistory() {
           </Box>
           {/* チャット履歴の表示 */}
           <Box sx={{ margin: 2 }}>
-            {chatHistory.length > 0 ? (
+            {/* ローディング中の場合 */}
+            {isLoading ? (
+              <Typography>Loading...</Typography>
+            ) : chatHistory.length > 0 ? (
+              /* チャット履歴がある場合 */
               chatHistory.slice(0, 30).map(
                 (
-                  chat // 例えば10件まで表示
+                  chat // 例えば30件まで表示
                 ) => (
                   <Box
                     key={chat.id}
@@ -137,6 +141,7 @@ export default function ChatHistory() {
                 )
               )
             ) : (
+              /* チャット履歴がない場合 */
               <Typography variant="body1">チャット履歴はありません</Typography>
             )}
           </Box>
