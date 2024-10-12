@@ -10,9 +10,12 @@ services:
     environment:
       # 環境変数の設定（本番環境を指定）
       - NODE_ENV=production
-    # ボリュームの設定（ホストのファイル変更をコンテナに反映）
-    volumes:
-      - .:/app
+      - DATABASE_URL = ${DATABASE_URL}
+
+    # # ボリュームの設定（ホストのファイル変更をコンテナに反映）
+    # volumes:
+    #   - .:/app
+
     # このサービスはpostgres_dbに依存している
     depends_on:
       - postgres_db
@@ -24,7 +27,11 @@ services:
     image: postgres:14-alpine
     # データベースの設定（ユーザー、パスワード、データベース名）
     environment:
-      POSTGRES_URL: ${DATABASE_URL}
+      # 環境変数を使用してデータベース設定を行う
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
     # データ永続化のためにボリュームをマウント
     volumes:
       - postgres_data:/var/lib/postgresql/data

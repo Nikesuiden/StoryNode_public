@@ -15,6 +15,12 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Prismaのスキーマファイルもコピーする
+COPY prisma ./prisma
+
+# prismaディレクトリ内の内容を表示して確認
+RUN ls -la /app/prisma
+
 RUN npx prisma generate
 RUN npm run build
 
