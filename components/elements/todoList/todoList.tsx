@@ -4,6 +4,7 @@
 
 import supabase from "@/lib/supabaseClient";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { red } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import React from "react";
 
@@ -142,10 +143,10 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
             ) : (
               <>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography sx={{ flex: 4 }}>{todo.todo}</Typography>
+                  <Typography sx={{ flex: 5 }}>{todo.todo}</Typography>
                   <Box sx={{ display: "flex", flex: 1 }}>
                     <Button
-                      variant="text"
+                      variant="contained"
                       onClick={() => {
                         setEditingId(todo.id);
                         setEditingText(todo.todo);
@@ -159,6 +160,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                       color="secondary"
                       onClick={() => deleteTodo(todo.id)}
                       style={{ marginLeft: 8 }}
+
                     >
                       削除
                     </Button>
