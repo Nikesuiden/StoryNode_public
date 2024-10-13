@@ -10,7 +10,7 @@ services:
     environment:
       # 環境変数の設定（本番環境を指定）
       - NODE_ENV=production
-      - DATABASE_URL = ${DATABASE_URL}
+      - DATABASE_URL=${DATABASE_URL}
 
     # # ボリュームの設定（ホストのファイル変更をコンテナに反映）
     # volumes:
@@ -20,6 +20,11 @@ services:
     depends_on:
       - postgres_db
     command: sh -c "npx prisma migrate deploy && npm run start"
+    env_file:
+      - .env
+    volumes:
+      - ./prisma:/app/prisma
+
 
 
   postgres_db:

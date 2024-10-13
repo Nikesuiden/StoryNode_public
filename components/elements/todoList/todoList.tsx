@@ -112,7 +112,9 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                   onChange={(e) => setEditingText(e.target.value)}
                   variant="outlined"
                   size="small"
+                  sx={{flex : 4}}
                 />
+                <Box sx={{flex : 1}}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -127,7 +129,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                   style={{ marginLeft: 8 }}
                 >
                   キャンセル
-                </Button>
+                </Button></Box>
               </>
             ) : (
               <>
