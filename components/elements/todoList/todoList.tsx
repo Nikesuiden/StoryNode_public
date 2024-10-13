@@ -104,7 +104,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
         <Typography sx={{ ml: 1 }}>Loading...</Typography>
       ) : Array.isArray(todos) && todos.length > 0 ? (
         todos.map((todo) => (
-          <Box key={todo.id} display="flex" alignItems="center" mb={2} ml={1}>
+          <Box key={todo.id} display="flex" justifyContent="space-between" alignItems="center" mb={2} ml={1}>
             {editingId === todo.id ? (
               <>
                 <TextField
