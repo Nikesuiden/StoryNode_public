@@ -104,7 +104,14 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
         <Typography sx={{ ml: 1 }}>Loading...</Typography>
       ) : Array.isArray(todos) && todos.length > 0 ? (
         todos.map((todo) => (
-          <Box key={todo.id} display="flex" justifyContent="space-between" alignItems="center" mb={2} ml={1}>
+          <Box
+            key={todo.id}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
+            ml={1}
+          >
             {editingId === todo.id ? (
               <>
                 <TextField
@@ -112,31 +119,30 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                   onChange={(e) => setEditingText(e.target.value)}
                   variant="outlined"
                   size="small"
-                  sx={{flex : 4}}
+                  sx={{ flex: 4 }}
                 />
-                <Box sx={{flex : 1, display : "flex"}}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => updateTodo(todo.id)}
-                  style={{ marginLeft: 8 }}
-                >
-                  保存
-                </Button>
-                <Button
-                  variant="text"
-                  onClick={() => setEditingId(null)}
-                  style={{ marginLeft: 8 }}
-                >
-                  キャンセル
-                </Button></Box>
+                <Box sx={{ flex: 1, display: "flex" }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => updateTodo(todo.id)}
+                    style={{ marginLeft: 8 }}
+                  >
+                    保存
+                  </Button>
+                  <Button
+                    variant="text"
+                    onClick={() => setEditingId(null)}
+                    style={{ marginLeft: 8 }}
+                  >
+                    キャンセル
+                  </Button>
+                </Box>
               </>
             ) : (
               <>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Box sx={{ flex: 4 }}>
-                    <Typography>{todo.todo}</Typography>
-                  </Box>
+                  <Typography sx={{ flex: 4 }}>{todo.todo}</Typography>
                   <Box sx={{ display: "flex", flex: 1 }}>
                     <Button
                       variant="text"
