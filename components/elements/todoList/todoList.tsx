@@ -114,7 +114,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                   size="small"
                   sx={{flex : 4}}
                 />
-                <Box sx={{flex : 1}}>
+                <Box sx={{flex : 1, display : "flex"}}>
                 <Button
                   variant="contained"
                   color="primary"
