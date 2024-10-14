@@ -3,9 +3,6 @@ import { getUserFromRequest } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 
-/**
- * GETリクエスト: 日記投稿の一覧を取得
- */
 export async function GET(req: NextRequest) {
   try {
     const user = await getUserFromRequest(req);
@@ -13,9 +10,34 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // クエリパラメータから 'period' を取得
+    const { searchParams } = new URL(req.url);
+    const periodParam = searchParams.get('period');
+
+    let createdAtFilter = undefined;
+
+    if (periodParam) {
+      const periodDays = parseInt(periodParam, 10);
+      if (isNaN(periodDays) || periodDays < 0) {
+        return NextResponse.json({ error: "Invalid period parameter" }, { status: 400 });
+      }
+
+      // 現在の日時から period 日前までの範囲を計算
+      const now = new Date();
+      const fromDate = new Date(now.getTime() - periodDays * 24 * 60 * 60 * 1000);
+
+      createdAtFilter = {
+        gte: fromDate,
+        lte: now,
+      };
+    }
+
     // 日記投稿を取得
     const diaryPosts = await prisma.diaryPost.findMany({
-      where: { userId: user.id },
+      where: {
+        userId: user.id,
+        ...(createdAtFilter && { createdAt: createdAtFilter }),
+      },
       orderBy: { createdAt: "desc" },
     });
 

@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import supabase from "@/lib/supabaseClient";
-import { PhoneInTalk } from "@mui/icons-material";
+
 
 interface DiaryPost {
   id: number;
@@ -319,13 +319,13 @@ const AiChatForm: React.FC = () => {
             label="日記の収集期間"
           >
             <MenuItem value={-1}>--未設定--</MenuItem>
-            <MenuItem value={0}>今日</MenuItem>
-            <MenuItem value={1}>昨日</MenuItem>
-            <MenuItem value={2}>一昨日</MenuItem>
-            <MenuItem value={6}>1週間</MenuItem>
-            <MenuItem value={13}>2週間</MenuItem>
-            <MenuItem value={20}>3週間</MenuItem>
-            <MenuItem value={30}>1ヶ月</MenuItem>
+            <MenuItem value={1}>今日</MenuItem>
+            <MenuItem value={2}>昨日</MenuItem>
+            <MenuItem value={3}>一昨日</MenuItem>
+            <MenuItem value={7}>1週間</MenuItem>
+            <MenuItem value={14}>2週間</MenuItem>
+            <MenuItem value={21}>3週間</MenuItem>
+            <MenuItem value={31}>1ヶ月</MenuItem>
           </Select>
         </FormControl>
         <Typography
