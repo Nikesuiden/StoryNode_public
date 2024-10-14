@@ -22,13 +22,20 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Invalid period parameter" }, { status: 400 });
       }
 
-      // 現在の日時から period 日前までの範囲を計算
-      const now = new Date();
-      const fromDate = new Date(now.getTime() - periodDays * 24 * 60 * 60 * 1000);
+      // 現在の日付から 'periodDays' 日前の対象日を取得
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() - periodDays);
+
+      // 対象日の開始時刻と終了時刻を設定
+      const fromDate = new Date(targetDate);
+      fromDate.setHours(0, 0, 0, 0);
+
+      const toDate = new Date(targetDate);
+      toDate.setHours(23, 59, 59, 999);
 
       createdAtFilter = {
         gte: fromDate,
-        lte: now,
+        lte: toDate,
       };
     }
 
