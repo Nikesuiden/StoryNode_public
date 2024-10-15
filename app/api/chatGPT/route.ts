@@ -8,8 +8,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'API key is missing' }, { status: 500 });
   }
 
+  // 一般API用エンドポイント: https://api.openai.com/v1/chat/completions
+  // INIAD_APIエンドポイント: https://api.openai.iniad.org/api/v1/chat/completions
+
+
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.openai.iniad.org/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
