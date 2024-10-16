@@ -274,6 +274,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   sx={{ marginBottom: 2 }}
+                  multiline
                 />
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Button variant="contained" onClick={handleEdit}>
