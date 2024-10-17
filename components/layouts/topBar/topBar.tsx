@@ -20,8 +20,8 @@ const TopBar: React.FC<AuthProps> = ({ onAuthChange }) => {
   };
 
   useEffect(() => {
-    authChange()
-  }, [loading])
+    authChange();
+  }, [loading]);
 
   const fetchUser = async () => {
     try {
@@ -36,8 +36,8 @@ const TopBar: React.FC<AuthProps> = ({ onAuthChange }) => {
       }
     } catch (error) {
       console.error("ユーザー取得エラー:", error);
-      router.replace("/opening"); // エラー時もリダイレクト
       setUser(null);
+      router.replace("/opening"); // エラー時もリダイレクト
     } finally {
       setLoading(false);
     }
