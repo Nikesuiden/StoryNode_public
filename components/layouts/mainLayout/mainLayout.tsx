@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import SideBar from "../sideBar/sideBar";
 import BottomBar from "../bottomBar/bottomBar";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import TopBar from "../topBar/topBar";
 
 // Propsとしてchildrenを受け取るための型を定義
@@ -10,6 +10,11 @@ interface MainLayoutProps {
 }
 
 const MainLayout = ({ children }: MainLayoutProps) => {
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+
+  const handleAuthData = (data: boolean) => {
+    setIsAuthLoading(data);
+  };
   return (
     <Box>
       <Box
@@ -47,8 +52,20 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
         {/* アプリ情報情報 */}
         <Box sx={{ flex: 4 }}>
-          <TopBar />
-          {children}
+          <TopBar onAuthChange={handleAuthData} />
+          {!isAuthLoading ? (
+            children
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

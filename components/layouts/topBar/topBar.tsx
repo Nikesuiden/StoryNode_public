@@ -3,13 +3,25 @@
 import { Box, Typography } from "@mui/material";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import supabase from "@/lib/supabaseClient";
 
-const TopBar: React.FC = () => {
+interface AuthProps {
+  onAuthChange: (data: boolean) => void;
+}
+
+const TopBar: React.FC<AuthProps> = ({ onAuthChange }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+
+  const authChange = () => {
+    onAuthChange(loading);
+  };
+
+  useEffect(() => {
+    authChange()
+  }, [loading])
 
   const fetchUser = async () => {
     try {
@@ -20,12 +32,12 @@ const TopBar: React.FC = () => {
       if (error) throw error;
       setUser(session?.user ?? null);
       if (!session) {
-        router.replace('/opening'); // リダイレクト先のページパス
+        router.replace("/opening"); // リダイレクト先のページパス
       }
     } catch (error) {
-      console.error('ユーザー取得エラー:', error);
+      console.error("ユーザー取得エラー:", error);
+      router.replace("/opening"); // エラー時もリダイレクト
       setUser(null);
-      router.replace('/opening'); // エラー時もリダイレクト
     } finally {
       setLoading(false);
     }
@@ -53,7 +65,7 @@ const TopBar: React.FC = () => {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: 'flex-end',
+          alignItems: "flex-end",
           paddingTop: 10,
           paddingBottom: 12,
         }}
