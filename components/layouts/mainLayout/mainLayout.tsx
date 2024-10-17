@@ -2,11 +2,12 @@ import { Box } from "@mui/material";
 import SideBar from "../sideBar/sideBar";
 import BottomBar from "../bottomBar/bottomBar";
 import { ReactNode } from "react";
+import TopBar from "../topBar/topBar";
 
 // Propsとしてchildrenを受け取るための型を定義
 interface MainLayoutProps {
-    children: ReactNode;  // ReactNodeを使うことで、あらゆる子要素を受け入れられる
-  }
+  children: ReactNode; // ReactNodeを使うことで、あらゆる子要素を受け入れられる
+}
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   return (
@@ -45,7 +46,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         </Box>
 
         {/* アプリ情報情報 */}
-        <Box sx={{ flex: 4 }}>{children}</Box>
+        <Box sx={{ flex: 4 }}>
+          <TopBar />
+          {children}
+        </Box>
       </Box>
     </Box>
   );
