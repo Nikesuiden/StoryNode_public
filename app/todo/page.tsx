@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import ToDoList from "@/components/elements/todoList/todoList";
 import supabase from "@/lib/supabaseClient";
 import ToDoInput from "@/components/elements/todoInput/todoInput";
+import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 
 interface ToDo {
   id: number;
@@ -54,52 +55,14 @@ const ToDoPage: React.FC = () => {
   }, []);
 
   return (
-    <Box>
-      <Box
-        sx={{
-          margin: 2,
-          "@media screen and (min-width:700px)": {
-            display: "flex",
-          },
-          "@media screen and (max-width:700px)": {
-            paddingBottom: "60px",
-          },
-        }}
-      >
-        {/* スマホレスポンシブ */}
-        <Box
-          sx={{
-            "@media screen and (min-width:700px)": {
-              display: "none",
-            },
-          }}
-        >
-          <BottomBar />
-        </Box>
+    <MainLayout>
+      <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
+        ToDoList
+      </Typography>
 
-        {/* PCレスポンシブ */}
-        <Box
-          sx={{
-            "@media screen and (max-width:700px)": {
-              display: "none",
-            },
-          }}
-        >
-          <SideBar />
-        </Box>
-
-        {/* アプリ情報 */}
-        <Box sx={{ flex: 4 }}>
-          <TopBar />
-          <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
-            ToDoList
-          </Typography>
-
-          <ToDoInput onAction={fetchToDoList} />
-          <ToDoList initialData={todoData} onAction={fetchToDoList} />
-        </Box>
-      </Box>
-    </Box>
+      <ToDoInput onAction={fetchToDoList} />
+      <ToDoList initialData={todoData} onAction={fetchToDoList} />
+    </MainLayout>
   );
 };
 

@@ -9,6 +9,7 @@ import SideBar from "@/components/layouts/sideBar/sideBar";
 import { useCallback, useEffect, useState } from "react";
 import { History } from "@mui/icons-material";
 import supabase from "@/lib/supabaseClient";
+import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 
 interface ChatHistoryItem {
   id: number;
@@ -60,93 +61,53 @@ export default function ChatHistory() {
   };
 
   return (
-    <Box>
-      <Box
-        sx={{
-          margin: 2,
-          "@media screen and (min-width:700px)": {
-            display: "flex",
-          },
-          "@media screen and (max-width:700px)": {
-            paddingBottom: "60px",
-          },
-        }}
-      >
-        {/* スマホレスポンシブ */}
-        <Box
-          sx={{
-            "@media screen and (min-width:700px)": {
-              display: "none",
-            },
-          }}
+    <MainLayout>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
+          Chat History
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ justifyContent: "center" }}
+          onClick={() => handleNavigation("/aichat")}
         >
-          <BottomBar />
-        </Box>
-
-        {/* PCレスポンシブ */}
-        <Box
-          sx={{
-            "@media screen and (max-width:700px)": {
-              display: "none",
-            },
-          }}
-        >
-          <SideBar />
-        </Box>
-
-        {/* アプリ情報 */}
-        <Box sx={{ flex: 4 }}>
-          <TopBar />
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography
-              style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}
-            >
-              Chat History
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ justifyContent: "center" }}
-              onClick={() => handleNavigation("/aichat")}
-            >
-              <History style={{ marginRight: 8 }} />
-              AI Chat
-            </Button>
-          </Box>
-          {/* チャット履歴の表示 */}
-          <Box sx={{ margin: 2 }}>
-            {/* ローディング中の場合 */}
-            {isLoading ? (
-              <Typography>Loading...</Typography>
-            ) : chatHistory.length > 0 ? (
-              /* チャット履歴がある場合 */
-              chatHistory.slice(0, 30).map(
-                (
-                  chat // 例えば30件まで表示
-                ) => (
-                  <Box
-                    key={chat.id}
-                    sx={{
-                      marginBottom: 2,
-                      padding: 2,
-                      border: "1px solid #ccc",
-                      borderRadius: 4,
-                    }}
-                  >
-                    <Typography variant="h6">Prompt: {chat.prompt}</Typography>
-                    <Typography variant="body1" sx={{ mt: 1 }}>
-                      Response: {chat.response}
-                    </Typography>
-                  </Box>
-                )
-              )
-            ) : (
-              /* チャット履歴がない場合 */
-              <Typography variant="body1">チャット履歴はありません</Typography>
-            )}
-          </Box>
-        </Box>
+          <History style={{ marginRight: 8 }} />
+          AI Chat
+        </Button>
       </Box>
-    </Box>
+      {/* チャット履歴の表示 */}
+      <Box sx={{ margin: 2 }}>
+        {/* ローディング中の場合 */}
+        {isLoading ? (
+          <Typography>Loading...</Typography>
+        ) : chatHistory.length > 0 ? (
+          /* チャット履歴がある場合 */
+          chatHistory.slice(0, 30).map(
+            (
+              chat // 例えば30件まで表示
+            ) => (
+              <Box
+                key={chat.id}
+                sx={{
+                  marginBottom: 2,
+                  padding: 2,
+                  border: "1px solid #ccc",
+                  borderRadius: 4,
+                }}
+              >
+                <Typography variant="h6">Prompt: {chat.prompt}</Typography>
+                <Typography variant="body1" sx={{ mt: 1 }}>
+                  Response: {chat.response}
+                </Typography>
+              </Box>
+            )
+          )
+        ) : (
+          /* チャット履歴がない場合 */
+          <Typography variant="body1">チャット履歴はありません</Typography>
+        )}
+      </Box>
+    </MainLayout>
   );
 }
