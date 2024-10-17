@@ -36,6 +36,8 @@ export default function Speech() {
   const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
   const [period, setPeriod] = useState<number>(-1);
 
+  const [isAuthLoading, setIsAuthLoading] = useState<Boolean>(true);
+
   const [isIphone, setIsIphone] = useState<boolean>(false);
 
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -44,6 +46,10 @@ export default function Speech() {
   const handleNavigation = (path: string) => {
     router.push(path);
   };
+
+  const handleAuthData = (data : boolean) => {
+    setIsAuthLoading(data);
+  }
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = useCallback(async () => {
@@ -270,7 +276,7 @@ export default function Speech() {
   return (
     <Box>
       <Box sx={{ m: 2 }}>
-        <TopBar />
+        <TopBar onAuthChange={handleAuthData}/>
       </Box>
 
       <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
