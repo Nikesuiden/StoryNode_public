@@ -1,73 +1,107 @@
 import { Box, CircularProgress } from "@mui/material";
 import SideBar from "../sideBar/sideBar";
 import BottomBar from "../bottomBar/bottomBar";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import TopBar from "../topBar/topBar";
+import supabase from "@/lib/supabaseClient"; // Supabaseクライアントのインポート
+import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
-// Propsとしてchildrenを受け取るための型を定義
 interface MainLayoutProps {
-  children: ReactNode; // ReactNodeを使うことで、あらゆる子要素を受け入れられる
+  children: ReactNode;
 }
 
 const MainLayout = ({ children }: MainLayoutProps) => {
+  const [user, setUser] = useState<User | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+  const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
 
-  const handleAuthData = (data: boolean) => {
-    setIsAuthLoading(data);
+  const router = useRouter();
+
+  // ユーザー情報を取得する関数
+  const fetchUser = async () => {
+    try {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+      if (error) throw error;
+
+      setUser(session?.user ?? null);
+
+      if (!session) {
+        setIsRedirecting(true); // リダイレクト開始
+        router.replace("/opening"); // リダイレクト先のページパス
+      }
+    } catch (error) {
+      console.error("ユーザー取得エラー:", error);
+      setIsRedirecting(true); // エラー時もリダイレクト開始
+      router.replace("/opening"); // エラー時もリダイレクト
+      setUser(null);
+    } finally {
+      setIsAuthLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   return (
     <Box>
-      <Box
-        sx={{
-          margin: 2,
-          "@media screen and (min-width:700px)": {
+      {/* 認証中またはリダイレクト中の場合はローディングインジケーターを表示 */}
+      {isAuthLoading || isRedirecting ? (
+        <Box
+          sx={{
             display: "flex",
-          },
-          "@media screen and (max-width:700px)": {
-            paddingBottom: "60px",
-          },
-        }}
-      >
-        {/* スマホレスポンシブ */}
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh", // ローディング画面を中央に配置
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
         <Box
           sx={{
+            margin: 2,
             "@media screen and (min-width:700px)": {
-              display: "none",
+              display: "flex",
             },
-          }}
-        >
-          <BottomBar />
-        </Box>
-
-        {/* PCレスポンシブ */}
-        <Box
-          sx={{
             "@media screen and (max-width:700px)": {
-              display: "none",
+              paddingBottom: "60px",
             },
           }}
         >
-          <SideBar />
-        </Box>
+          {/* スマホレスポンシブ */}
+          <Box
+            sx={{
+              "@media screen and (min-width:700px)": {
+                display: "none",
+              },
+            }}
+          >
+            <BottomBar />
+          </Box>
 
-        {/* アプリ情報情報 */}
-        <Box sx={{ flex: 4 }}>
-          <TopBar onAuthChange={handleAuthData} />
-          {!isAuthLoading ? (
-            children
-          ) : (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          )}
+          {/* PCレスポンシブ */}
+          <Box
+            sx={{
+              "@media screen and (max-width:700px)": {
+                display: "none",
+              },
+            }}
+          >
+            <SideBar />
+          </Box>
+
+          {/* アプリ情報 */}
+          <Box sx={{ flex: 4 }}>
+            <TopBar user={user} />
+            {children}
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

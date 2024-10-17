@@ -9,9 +9,13 @@ export default function ChatHistory() {
   const handleNavigation = (path: string) => {
     router.push(path);
   };
+
+  const tellCaution = () => {
+    alert("音声対話もうちょっとまって🙏")
+  }
   return (
     <Box sx={{ display: "flex" }}>
-      <Box onClick={() => handleNavigation("/speech")}>
+      <Box onClick={() => tellCaution()}>
         <PhoneInTalk sx={{ fontSize: 50, cursor: "pointer" }} />
       </Box>
       <Button

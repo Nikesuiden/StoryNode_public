@@ -276,7 +276,6 @@ export default function Speech() {
   return (
     <Box>
       <Box sx={{ m: 2 }}>
-        <TopBar onAuthChange={handleAuthData}/>
       </Box>
 
       <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
