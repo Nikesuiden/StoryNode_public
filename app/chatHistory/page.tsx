@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import ToDoInput from "@/components/elements/todoInput/todoInput";
 import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import TopBar from "@/components/layouts/topBar/topBar";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import { useCallback, useEffect, useState } from "react";
 import { History } from "@mui/icons-material";
@@ -80,7 +80,17 @@ export default function ChatHistory() {
       <Box sx={{ margin: 2 }}>
         {/* ローディング中の場合 */}
         {isLoading ? (
-          <Typography>Loading...</Typography>
+          <Box
+            sx={{
+              m: 2,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              mt: 4,
+            }}
+          >
+            <CircularProgress />
+          </Box>
         ) : chatHistory.length > 0 ? (
           /* チャット履歴がある場合 */
           chatHistory.slice(0, 30).map(

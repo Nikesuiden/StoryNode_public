@@ -3,8 +3,7 @@
 "use client";
 
 import supabase from "@/lib/supabaseClient";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { red } from "@mui/material/colors";
+import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import React from "react";
 
@@ -102,7 +101,17 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
   return (
     <Box mt={4}>
       {isLoading ? (
-        <Typography sx={{ ml: 1 }}>Loading...</Typography>
+        <Box
+          sx={{
+            m: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: 4,
+          }}
+        >
+          <CircularProgress />
+        </Box>
       ) : Array.isArray(todos) && todos.length > 0 ? (
         todos.map((todo) => (
           <Box
@@ -160,7 +169,6 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                       color="secondary"
                       onClick={() => deleteTodo(todo.id)}
                       style={{ marginLeft: 8 }}
-
                     >
                       削除
                     </Button>

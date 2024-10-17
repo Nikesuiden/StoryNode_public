@@ -14,6 +14,7 @@ import {
   SelectChangeEvent,
   Menu,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, MouseEvent } from "react";
@@ -327,7 +328,9 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
             )
           )
       ) : (
-        <Typography sx={{ m: 2 }}>Loading...</Typography>
+        <Box sx={{ m: 2, display :"flex", justifyContent:"center", alignItems:"center", mt: 4 }}>
+          <CircularProgress />
+        </Box>
       )}
 
       {/* 編集・削除メニューの表示 */}
