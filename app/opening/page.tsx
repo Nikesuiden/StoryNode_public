@@ -25,14 +25,14 @@ const Opening: React.FC = () => {
             color="primary"
             onClick={() => handleNavigation('/signin')}
           >
-            ログイン
+            Login
           </Button>
           <Button
             variant="outlined"
             color="primary"
             onClick={() => handleNavigation('/signup')}
           >
-            新規登録
+            SignUp
           </Button>
         </Box>
       </Box>
