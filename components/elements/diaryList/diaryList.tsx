@@ -277,7 +277,14 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
                   sx={{ marginBottom: 2 }}
                   multiline
                 />
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
                   <Button variant="contained" onClick={handleEdit}>
                     編集を保存
                   </Button>
@@ -313,9 +320,11 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
                     flexDirection: "column",
                     justifyContent: "space-between",
                     ml: "2px",
+                    position: "relative",
                   }}
                 >
                   <IconButton
+                    sx={{ zIndex: 1 }}
                     onClick={(event) => handleMenuClick(event, post.id)}
                   >
                     <MoreHoriz />
@@ -328,7 +337,15 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
             )
           )
       ) : (
-        <Box sx={{ m: 2, display :"flex", justifyContent:"center", alignItems:"center", mt: 4 }}>
+        <Box
+          sx={{
+            m: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: 4,
+          }}
+        >
           <CircularProgress />
         </Box>
       )}
@@ -340,7 +357,9 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
         onClose={handleMenuClose}
       >
         <MenuItem onClick={handleEditOpen}>編集</MenuItem>
-        <MenuItem onClick={handleDelete}>削除</MenuItem>
+        <MenuItem sx={{ color: "red", mt: 1 }} onClick={handleDelete}>
+          削除
+        </MenuItem>
       </Menu>
     </Box>
   );

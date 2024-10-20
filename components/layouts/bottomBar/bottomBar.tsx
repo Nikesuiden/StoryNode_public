@@ -22,9 +22,11 @@ export default function BottomBar() {
     router.push(path);
   };
   return (
-    <Box style={{ position: "fixed", left: 0, bottom: 0, width: "100%" }}>
+    <Box
+      sx={{ position: "fixed", left: 0, bottom: 0, width: "100%", zIndex: 10 }}
+    >
       <Divider />
-      <BottomNavigation showLabels sx={{ height: 60 , marginTop: 0.5}}>
+      <BottomNavigation showLabels sx={{ height: 65 }}>
         <BottomNavigationAction
           label="Diary"
           icon={<ImportContacts fontSize="large" />}
