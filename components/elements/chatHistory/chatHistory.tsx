@@ -11,7 +11,7 @@ export default function ChatHistory() {
   };
 
   const tellCaution = () => {
-    alert("音声対話もうちょっとまって🙏")
+    alert("現在メンテナンス中")
   }
   return (
     <Box sx={{ display: "flex" }}>
