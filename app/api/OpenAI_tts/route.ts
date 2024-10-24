@@ -1,7 +1,10 @@
 import { NextApiResponse, NextApiRequest } from "next";
-import fs from "fs";
+import OpenAI from "openai";
 import path from "path";
-import { openai } from "@/lib/openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY_SELF || "",
+});
 
 export default async function OpenAI_TTS(
   req: NextApiRequest,

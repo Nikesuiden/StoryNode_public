@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Container,
   Box,
@@ -41,15 +41,16 @@ export default function Speech() {
   const [isIphone, setIsIphone] = useState<boolean>(false);
 
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null); // audioタグへの参照を作成
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
     router.push(path);
   };
 
-  const handleAuthData = (data : boolean) => {
+  const handleAuthData = (data: boolean) => {
     setIsAuthLoading(data);
-  }
+  };
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = useCallback(async () => {
@@ -106,6 +107,33 @@ export default function Speech() {
       audio.play(); // 自動再生
     } else {
       // alert("音声の再生に失敗しました。");
+      return;
+    }
+  };
+
+  // OpenAI版TTSを呼び出す関数
+  const openaiTTS = async () => {
+    const res = await fetch("/api/OpenAI_tts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ input: response }), // ここでテキストを送信
+    });
+
+    if (res.ok) {
+      const audioBlob = await res.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      if (audioRef.current) {
+        audioRef.current.src = audioUrl; // audioタグのsrcを設定
+        audioRef.current.play(); // 音声を自動再生
+      } else {
+        alert("音声の取得に失敗しました。");
+        return;
+      }
+    } else {
+      alert("リクエストに失敗しました。");
       return;
     }
   };
@@ -270,16 +298,16 @@ export default function Speech() {
   }, [period]);
 
   useEffect(() => {
-    handleTextToSpeech();
+    // handleTextToSpeech();
+    openaiTTS();
   }, [response]);
 
   return (
     <Box>
-      <Box sx={{ m: 2 }}>
-      </Box>
+      <Box sx={{ m: 2 }}></Box>
 
       <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
-        <Box sx={{position : "absolute", top : 0, right: 0}}>
+        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
           {/* <RecommendOS /> */}
         </Box>
         <Box
@@ -367,12 +395,7 @@ export default function Speech() {
             {response}
           </Typography>
           <br />
-          {audioUrl && (
-            <audio controls autoPlay>
-              <source src={audioUrl} type="audio/mp3" />
-              Your browser does not support the audio element.
-            </audio>
-          )}
+          {audioRef && <audio ref={audioRef} controls hidden />}
         </Box>
       </Container>
     </Box>

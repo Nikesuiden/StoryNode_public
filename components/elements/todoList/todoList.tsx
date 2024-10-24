@@ -3,7 +3,13 @@
 "use client";
 
 import supabase from "@/lib/supabaseClient";
-import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import React from "react";
 
@@ -26,11 +32,9 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
   // initialData が変更されたときに todos を更新
   useEffect(() => {
     setIsLoading(true);
-    console.log(isLoading);
     if (initialData) {
       setTodos(initialData);
       setIsLoading(false);
-      console.log(isLoading);
     }
   }, [initialData]);
 
@@ -103,7 +107,6 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
       {isLoading ? (
         <Box
           sx={{
-            m: 2,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -120,7 +123,6 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
             justifyContent="space-between"
             alignItems="center"
             mb={2}
-            ml={1}
           >
             {editingId === todo.id ? (
               <>
@@ -129,57 +131,50 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                   onChange={(e) => setEditingText(e.target.value)}
                   variant="outlined"
                   size="small"
-                  sx={{ flex: 4 }}
+                  sx={{ flex: 1 }}
                 />
-                <Box sx={{ flex: 1, display: "flex" }}>
+                <Box sx={{ display: "flex", gap: 1, ml: 2 }}>
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={() => updateTodo(todo.id)}
-                    style={{ marginLeft: 8 }}
                   >
                     保存
                   </Button>
-                  <Button
-                    variant="text"
-                    onClick={() => setEditingId(null)}
-                    style={{ marginLeft: 8 }}
-                  >
+                  <Button variant="text" onClick={() => setEditingId(null)}>
                     キャンセル
                   </Button>
                 </Box>
               </>
             ) : (
               <>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography sx={{ flex: 5 }}>{todo.todo}</Typography>
-                  <Box sx={{ display: "flex", flex: 1 }}>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        setEditingId(todo.id);
-                        setEditingText(todo.todo);
-                      }}
-                      style={{ marginLeft: 8 }}
-                    >
-                      編集
-                    </Button>
-                    <Button
-                      variant="text"
-                      color="secondary"
-                      onClick={() => deleteTodo(todo.id)}
-                      style={{ marginLeft: 8 }}
-                    >
-                      削除
-                    </Button>
-                  </Box>
+                <Typography sx={{ flex: 1, textAlign: "left" }}>
+                  {todo.todo}
+                </Typography>
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setEditingId(todo.id);
+                      setEditingText(todo.todo);
+                    }}
+                  >
+                    編集
+                  </Button>
+                  <Button
+                    variant="text"
+                    color="secondary"
+                    onClick={() => deleteTodo(todo.id)}
+                  >
+                    削除
+                  </Button>
                 </Box>
               </>
             )}
           </Box>
         ))
       ) : (
-        <Typography sx={{ ml: 1 }}>ToDoがありません</Typography>
+        <Typography>ToDoがありません</Typography>
       )}
     </Box>
   );
