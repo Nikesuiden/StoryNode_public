@@ -6,7 +6,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY_SELF || "",
 });
 
-export default async function OpenAI_TTS(
+export async function OpenAI_TTS(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
