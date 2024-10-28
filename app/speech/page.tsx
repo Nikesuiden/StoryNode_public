@@ -18,6 +18,7 @@ import TopBar from "@/components/layouts/topBar/topBar";
 import { PhoneDisabled } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import RecommendOS from "@/components/elements/recommendOS/recommendOS";
+import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 
 interface DiaryPost {
   id: number;
@@ -111,32 +112,32 @@ export default function Speech() {
     }
   };
 
-  // OpenAI版TTSを呼び出す関数
-  const openaiTTS = async () => {
-    const res = await fetch("/api/OpenAI_tts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ input: response }), // ここでテキストを送信
-    });
+  // // OpenAI版TTSを呼び出す関数
+  // const openaiTTS = async () => {
+  //   const res = await fetch("/api/OpenAI_tts", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ input: response }), // ここでテキストを送信
+  //   });
 
-    if (res.ok) {
-      const audioBlob = await res.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
+  //   if (res.ok) {
+  //     const audioBlob = await res.blob();
+  //     const audioUrl = URL.createObjectURL(audioBlob);
 
-      if (audioRef.current) {
-        audioRef.current.src = audioUrl; // audioタグのsrcを設定
-        audioRef.current.play(); // 音声を自動再生
-      } else {
-        alert("音声の取得に失敗しました。");
-        return;
-      }
-    } else {
-      alert("リクエストに失敗しました。");
-      return;
-    }
-  };
+  //     if (audioRef.current) {
+  //       audioRef.current.src = audioUrl; // audioタグのsrcを設定
+  //       audioRef.current.play(); // 音声を自動再生
+  //     } else {
+  //       alert("音声の取得に失敗しました。");
+  //       return;
+  //     }
+  //   } else {
+  //     alert("リクエストに失敗しました。");
+  //     return;
+  //   }
+  // };
 
   // 日記データをフォーマットする関数
   function formatDiaryPosts(diaryPosts: DiaryPost[]): string {
@@ -303,101 +304,103 @@ export default function Speech() {
   }, [response]);
 
   return (
-    <Box>
-      <Box sx={{ m: 2 }}></Box>
+    <MainLayout>
+      <Box>
+        <Box sx={{ m: 2 }}></Box>
 
-      <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
-        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-          {/* <RecommendOS /> */}
-        </Box>
-        <Box
-          sx={{ position: "absolute", m: 3, cursor: "pointer" }}
-          onClick={() => handleNavigation("/aichat")}
-        >
-          <PhoneDisabled sx={{ fontSize: 25 }} />
-        </Box>
-        <Typography variant="h3" component="h1" gutterBottom>
-          音声対話
-        </Typography>
+        <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
+          <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+            {/* <RecommendOS /> */}
+          </Box>
+          <Box
+            sx={{ position: "absolute", m: 3, cursor: "pointer" }}
+            onClick={() => handleNavigation("/aichat")}
+          >
+            <PhoneDisabled sx={{ fontSize: 25 }} />
+          </Box>
+          <Typography variant="h3" component="h1" gutterBottom>
+            音声対話
+          </Typography>
 
-        <Box component="form" sx={{ "& > *": { width: "40%" } }} noValidate>
-          <FormControl sx={{ minWidth: 120, width: "40%" }} fullWidth>
-            <InputLabel
-              style={{
-                backgroundColor: "white",
-                paddingLeft: "5px",
-                paddingRight: "5px",
-              }}
-            >
-              日記の収集期間
-            </InputLabel>
-            <Select
-              value={period}
-              onChange={periodChange}
-              label="日記の収集期間"
-            >
-              <MenuItem value={-1}>--未設定--</MenuItem>
-              <MenuItem value={0}>今日</MenuItem>
-              <MenuItem value={1}>昨日</MenuItem>
-              <MenuItem value={2}>一昨日</MenuItem>
-              <MenuItem value={6}>1週間</MenuItem>
-              <MenuItem value={13}>2週間</MenuItem>
-              <MenuItem value={20}>3週間</MenuItem>
-              <MenuItem value={30}>1ヶ月</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
+          <Box component="form" sx={{ "& > *": { width: "40%" } }} noValidate>
+            <FormControl sx={{ minWidth: 120, width: "40%" }} fullWidth>
+              <InputLabel
+                style={{
+                  backgroundColor: "white",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                }}
+              >
+                日記の収集期間
+              </InputLabel>
+              <Select
+                value={period}
+                onChange={periodChange}
+                label="日記の収集期間"
+              >
+                <MenuItem value={-1}>--未設定--</MenuItem>
+                <MenuItem value={0}>今日</MenuItem>
+                <MenuItem value={1}>昨日</MenuItem>
+                <MenuItem value={2}>一昨日</MenuItem>
+                <MenuItem value={6}>1週間</MenuItem>
+                <MenuItem value={13}>2週間</MenuItem>
+                <MenuItem value={20}>3週間</MenuItem>
+                <MenuItem value={30}>1ヶ月</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
-        <Box sx={{ mt: 3 }}>
-          {!isListening ? (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleStartListening}
-              component={motion.div}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              マイクを開始
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleStopListening}
-              component={motion.div}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              マイクを停止
-            </Button>
-          )}
-        </Box>
+          <Box sx={{ mt: 3 }}>
+            {!isListening ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleStartListening}
+                component={motion.div}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                マイクを開始
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleStopListening}
+                component={motion.div}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                マイクを停止
+              </Button>
+            )}
+          </Box>
 
-        <Box
-          component={motion.div}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          sx={{ mt: 4 }}
-        >
-          <Typography variant="h5" component="h2" gutterBottom>
-            〜 文字起こし結果 〜
-          </Typography>
-          <Typography variant="body1" component="p">
-            {prompt}
-          </Typography>
-          <br />
-          <Typography variant="h5" component="h2" gutterBottom>
-            〜 GPTの返答 〜
-          </Typography>
-          <Typography variant="body1" component="p">
-            {response}
-          </Typography>
-          <br />
-          {audioRef && <audio ref={audioRef} controls hidden />}
-        </Box>
-      </Container>
-    </Box>
+          <Box
+            component={motion.div}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            sx={{ mt: 4 }}
+          >
+            <Typography variant="h5" component="h2" gutterBottom>
+              〜 文字起こし結果 〜
+            </Typography>
+            <Typography variant="body1" component="p">
+              {prompt}
+            </Typography>
+            <br />
+            <Typography variant="h5" component="h2" gutterBottom>
+              〜 GPTの返答 〜
+            </Typography>
+            <Typography variant="body1" component="p">
+              {response}
+            </Typography>
+            <br />
+            {audioRef && <audio ref={audioRef} controls hidden />}
+          </Box>
+        </Container>
+      </Box>
+    </MainLayout>
   );
 }

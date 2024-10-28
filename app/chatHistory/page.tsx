@@ -7,7 +7,7 @@ import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import { useCallback, useEffect, useState } from "react";
-import { History } from "@mui/icons-material";
+import { History, KeyboardReturn } from "@mui/icons-material";
 import supabase from "@/lib/supabaseClient";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 
@@ -72,7 +72,7 @@ export default function ChatHistory() {
           sx={{ justifyContent: "center" }}
           onClick={() => handleNavigation("/aichat")}
         >
-          <History style={{ marginRight: 8 }} />
+          <KeyboardReturn style={{ marginRight: 8 }} />
           AI Chat
         </Button>
       </Box>
