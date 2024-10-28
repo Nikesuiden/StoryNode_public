@@ -300,7 +300,7 @@ export default function Speech() {
 
   useEffect(() => {
     // handleTextToSpeech();
-    openaiTTS();
+    // openaiTTS();
   }, [response]);
 
   return (
