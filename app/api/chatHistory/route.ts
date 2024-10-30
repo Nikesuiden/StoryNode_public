@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import prisma from "@/lib/prisma";
-import { constrainedMemory } from "process";
 import { getUserFromRequest } from "@/lib/auth";
-import { getRSCModuleInformation } from "next/dist/build/analysis/get-page-static-info";
 
 // GETリクエスト用のハンドラ
 export async function GET(
@@ -11,7 +8,7 @@ export async function GET(
   { params }: { params: { id?: string } }
 ) {
   try {
-    // ユーザ認証の箇所
+    // ユーザ認証の箇所　// ここsupabaseからデータを取得
     const user = await getUserFromRequest(req);
 
     // ログイン中のアカウントがない場合
@@ -19,7 +16,8 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // ユーザーの存在確認
+    // prismaデータベースからUserIdを取得
+    // ユーザーの存在確認　これはデータベースのフィルタ用　PrismaのUserIdとSupabaseのIdに互換性を持たせるため
     const existingUser = await prisma.user.findUnique({
       where: {
         id: user.id,

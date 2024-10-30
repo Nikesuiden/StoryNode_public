@@ -1,21 +1,28 @@
 "use client";
 
-import { Mail } from "@mui/icons-material";
+import {
+  BorderClear,
+  Feedback,
+  Mail,
+  Notifications,
+} from "@mui/icons-material";
 import { Avatar, Box, Typography } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 
-interface TopBarProps {
+interface UserProps {
   user: User | null; // MainLayoutから渡されるユーザー情報
 }
 
-const TopBar: React.FC<TopBarProps> = ({ user }) => {
+const TopBar: React.FC<UserProps> = ({ user }) => {
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+
   useEffect(() => {
     if (user) {
       setProfilePicture(user.user_metadata.avatar_url);
     }
-  }, []);
+  }, [user]);
   return (
     <Box sx={{ mb: 2 }}>
       <Box
@@ -34,16 +41,10 @@ const TopBar: React.FC<TopBarProps> = ({ user }) => {
         {/* <Typography style={{ fontSize: 15 }}>
           {user ? `${user.user_metadata.full_name}` : "ログインしていません"}
         </Typography> */}
-        
-        {profilePicture ? (
-          <Avatar
-            src={profilePicture}
-            alt="User Profile"
-            sx={{ width: "70", height: "70", cursor: "pointer" }}
-          />
-        ) : (
-          <Mail sx={{ width: "70", height: "70", cursor: "pointer" }}/>
-        )}
+        <Box sx={{display: "flex"}}>
+          <Notifications sx={{color: grey}}/>
+          <Feedback sx={{color: grey}}/>
+        </Box>
       </Box>
       <hr />
     </Box>

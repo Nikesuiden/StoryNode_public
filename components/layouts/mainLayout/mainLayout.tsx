@@ -81,7 +81,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
               },
             }}
           >
-            <BottomBar />
+            <BottomBar user={user}/>
           </Box>
 
           {/* PCレスポンシブ */}
@@ -92,7 +92,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
               },
             }}
           >
-            <SideBar />
+            <SideBar user={user}/>
           </Box>
 
           {/* アプリ情報 */}

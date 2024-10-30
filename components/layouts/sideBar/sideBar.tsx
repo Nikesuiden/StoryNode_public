@@ -19,11 +19,18 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Avatar,
 } from "@mui/material";
+import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { cloneElement } from "react";
+import { cloneElement, useEffect, useState } from "react";
 
-export default function SideBar() {
+interface UserProps {
+  user: User | null;
+}
+
+const SideBar: React.FC<UserProps> = ({ user }) => {
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const drawerWidth = 180;
 
   const router = useRouter();
@@ -31,11 +38,26 @@ export default function SideBar() {
     router.push(path);
   };
 
+  useEffect(() => {
+    if (user) {
+      setProfilePicture(user.user_metadata.avatar_url);
+    }
+  }, [user]);
+
   const icons = [
     { component: <ImportContacts fontSize="large" />, key: "importContacts" },
     { component: <Forum fontSize="large" />, key: "forum" },
     { component: <CheckCircle fontSize="large" />, key: "checkCircle" },
-    { component: <Settings fontSize="large" />, key: "settings" },
+    {
+      component: (
+        <Avatar
+          src={profilePicture ?? undefined}
+          alt="User Profile"
+          sx={{ width: "40", height: "40", cursor: "pointer" }}
+        />
+      ),
+      key: "settings",
+    },
   ];
 
   const urls = ["/", "/aichat", "/todo", "/settings"];
@@ -60,13 +82,13 @@ export default function SideBar() {
         anchor="left"
       >
         <List sx={{ ml: 2 }}>
-          {["Diary", "AIchat", "ToDo", "Settings"].map((text, index) => (
+          {["Diary", "AIchat", "ToDo", "Accounts"].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
               onClick={() => handleNavigation(urls[index])}
             >
-              <ListItemButton sx={{marginTop: 1}}>
+              <ListItemButton sx={{ marginTop: 1 }}>
                 <ListItemIcon>
                   {cloneElement(icons[index].component, {
                     key: icons[index].key,
@@ -80,4 +102,6 @@ export default function SideBar() {
       </Drawer>
     </Box>
   );
-}
+};
+
+export default SideBar;
