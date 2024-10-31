@@ -13,7 +13,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/server";
 
 
 interface DiaryPost {
@@ -100,6 +100,7 @@ const AiChatForm: React.FC = () => {
   }
 
   const handleSubmit = async () => {
+    const supabase = await createClient()
     if (period === -1) {
       alert("日記収集期間を選択してください。");
       return;
@@ -193,6 +194,8 @@ const AiChatForm: React.FC = () => {
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = async () => {
+    const supabase = await createClient()
+    
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -233,6 +236,7 @@ const AiChatForm: React.FC = () => {
     response: string,
     period: number
   ) => {
+    const supabase = await createClient()
     try {
       const {
         data: { session },
