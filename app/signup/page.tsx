@@ -1,6 +1,5 @@
 "use client";
 
-import supabase from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { MeetingRoom } from "@mui/icons-material";
@@ -8,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import SignUpWithGoogle from "@/components/elements/signUpWithGoogle/signUpWithGoogle";
+import { createClient } from "@/utils/supabase/server";
 
 export default function SignUp() {
   const router = useRouter();
@@ -19,6 +19,7 @@ export default function SignUp() {
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
+    const supabase = await createClient()
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -32,6 +33,7 @@ export default function SignUp() {
   };
 
   const handleGoogleLogin = async () => {
+    const supabase = await createClient()
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {

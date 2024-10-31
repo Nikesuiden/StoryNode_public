@@ -1,12 +1,12 @@
 "use client";
 
-import supabase from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { MeetingRoom } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import SignInWithGoogle from "@/components/elements/signinWithGoogle/signinWithGoogle";
 import { Center } from "@chakra-ui/react";
+import { createClient } from "@/utils/supabase/server";
 
 export default function SignIn() {
   const router = useRouter();
@@ -18,6 +18,7 @@ export default function SignIn() {
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
+    const supabase = await createClient()
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,

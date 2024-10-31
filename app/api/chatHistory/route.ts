@@ -9,7 +9,7 @@ export async function GET(
 ) {
   try {
     // ユーザ認証の箇所　// ここsupabaseからデータを取得
-    const user = await getUserFromRequest(req);
+    const user = await getUserFromRequest();
 
     // ログイン中のアカウントがない場合
     if (!user) {
@@ -50,7 +50,7 @@ export async function POST(
   { params }: { params: { id?: string } }
 ) {
   try {
-    const user = await getUserFromRequest(req);
+    const user = await getUserFromRequest();
 
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

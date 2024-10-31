@@ -37,7 +37,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const user = await getUserFromRequest(req);
+    const user = await getUserFromRequest();
     if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -105,7 +105,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const user = await getUserFromRequest(req);
+    const user = await getUserFromRequest();
     if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },

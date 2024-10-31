@@ -7,7 +7,7 @@ import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/server";
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -23,6 +23,7 @@ const Index: React.FC = () => {
   };
 
   const fetchDiaryPosts = useCallback(async () => {
+    const supabase = await createClient()
     setIsLoading(true);
     const {
       data: { session },
@@ -48,7 +49,7 @@ const Index: React.FC = () => {
       alert("情報の取得に失敗しました。タイトル画面に戻ります。");
       handleNavigation("/signin");
     }
-  }, [supabase, handleNavigation]); // 必要な依存関係を追加
+  }, [handleNavigation]); // 必要な依存関係を追加
 
   useEffect(() => {
     fetchDiaryPosts();
