@@ -5,7 +5,6 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { MeetingRoom } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import SignInWithGoogle from "@/components/elements/signinWithGoogle/signinWithGoogle";
-import { Center } from "@chakra-ui/react";
 import { createClient } from "@/utils/supabase/server";
 
 export default function SignIn() {
