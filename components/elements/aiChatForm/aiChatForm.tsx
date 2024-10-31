@@ -13,8 +13,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
-import { createClient } from "@/utils/supabase/server";
-
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 
 interface DiaryPost {
   id: number;
@@ -29,7 +28,7 @@ const rainbowAnimation = keyframes`
   100% { background-position: 0% 50%; }
 `;
 
-const AiChatForm: React.FC = () => {
+const AiChatForm: React.FC = async () => {
   const d_maxLength: number = 7000; // 入力上限定義
 
   const [period, setPeriod] = useState<number>(-1);
@@ -42,6 +41,8 @@ const AiChatForm: React.FC = () => {
   const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
 
   const [totalPrompt, setTotalPrompt] = useState<string>("");
+
+  const supabase = await createServerSupabaseClient();
 
   // 日記データをフォーマットする関数
   function formatDiaryPosts(diaryPosts: DiaryPost[]): string {
@@ -100,7 +101,6 @@ const AiChatForm: React.FC = () => {
   }
 
   const handleSubmit = async () => {
-    const supabase = await createClient()
     if (period === -1) {
       alert("日記収集期間を選択してください。");
       return;
@@ -194,8 +194,6 @@ const AiChatForm: React.FC = () => {
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = async () => {
-    const supabase = await createClient()
-    
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -236,7 +234,6 @@ const AiChatForm: React.FC = () => {
     response: string,
     period: number
   ) => {
-    const supabase = await createClient()
     try {
       const {
         data: { session },
@@ -296,7 +293,7 @@ const AiChatForm: React.FC = () => {
 
   useEffect(() => {
     totalPromptChange();
-  }, [prompt, diaryToPrompt])
+  }, [prompt, diaryToPrompt]);
 
   // 期間が変更されたら日記データを取得します。
   useEffect(() => {

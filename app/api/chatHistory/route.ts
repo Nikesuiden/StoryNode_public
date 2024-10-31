@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getUserFromRequest } from "@/lib/auth";
+import { createClient } from "@/utils/supabase/server";
 
 // GETリクエスト用のハンドラ
 export async function GET(
   req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
+  const supabase = await createClient();
   try {
     // ユーザ認証の箇所　// ここsupabaseからデータを取得
-    const user = await getUserFromRequest();
+    const { data, error } = await supabase.auth.getUser();
 
     // ログイン中のアカウントがない場合
-    if (!user) {
+    if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -20,7 +21,7 @@ export async function GET(
     // ユーザーの存在確認　これはデータベースのフィルタ用　PrismaのUserIdとSupabaseのIdに互換性を持たせるため
     const existingUser = await prisma.user.findUnique({
       where: {
-        id: user.id,
+        id: data.user.id,
       },
     });
 
@@ -49,10 +50,11 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
+  const supabase = await createClient();
   try {
-    const user = await getUserFromRequest();
+    const { data, error } = await supabase.auth.getUser();
 
-    if (!user) {
+    if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -61,7 +63,7 @@ export async function POST(
     // ユーザーの存在確認
     const existingUser = await prisma.user.findUnique({
       where: {
-        id: user.id,
+        id: data.user.id,
       },
     });
 

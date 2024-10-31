@@ -5,7 +5,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { MeetingRoom } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import SignInWithGoogle from "@/components/elements/signinWithGoogle/signinWithGoogle";
-import { createClient } from "@/utils/supabase/server";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 
 export default function SignIn() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function SignIn() {
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
-    const supabase = await createClient()
+    const supabase = await createServerSupabaseClient();
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -27,6 +27,20 @@ export default function SignIn() {
       alert(error.message);
     } else {
       alert("ログイン成功！");
+    }
+  };
+
+  const handleSignup = async () => {
+    const supabase = await createServerSupabaseClient();
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("サインアップ成功！");
     }
   };
 
@@ -70,27 +84,55 @@ export default function SignIn() {
         <Typography variant="h4" gutterBottom>
           ログイン
         </Typography>
-        {/* <TextField
-          type="email"
-          placeholder="メールアドレス"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          type="email"
-          placeholder="パスワード"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button onClick={handleLogin}>ログイン</Button> */}
+
+        <form onSubmit={(e) => e.preventDefault()} style={{ width: "100%" }}>
+          <TextField
+            label="Email"
+            type="email"
+            fullWidth
+            margin="normal"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            label="Password"
+            type="password"
+            fullWidth
+            margin="normal"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleLogin}
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            Log in
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleSignup}
+            fullWidth
+            sx={{ mt: 1 }}
+          >
+            Sign up
+          </Button>
+        </form>
+
         <Box
           sx={{
-            display: "flex", // ここを追加
+            display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center", // ここで水平方向の中央揃え
-            width: "100%", // 幅を100%に設定
-            marginTop: 2, // 適宜余白を追加
+            justifyContent: "center",
+            width: "100%",
+            marginTop: 2,
           }}
         >
           <SignInWithGoogle />

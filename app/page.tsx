@@ -7,12 +7,12 @@ import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
-import { createClient } from "@/utils/supabase/server";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-const Index: React.FC = () => {
+const Index: React.FC = async () => {
   const [diaryData, setDiaryData] = useState(null); // 保存された日記をリストを親で保持。
   const [isLoading, setIsLoading] = useState<boolean>(true); // 初期ローディングを感知する機能
 
@@ -22,8 +22,9 @@ const Index: React.FC = () => {
     router.push(path);
   };
 
+  const supabase = await createServerSupabaseClient();
+
   const fetchDiaryPosts = useCallback(async () => {
-    const supabase = await createClient()
     setIsLoading(true);
     const {
       data: { session },

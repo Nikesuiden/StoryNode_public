@@ -18,7 +18,7 @@ import { PhoneDisabled } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import RecommendOS from "@/components/elements/recommendOS/recommendOS";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
-import { createClient } from "@/utils/supabase/server";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 
 interface DiaryPost {
   id: number;
@@ -27,7 +27,7 @@ interface DiaryPost {
   createdAt: string;
 }
 
-export default function Speech() {
+export default async function Speech() {
   const [prompt, setPrompt] = useState<string>("");
   const [isListening, setIsListening] = useState<boolean>(false);
   const [recognition, setRecognition] = useState<any>(null);
@@ -44,14 +44,15 @@ export default function Speech() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null); // audioタグへの参照を作成
 
+  const supabase = await createServerSupabaseClient();
+
   const router = useRouter();
   const handleNavigation = (path: string) => {
     router.push(path);
   };
-  
+
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = useCallback(async () => {
-    const supabase = await createClient()
     const {
       data: { session },
     } = await supabase.auth.getSession();

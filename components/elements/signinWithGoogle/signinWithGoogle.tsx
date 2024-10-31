@@ -1,13 +1,21 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
+
+
 
 export default function SignInWithGoogle() {
   const handleGoogleLogin = async () => {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    })
     if (error) alert(error.message);
   };
   return (

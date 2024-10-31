@@ -7,19 +7,18 @@ import { useRouter } from "next/navigation";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import SignUpWithGoogle from "@/components/elements/signUpWithGoogle/signUpWithGoogle";
-import { createClient } from "@/utils/supabase/server";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 
-export default function SignUp() {
+export default async function SignUp() {
   const router = useRouter();
   const handleNavigation = (path: string) => {
     router.push(path);
   };
-
+  const supabase = await createServerSupabaseClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
-    const supabase = await createClient()
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -33,17 +32,15 @@ export default function SignUp() {
   };
 
   const handleGoogleLogin = async () => {
-    const supabase = await createClient()
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
         queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
+          access_type: "offline",
+          prompt: "consent",
         },
       },
-    })
-    
+    });
   };
 
   return (

@@ -9,7 +9,7 @@ import SideBar from "@/components/layouts/sideBar/sideBar";
 import { useCallback, useEffect, useState } from "react";
 import { History, KeyboardReturn } from "@mui/icons-material";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
-import { createClient } from "@/utils/supabase/server";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 
 interface ChatHistoryItem {
   id: number;
@@ -18,13 +18,14 @@ interface ChatHistoryItem {
   response: string;
 }
 
-export default function ChatHistory() {
+export default async function ChatHistory() {
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);  
+  const supabase = await createServerSupabaseClient();
   // 初回レンダリング時にチャット履歴を取得
   const fetchChatHistory = useCallback(async () => {
     setIsLoading(true);
-    const supabase = await createClient()
+  
     try {
       const {
         data: { session },

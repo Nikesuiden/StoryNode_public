@@ -1,18 +1,21 @@
 import { NextResponse } from "next/server";
-import { getUserFromRequest } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
+  const supabase = await createClient();
   try {
-    const user = await getUserFromRequest();
-    if (!user) {
+    // 非同期処理でユーザー情報を取得
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const userId = data.user.id; // 取得したユーザーID
+
     // クエリパラメータから 'period' を取得
     const { searchParams } = new URL(req.url);
-    const periodParam = searchParams.get('period');
+    const periodParam = searchParams.get("period");
 
     let createdAtFilter = undefined;
 
@@ -35,7 +38,7 @@ export async function GET(req: NextRequest) {
     // 日記投稿を取得
     const diaryPosts = await prisma.diaryPost.findMany({
       where: {
-        userId: user.id,
+        userId: userId,
         ...(createdAtFilter && { createdAt: createdAtFilter }),
       },
       orderBy: { createdAt: "desc" },
@@ -55,13 +58,16 @@ export async function GET(req: NextRequest) {
  * POSTリクエスト: 新しい日記投稿を作成
  */
 export async function POST(req: NextRequest) {
+  const supabase = await createClient()
   try {
-    const user = await getUserFromRequest();
-    if (!user) {
+    const { data, error } = await supabase.auth.getUser();
+    if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { content, emotion } = await req.json();
+
+    const UserId = data.user.id
 
     if (!content || !emotion) {
       return NextResponse.json(
@@ -75,7 +81,7 @@ export async function POST(req: NextRequest) {
       data: {
         content,
         emotion,
-        userId: user.id,
+        userId: UserId
       },
     });
 

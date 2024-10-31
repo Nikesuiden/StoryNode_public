@@ -1,8 +1,8 @@
 // app/api/diaryPost/[id]/route.ts
 
 import { NextResponse, NextRequest } from 'next/server';
-import { getUserFromRequest } from '@/lib/auth';
 import prisma from '@/lib/prisma';
+import { createClient } from '@/utils/supabase/server';
 
 /**
  * ユーザーの存在確認と作成を行う関数
@@ -36,9 +36,10 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const supabase = await createClient()
   try {
-    const user = await getUserFromRequest();
-    if (!user) {
+    const { data, error } = await supabase.auth.getUser();
+    if (!data.user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -48,7 +49,7 @@ export async function PUT(
     // ユーザーの存在確認と必要なら作成
     let existingUser;
     try {
-      existingUser = await findOrCreateUser(user.id, user.email);
+      existingUser = await findOrCreateUser(data.user.id, data.user.email);
     } catch (error: any) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
@@ -104,9 +105,10 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const supabase = await createClient();
   try {
-    const user = await getUserFromRequest();
-    if (!user) {
+    const { data, error } = await supabase.auth.getUser();
+    if (!data.user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -116,7 +118,7 @@ export async function DELETE(
     // ユーザーの存在確認と必要なら作成
     let existingUser;
     try {
-      existingUser = await findOrCreateUser(user.id, user.email);
+      existingUser = await findOrCreateUser(data.user.id, data.user.email);
     } catch (error: any) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }

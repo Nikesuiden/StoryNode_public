@@ -1,7 +1,7 @@
 // LogoutButton.tsx
 "use client";
 
-import { createClient } from "@/utils/supabase/server";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
@@ -9,15 +9,15 @@ export default function LogoutButton() {
   const handleNavigation = (path: string) => {
     router.push(path);
   };
-  
+
   const handleLogout = async () => {
-    const supabase = await createClient()
+    const supabase = await createServerSupabaseClient();
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("ログアウト中にエラーが発生しました:", error.message);
     } else {
       console.log("ログアウトに成功しました");
-      handleNavigation('/opening')
+      handleNavigation("/opening");
     }
   };
 
