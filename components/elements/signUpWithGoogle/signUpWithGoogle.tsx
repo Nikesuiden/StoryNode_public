@@ -1,7 +1,6 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { createServerSupabaseClient } from "@/utils/supabase/server";
 
 export default async function SignUpWithGoogle() {
   const supabase = await createClient();

@@ -13,7 +13,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
-import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 
 interface DiaryPost {
   id: number;
@@ -42,7 +42,7 @@ const AiChatForm: React.FC = async () => {
 
   const [totalPrompt, setTotalPrompt] = useState<string>("");
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createClient();
 
   // 日記データをフォーマットする関数
   function formatDiaryPosts(diaryPosts: DiaryPost[]): string {

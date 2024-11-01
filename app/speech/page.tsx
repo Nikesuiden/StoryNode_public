@@ -18,7 +18,8 @@ import { PhoneDisabled } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import RecommendOS from "@/components/elements/recommendOS/recommendOS";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
-import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
+
 
 interface DiaryPost {
   id: number;
@@ -44,7 +45,7 @@ export default async function Speech() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null); // audioタグへの参照を作成
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createClient();
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
