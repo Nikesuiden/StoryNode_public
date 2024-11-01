@@ -47,19 +47,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <Box>
-      {/* 認証中またはリダイレクト中の場合はローディングインジケーターを表示 */}
-      {isAuthLoading || isRedirecting ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh", // ローディング画面を中央に配置
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
+      
         <Box
           sx={{
             margin: 2,
@@ -99,7 +87,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             {children}
           </Box>
         </Box>
-      )}
     </Box>
   );
 };
