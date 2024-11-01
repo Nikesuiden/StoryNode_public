@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 
 export async function GET(req: NextRequest) {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   try {
     // 非同期処理でユーザー情報を取得
     const { data, error } = await supabase.auth.getUser();
@@ -58,7 +59,7 @@ export async function GET(req: NextRequest) {
  * POSTリクエスト: 新しい日記投稿を作成
  */
 export async function POST(req: NextRequest) {
-  const supabase = await createClient()
+  const supabase = await createServerSupabaseClient();
   try {
     const { data, error } = await supabase.auth.getUser();
     if (!data.user) {

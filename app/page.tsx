@@ -12,7 +12,7 @@ import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-const Index: React.FC = async () => {
+const Index: React.FC = () => {
   const [diaryData, setDiaryData] = useState(null); // 保存された日記をリストを親で保持。
   const [isLoading, setIsLoading] = useState<boolean>(true); // 初期ローディングを感知する機能
 
@@ -22,9 +22,9 @@ const Index: React.FC = async () => {
     router.push(path);
   };
 
-  const supabase = await createClient();
+  
 
-  const fetchDiaryPosts = useCallback(async () => {
+  const fetchDiaryPosts = useCallback(async () => {const supabase = await createClient();
     setIsLoading(true);
     const {
       data: { session },

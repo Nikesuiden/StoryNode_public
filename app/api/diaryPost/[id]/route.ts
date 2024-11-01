@@ -2,7 +2,7 @@
 
 import { NextResponse, NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
-import { createClient } from '@/utils/supabase/server';
+import { createServerSupabaseClient } from '@/utils/supabase/server';
 
 /**
  * ユーザーの存在確認と作成を行う関数
@@ -36,7 +36,7 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = await createClient()
+  const supabase = await createServerSupabaseClient()
   try {
     const { data, error } = await supabase.auth.getUser();
     if (!data.user) {
@@ -105,7 +105,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   try {
     const { data, error } = await supabase.auth.getUser();
     if (!data.user) {

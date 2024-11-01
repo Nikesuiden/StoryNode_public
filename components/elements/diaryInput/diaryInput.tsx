@@ -1,6 +1,6 @@
 "use client";
 
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import {
   Box,
   Button,
@@ -44,6 +44,7 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
 
   /// フォーム送信時の処理
   const handleSubmit = async () => {
+    const supabase = await createClient();
     if (!diaryInput) {
       alert("日記の内容を記入してください。");
       return;

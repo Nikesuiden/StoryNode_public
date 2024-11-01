@@ -2,7 +2,7 @@
 
 "use client";
 
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
@@ -25,6 +25,7 @@ const ToDoInput: React.FC<ToDoInputProps> = ({ onAction }) => {
 
   // 新しいToDoを追加（POST）
   const addTodo = async () => {
+    const supabase = await createClient();
     const {
       data: { session },
     } = await supabase.auth.getSession();

@@ -18,14 +18,16 @@ interface ChatHistoryItem {
   response: string;
 }
 
-export default async function ChatHistory() {
+export default function ChatHistory() {
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);  
-  const supabase = await createClient;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   // 初回レンダリング時にチャット履歴を取得
   const fetchChatHistory = useCallback(async () => {
+    const supabase = await createClient();
+
     setIsLoading(true);
-  
+
     try {
       const {
         data: { session },

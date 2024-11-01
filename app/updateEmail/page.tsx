@@ -1,13 +1,14 @@
 // UpdateEmail.tsx
 "use client";
 
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import { useState } from "react";
 
 export default function UpdateEmail() {
   const [email, setEmail] = useState("");
 
   const handleUpdateEmail = async () => {
+    const supabase = await createClient();
     const { data, error } = await supabase.auth.updateUser({ email });
     if (error) {
       console.error("メールアドレス変更中にエラーが発生しました:", error.message);

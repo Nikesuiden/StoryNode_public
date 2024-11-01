@@ -1,13 +1,14 @@
 // PasswordReset.tsx
 "use client";
 
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import { useState } from "react";
 
 export default function PasswordReset() {
   const [email, setEmail] = useState("");
 
   const handlePasswordReset = async () => {
+    const supabase = createClient();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: "https://your-domain.com/update-password",
     });

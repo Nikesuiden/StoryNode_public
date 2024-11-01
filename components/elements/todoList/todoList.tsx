@@ -46,7 +46,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
     try {
       const {
         data, error
-      } = await supabase.auth.getUser();
+      } = await supabase.auth.getSession();
 
       if (!data.session?.access_token) {
         console.error("ユーザーがログインしていません。");
@@ -57,7 +57,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${data.session.access_token}`,
         },
         body: JSON.stringify({ todo: editingText }),
       });
@@ -76,12 +76,13 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
 
   // ToDoを削除（DELETE）
   const deleteTodo = async (id: number) => {
+    const supabase = await createClient();
     try {
       const {
-        data: { session },
+        data, error
       } = await supabase.auth.getSession();
 
-      if (!session?.access_token) {
+      if (!data.session?.access_token) {
         console.error("ユーザーがログインしていません。");
         return;
       }
@@ -89,7 +90,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
       const response = await fetch(`/api/ToDoList/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${data.session.access_token}`,
         },
       });
 

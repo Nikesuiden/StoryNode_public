@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { createClient } from "@/utils/supabase/server";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 
 // GETリクエスト用のハンドラ
 export async function GET(
   req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   try {
     // ユーザ認証の箇所　// ここsupabaseからデータを取得
     const { data, error } = await supabase.auth.getUser();
@@ -50,7 +50,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   try {
     const { data, error } = await supabase.auth.getUser();
 
