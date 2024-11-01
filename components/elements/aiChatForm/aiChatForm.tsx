@@ -28,7 +28,7 @@ const rainbowAnimation = keyframes`
   100% { background-position: 0% 50%; }
 `;
 
-const AiChatForm: React.FC = async () => {
+const AiChatForm: React.FC = () => {
   const d_maxLength: number = 7000; // 入力上限定義
 
   const [period, setPeriod] = useState<number>(-1);
@@ -41,8 +41,6 @@ const AiChatForm: React.FC = async () => {
   const [diaryToPrompt, setDiaryToPrompt] = useState<string>("");
 
   const [totalPrompt, setTotalPrompt] = useState<string>("");
-
-  const supabase = await createClient();
 
   // 日記データをフォーマットする関数
   function formatDiaryPosts(diaryPosts: DiaryPost[]): string {
@@ -101,6 +99,7 @@ const AiChatForm: React.FC = async () => {
   }
 
   const handleSubmit = async () => {
+    const supabase = await createClient();
     if (period === -1) {
       alert("日記収集期間を選択してください。");
       return;
@@ -194,6 +193,7 @@ const AiChatForm: React.FC = async () => {
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = async () => {
+    const supabase = await createClient();
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -234,6 +234,8 @@ const AiChatForm: React.FC = async () => {
     response: string,
     period: number
   ) => {
+    const supabase = await createClient();
+
     try {
       const {
         data: { session },
