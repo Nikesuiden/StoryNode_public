@@ -5,7 +5,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { MeetingRoom } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import SignInWithGoogle from "@/components/elements/signinWithGoogle/signinWithGoogle";
-import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 
 export default function SignIn() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function SignIn() {
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createClient()
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -31,7 +31,7 @@ export default function SignIn() {
   };
 
   const handleSignup = async () => {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createClient();
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -85,7 +85,7 @@ export default function SignIn() {
           ログイン
         </Typography>
 
-        <form onSubmit={(e) => e.preventDefault()} style={{ width: "100%" }}>
+        {/* <form onSubmit={(e) => e.preventDefault()} style={{ width: "100%" }}>
           <TextField
             label="Email"
             type="email"
@@ -123,7 +123,7 @@ export default function SignIn() {
           >
             Sign up
           </Button>
-        </form>
+        </form> */}
 
         <Box
           sx={{

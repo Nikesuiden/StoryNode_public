@@ -7,7 +7,7 @@ import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import TopBar from "@/components/layouts/topBar/topBar";
-import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -22,7 +22,7 @@ const Index: React.FC = async () => {
     router.push(path);
   };
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createClient();
 
   const fetchDiaryPosts = useCallback(async () => {
     setIsLoading(true);

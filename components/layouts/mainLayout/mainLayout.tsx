@@ -5,7 +5,7 @@ import { ReactNode, useState, useEffect } from "react";
 import TopBar from "../topBar/topBar"; // Supabaseクライアントのインポート
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -20,7 +20,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   // ユーザー情報を取得する関数
   const fetchUser = async () => {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createClient();
     try {
       const { data, error } = await supabase.auth.getUser();
       if (error) throw error;

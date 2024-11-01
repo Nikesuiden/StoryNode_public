@@ -2,7 +2,7 @@
 
 "use client";
 
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import {
   Box,
   Button,
@@ -40,14 +40,15 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
 
   // ToDoを更新（PUT）
   const updateTodo = async (id: number) => {
+    const supabase = await createClient();
     if (!editingText.trim()) return;
 
     try {
       const {
-        data: { session },
-      } = await supabase.auth.getSession();
+        data, error
+      } = await supabase.auth.getUser();
 
-      if (!session?.access_token) {
+      if (!data.session?.access_token) {
         console.error("ユーザーがログインしていません。");
         return;
       }

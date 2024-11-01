@@ -7,14 +7,14 @@ import { useRouter } from "next/navigation";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import SignUpWithGoogle from "@/components/elements/signUpWithGoogle/signUpWithGoogle";
-import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 
 export default async function SignUp() {
   const router = useRouter();
   const handleNavigation = (path: string) => {
     router.push(path);
   };
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState<string>("");
 
