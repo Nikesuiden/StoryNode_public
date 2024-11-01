@@ -9,16 +9,17 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import SignUpWithGoogle from "@/components/elements/signUpWithGoogle/signUpWithGoogle";
 import { createClient } from "@/utils/supabase/client";
 
-export default async function SignUp() {
+export default function SignUp() {
   const router = useRouter();
   const handleNavigation = (path: string) => {
     router.push(path);
   };
-  const supabase = await createClient();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
+    const supabase = await createClient();
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -29,18 +30,6 @@ export default async function SignUp() {
     } else {
       alert("ログイン成功！");
     }
-  };
-
-  const handleGoogleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        queryParams: {
-          access_type: "offline",
-          prompt: "consent",
-        },
-      },
-    });
   };
 
   return (
