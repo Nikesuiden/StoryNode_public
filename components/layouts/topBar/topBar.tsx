@@ -41,9 +41,9 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
         {/* <Typography style={{ fontSize: 15 }}>
           {user ? `${user.user_metadata.full_name}` : "ログインしていません"}
         </Typography> */}
-        <Box sx={{display: "flex"}}>
-          <Notifications sx={{color: grey}}/>
-          <Feedback sx={{color: grey}}/>
+        <Box sx={{ display: "flex", marginRight: 2 }}>
+          <Notifications sx={{ color: grey, marginRight: 2, fontSize: 35 }} />
+          <Feedback sx={{ color: grey, fontSize: 35 }} />
         </Box>
       </Box>
       <hr />
