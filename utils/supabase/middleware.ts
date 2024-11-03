@@ -15,6 +15,8 @@ export async function updateSession(request: NextRequest) {
       cookies: {
         // Cookieの取得
         getAll() {
+          const checkCookies = request.cookies.getAll();
+          console.log("取得したクッキー", checkCookies);
           return request.cookies.getAll();
         },
 
@@ -39,14 +41,20 @@ export async function updateSession(request: NextRequest) {
 
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser();
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/signin") &&
-    !request.nextUrl.pathname.startsWith("/auth")
-  ) {
+  if (!user) {
+    console.log("ユーザ認証がされていません。");
+  }
+
+  if (error) {
+    console.log("getUserエラー :", error.message);
+  }
+
+  if (!user && !request.nextUrl.pathname.startsWith("/signin")) {
     // ユーザーがいない場合、ユーザーをログインページにリダイレクトする可能性があるため応答します。
+    console.log("取得失敗");
     const url = request.nextUrl.clone();
     url.pathname = "/signin";
     return NextResponse.redirect(url);

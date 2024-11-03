@@ -14,6 +14,7 @@ export default function SignInWithGoogle() {
           access_type: 'offline',
           prompt: 'consent',
         },
+        // redirectTo: `${window.location.origin}/api/auth/callback`,
       },
     })
     if (error) alert(error.message);

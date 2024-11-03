@@ -12,6 +12,7 @@ export default function SignUpWithGoogle() {
           access_type: "offline", //　トークンをリフレッシュします。
           prompt: "consent", //
         },
+        // redirectTo: `${window.location.origin}/api/auth/callback`,
       },
     });
     // エラーの内容を表示

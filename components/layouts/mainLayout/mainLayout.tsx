@@ -13,13 +13,17 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true); // 通例ではデフォルトで true
   const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
 
   const router = useRouter();
 
   // ユーザー情報を取得する関数
   const fetchUser = async () => {
+    if (user !== null) {
+      return;
+    }
+
     const supabase = await createClient();
     try {
       const { data, error } = await supabase.auth.getUser();
@@ -47,7 +51,19 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <Box>
-      
+      {/* 認証中またはリダイレクト中の場合はローディングインジケーターを表示 */}
+      {isAuthLoading || isRedirecting ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh", // ローディング画面を中央に配置
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
         <Box
           sx={{
             margin: 2,
@@ -87,6 +103,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             {children}
           </Box>
         </Box>
+      )}
     </Box>
   );
 };
