@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
 
 // GETリクエスト用のハンドラ
 export async function GET(
@@ -56,6 +57,20 @@ export async function POST(
 
     if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const UserId = data.user.id;
+    const Email = data.user.email as string;
+
+    // ユーザーの存在確認と作成
+    try {
+      await findOrCreateUser(UserId, Email);
+    } catch (err) {
+      console.error("ユーザー作成エラー:", err);
+      return NextResponse.json(
+        { error: "User creation failed" },
+        { status: 500 }
+      );
     }
 
     const { prompt, response, period } = await req.json();

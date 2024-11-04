@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
 
 export async function GET(req: NextRequest) {
   const supabase = await createServerSupabaseClient();
@@ -68,7 +69,19 @@ export async function POST(req: NextRequest) {
 
     const { content, emotion } = await req.json();
 
-    const UserId = data.user.id
+    const UserId = data.user.id;
+    const Email = data.user.email as string;
+
+    // ユーザーの存在確認と作成
+    try {
+      await findOrCreateUser(UserId, Email);
+    } catch (err) {
+      console.error("ユーザー作成エラー:", err);
+      return NextResponse.json(
+        { error: "User creation failed" },
+        { status: 500 }
+      );
+    }
 
     if (!content || !emotion) {
       return NextResponse.json(
