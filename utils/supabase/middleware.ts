@@ -1,3 +1,5 @@
+// utils/supabase/middleware.ts
+
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -51,6 +53,7 @@ export async function updateSession(request: NextRequest) {
   if (error) {
     console.log("getUserエラー :", error.message);
   }
+
 
   if (!user && !request.nextUrl.pathname.startsWith("/signin")) {
     // ユーザーがいない場合、ユーザーをログインページにリダイレクトする可能性があるため応答します。

@@ -1,3 +1,5 @@
+// app/auth/callback/route.ts
+
 import { createServerSupabaseClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 // サーバーサイド認証の手順に基づいて作成したクライアントをインポート

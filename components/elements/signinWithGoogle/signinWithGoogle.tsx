@@ -1,3 +1,5 @@
+// component/signinWithGoogle.ts
+
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
