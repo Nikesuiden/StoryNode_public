@@ -67,7 +67,7 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
             <Avatar
               src={profilePicture ?? undefined}
               alt="User Profile"
-              sx={{ width: "40", height: "40", cursor: "pointer" }}
+              sx={{ width: 35, height: 35, cursor: "pointer" }}
             />
           }
           onClick={() => handleNavigation("/settings")}
