@@ -24,7 +24,6 @@ interface UserProps {
 
 const BottomBar: React.FC<UserProps> = ({ user }) => {
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
-
   const router = useRouter();
   const handleNavigation = (path: string) => {
     router.push(path);

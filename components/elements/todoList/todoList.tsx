@@ -131,6 +131,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                   onChange={(e) => setEditingText(e.target.value)}
                   variant="outlined"
                   size="small"
+                  multiline
                   sx={{ flex: 1 }}
                 />
                 <Box sx={{ display: "flex", gap: 1, ml: 2 }}>
