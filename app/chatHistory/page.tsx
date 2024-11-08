@@ -6,7 +6,7 @@ import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { History, KeyboardReturn } from "@mui/icons-material";
 import supabase from "@/lib/supabaseClient";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
@@ -22,7 +22,7 @@ export default function ChatHistory() {
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // 初回レンダリング時にチャット履歴を取得
-  const fetchChatHistory = useCallback(async () => {
+  const fetchChatHistory = async () => {
     setIsLoading(true);
     try {
       const {
@@ -49,7 +49,7 @@ export default function ChatHistory() {
     } catch (error) {
       console.error("Error fetching chat history:", error);
     }
-  }, [supabase]); // supabaseに依存するため、依存配列に追加
+  }; // supabaseに依存するため、依存配列に追加
 
   useEffect(() => {
     fetchChatHistory();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Container,
   Box,
@@ -54,7 +54,7 @@ export default function Speech() {
   };
 
   // APIから日記の一覧を取得する関数
-  const fetchDiaryPosts = useCallback(async () => {
+  const fetchDiaryPosts = async () => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -88,7 +88,7 @@ export default function Speech() {
     } catch (error) {
       console.error("Error fetching diary posts:", error);
     }
-  }, [period]);
+  };
 
   // TTS呼び出し関数
   const handleTextToSpeech = async () => {

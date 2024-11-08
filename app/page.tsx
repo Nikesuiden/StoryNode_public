@@ -6,7 +6,7 @@ import TimeDisplay from "@/components/elements/timeDisplay/timeDisplay";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 import supabase from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Index: React.FC = () => {
   const [diaryData, setDiaryData] = useState(null); // 保存された日記をリストを親で保持。
@@ -18,7 +18,7 @@ const Index: React.FC = () => {
     router.push(path);
   };
 
-  const fetchDiaryPosts = useCallback(async () => {
+  const fetchDiaryPosts = async () => {
     setIsLoading(true);
     const {
       data: { session },
@@ -44,7 +44,7 @@ const Index: React.FC = () => {
       alert("情報の取得に失敗しました。タイトル画面に戻ります。");
       handleNavigation("/signin");
     }
-  }, [supabase, handleNavigation]); // 必要な依存関係を追加
+  }; // 必要な依存関係を追加
 
   useEffect(() => {
     fetchDiaryPosts();
