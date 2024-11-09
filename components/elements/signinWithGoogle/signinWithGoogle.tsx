@@ -1,10 +1,24 @@
-import supabase from "@/lib/supabaseClient";
+// component/signinWithGoogle.ts
+
+"use client";
+
+import { createClient } from "@/utils/supabase/client";
+
+
 
 export default function SignInWithGoogle() {
   const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+        // redirectTo: `${window.location.origin}/api/auth/callback`,
+      },
+    })
     if (error) alert(error.message);
   };
   return (

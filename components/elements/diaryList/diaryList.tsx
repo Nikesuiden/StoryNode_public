@@ -1,7 +1,8 @@
 "use client";
 
-import supabase from "@/lib/supabaseClient";
-import { MoreHoriz } from "@mui/icons-material";
+import { createClient } from "@/utils/supabase/client";
+import { cookieStorageManager } from "@chakra-ui/react";
+import { CollectionsTwoTone, MoreHoriz } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -92,6 +93,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
   };
 
   const handleEdit = async () => {
+    const supabase = await createClient();
     if (editingPostId !== null) {
       try {
         const {
@@ -135,6 +137,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
 
   // 投稿を削除
   const handleDelete = async () => {
+    const supabase = await createClient();
     if (selectedPostId !== null) {
       try {
         const {
@@ -167,6 +170,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
 
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = async () => {
+    const supabase = await createClient();
     const {
       data: { session },
     } = await supabase.auth.getSession();

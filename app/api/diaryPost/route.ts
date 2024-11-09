@@ -1,18 +1,23 @@
 import { NextResponse } from "next/server";
-import { getUserFromRequest } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
 
 export async function GET(req: NextRequest) {
+  const supabase = await createServerSupabaseClient();
   try {
-    const user = await getUserFromRequest(req);
-    if (!user) {
+    // 非同期処理でユーザー情報を取得
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const userId = data.user.id; // 取得したユーザーID
+
     // クエリパラメータから 'period' を取得
     const { searchParams } = new URL(req.url);
-    const periodParam = searchParams.get('period');
+    const periodParam = searchParams.get("period");
 
     let createdAtFilter = undefined;
 
@@ -35,7 +40,7 @@ export async function GET(req: NextRequest) {
     // 日記投稿を取得
     const diaryPosts = await prisma.diaryPost.findMany({
       where: {
-        userId: user.id,
+        userId: userId,
         ...(createdAtFilter && { createdAt: createdAtFilter }),
       },
       orderBy: { createdAt: "desc" },
@@ -55,13 +60,28 @@ export async function GET(req: NextRequest) {
  * POSTリクエスト: 新しい日記投稿を作成
  */
 export async function POST(req: NextRequest) {
+  const supabase = await createServerSupabaseClient();
   try {
-    const user = await getUserFromRequest(req);
-    if (!user) {
+    const { data, error } = await supabase.auth.getUser();
+    if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { content, emotion } = await req.json();
+
+    const UserId = data.user.id;
+    const Email = data.user.email as string;
+
+    // ユーザーの存在確認と作成
+    try {
+      await findOrCreateUser(UserId, Email);
+    } catch (err) {
+      console.error("ユーザー作成エラー:", err);
+      return NextResponse.json(
+        { error: "User creation failed" },
+        { status: 500 }
+      );
+    }
 
     if (!content || !emotion) {
       return NextResponse.json(
@@ -75,7 +95,7 @@ export async function POST(req: NextRequest) {
       data: {
         content,
         emotion,
-        userId: user.id,
+        userId: UserId
       },
     });
 

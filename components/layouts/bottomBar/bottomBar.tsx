@@ -24,6 +24,7 @@ interface UserProps {
 
 const BottomBar: React.FC<UserProps> = ({ user }) => {
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+
   const router = useRouter();
   const handleNavigation = (path: string) => {
     router.push(path);
@@ -66,7 +67,7 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
             <Avatar
               src={profilePicture ?? undefined}
               alt="User Profile"
-              sx={{ width: 35, height: 35, cursor: "pointer" }}
+              sx={{ width: "40", height: "40", cursor: "pointer" }}
             />
           }
           onClick={() => handleNavigation("/settings")}

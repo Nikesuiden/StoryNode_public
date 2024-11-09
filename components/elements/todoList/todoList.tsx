@@ -2,7 +2,7 @@
 
 "use client";
 
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import {
   Box,
   Button,
@@ -40,14 +40,15 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
 
   // ToDoを更新（PUT）
   const updateTodo = async (id: number) => {
+    const supabase = await createClient();
     if (!editingText.trim()) return;
 
     try {
       const {
-        data: { session },
+        data, error
       } = await supabase.auth.getSession();
 
-      if (!session?.access_token) {
+      if (!data.session?.access_token) {
         console.error("ユーザーがログインしていません。");
         return;
       }
@@ -56,7 +57,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${data.session.access_token}`,
         },
         body: JSON.stringify({ todo: editingText }),
       });
@@ -75,12 +76,13 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
 
   // ToDoを削除（DELETE）
   const deleteTodo = async (id: number) => {
+    const supabase = await createClient();
     try {
       const {
-        data: { session },
+        data, error
       } = await supabase.auth.getSession();
 
-      if (!session?.access_token) {
+      if (!data.session?.access_token) {
         console.error("ユーザーがログインしていません。");
         return;
       }
@@ -88,7 +90,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
       const response = await fetch(`/api/ToDoList/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${data.session.access_token}`,
         },
       });
 
@@ -131,7 +133,6 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
                   onChange={(e) => setEditingText(e.target.value)}
                   variant="outlined"
                   size="small"
-                  multiline
                   sx={{ flex: 1 }}
                 />
                 <Box sx={{ display: "flex", gap: 1, ml: 2 }}>

@@ -1,6 +1,6 @@
 "use client";
 
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import {
   Box,
   Button,
@@ -44,17 +44,16 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
 
   /// フォーム送信時の処理
   const handleSubmit = async () => {
+    const supabase = await createClient();
     if (!diaryInput) {
       alert("日記の内容を記入してください。");
       return;
     }
     try {
       // Supabase からセッション情報を取得
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.getUser();
 
-      if (!session?.access_token) {
+      if (!data.user) {
         return;
       }
 
@@ -62,9 +61,13 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`, // JWT トークンを Authorization ヘッダーに追加
+          Authorization: `Bearer ${data.user.id}`, // JWT トークンを Authorization ヘッダーに追加
         },
-        body: JSON.stringify({ content: diaryInput, emotion: inputEmotion }),
+        body: JSON.stringify({
+          content: diaryInput,
+          emotion: inputEmotion,
+          UserId: data.user.id,
+        }),
       });
 
       if (response.ok) {

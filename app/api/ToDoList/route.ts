@@ -3,13 +3,16 @@
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getUserFromRequest } from "@/lib/auth";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { supabase } from "@supabase/auth-ui-shared";
+import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
 
 // ToDoリストの取得（GETリクエスト）
 export async function GET(req: NextRequest) {
+  const supabase = await createServerSupabaseClient();
   try {
-    const user = await getUserFromRequest(req);
-    if (!user) {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) {
       return NextResponse.json(
         { error: "認証されていません" },
         { status: 401 }
@@ -17,12 +20,11 @@ export async function GET(req: NextRequest) {
     }
 
     const todos = await prisma.toDo.findMany({
-      where: { userId: user.id },
+      where: { userId: data.user.id },
       orderBy: {
         createdAt: "desc",
       },
     });
-    
     return NextResponse.json(todos, { status: 200 });
   } catch (error) {
     console.error("ToDoリストの取得中にエラーが発生しました:", error);
@@ -35,10 +37,25 @@ export async function GET(req: NextRequest) {
 
 // ToDoの作成（POSTリクエスト）
 export async function POST(req: NextRequest) {
+  const supabase = await createServerSupabaseClient();
   try {
-    const user = await getUserFromRequest(req);
-    if (!user) {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const UserId = data.user.id;
+    const Email = data.user.email as string;
+
+    // ユーザーの存在確認と作成
+    try {
+      await findOrCreateUser(UserId, Email);
+    } catch (err) {
+      console.error("ユーザー作成エラー:", err);
+      return NextResponse.json(
+        { error: "User creation failed" },
+        { status: 500 }
+      );
     }
 
     const { todo } = await req.json();
@@ -56,7 +73,7 @@ export async function POST(req: NextRequest) {
       data: {
         todo,
         user: {
-          connect: { id: user.id },
+          connect: { id: data.user.id },
         },
       },
     });
