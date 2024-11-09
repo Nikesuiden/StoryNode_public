@@ -2,6 +2,7 @@
 
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import prisma from "@/lib/prisma";
 
 export async function updateSession(request: NextRequest) {
   // Next.jsのレスポンスオブジェクトを作成
@@ -46,32 +47,54 @@ export async function updateSession(request: NextRequest) {
     error,
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    console.log("ユーザ認証がされていません。");
-  }
-
   if (error) {
-    console.log("getUserエラー :", error.message);
+    console.log("getUserエラー:", error.message);
   }
 
-  
-
-
-  if (!user && !request.nextUrl.pathname.startsWith("/signin")) {
-    // ユーザーがいない場合、ユーザーをログインページにリダイレクトする可能性があるため応答します。
-    console.log("取得失敗");
-    const url = request.nextUrl.clone();
-    url.pathname = "/signin";
-    return NextResponse.redirect(url);
+  if (!user) {
+    console.log("ユーザー認証がされていません。");
+    if (!request.nextUrl.pathname.startsWith("/signin")) {
+      // 認証されていないユーザーをログインページにリダイレクト
+      const url = request.nextUrl.clone();
+      url.pathname = "/signin";
+      return NextResponse.redirect(url);
+    }
+    // 既に/signinページにいる場合、リダイレクトせずに処理を続行
+    return supabaseResponse;
   }
 
-  // 重要: supabaseResponse オブジェクトをそのまま返す必要があります。
-  // NextResponse.next() で新しいレスポンスオブジェクトを作成する場合は、以下の点に注意してください:
+  if (!user.email) {
+    console.log("Emailが見つかりませんでした。");
+    if (!request.nextUrl.pathname.startsWith("/signin")) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/signin";
+      return NextResponse.redirect(url);
+    }
+    return supabaseResponse;
+  }
+
+  // Prismaデータベースからユーザー情報を取得
+  let existingUser = await prisma.user.findUnique({
+    where: { id: user.id },
+  });
+
+  // ユーザーが存在しない場合、新規作成
+  if (!existingUser) {
+    existingUser = await prisma.user.create({
+      data: {
+        id: user.id,
+        email: user.email, // 型エラーが発生しないように事前にチェック済み
+      },
+    });
+  }
+
+  // 重要: supabaseResponseオブジェクトをそのまま返す必要があります。
+  // NextResponse.next()で新しいレスポンスオブジェクトを作成する場合は、以下の点に注意してください:
   // 1. このようにリクエストを渡します:
   //    const myNewResponse = NextResponse.next({ request })
   // 2. クッキーをコピーします:
   //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. myNewResponse オブジェクトをニーズに合わせて変更しますが、クッキーを変更しないでください！
+  // 3. myNewResponseオブジェクトをニーズに合わせて変更しますが、クッキーを変更しないでください！
   // 4. 最後に:
   //    return myNewResponse
   // これを行わないと、ブラウザとサーバーが同期しなくなり、ユーザーのセッションが早期に終了する原因となる可能性があります。
