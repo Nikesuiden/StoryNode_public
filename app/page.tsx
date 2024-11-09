@@ -3,12 +3,8 @@
 import DiaryInput from "@/components/elements/diaryInput/diaryInput";
 import DiaryList from "@/components/elements/diaryList/diaryList";
 import TimeDisplay from "@/components/elements/timeDisplay/timeDisplay";
-import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
-import SideBar from "@/components/layouts/sideBar/sideBar";
-import TopBar from "@/components/layouts/topBar/topBar";
 import { createClient } from "@/utils/supabase/client";
-import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
