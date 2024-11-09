@@ -54,6 +54,8 @@ export async function updateSession(request: NextRequest) {
     console.log("getUserエラー :", error.message);
   }
 
+  
+
 
   if (!user && !request.nextUrl.pathname.startsWith("/signin")) {
     // ユーザーがいない場合、ユーザーをログインページにリダイレクトする可能性があるため応答します。
