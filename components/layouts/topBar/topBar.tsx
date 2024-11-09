@@ -16,13 +16,9 @@ interface UserProps {
 }
 
 const TopBar: React.FC<UserProps> = ({ user }) => {
-  const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const feedbackUrl = process.env.FEEDBACKFORM;
+  const questionaryUrl = process.env.QUESTIONARY_URL;
 
-  useEffect(() => {
-    if (user) {
-      setProfilePicture(user.user_metadata.avatar_url);
-    }
-  }, [user]);
   return (
     <Box sx={{ mb: 2 }}>
       <Box
@@ -41,26 +37,35 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
         {/* <Typography style={{ fontSize: 15 }}>
           {user ? `${user.user_metadata.full_name}` : "ログインしていません"}
         </Typography> */}
-        <Box sx={{ display: "flex", marginRight: 0, position: "absolute", right: 20, top: 28,
-         }}>
+        <Box
+          sx={{
+            display: "flex",
+            marginRight: 0,
+            position: "absolute",
+            right: 20,
+            top: 28,
+          }}
+        >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
+              cursor: "pointer",
             }}
           >
             <Notifications sx={{ color: grey, marginRight: 4, fontSize: 35 }} />
-            <Typography sx={{ fontSize: 9, ml:0.35 }}>Update</Typography>
+            <Typography sx={{ fontSize: 9, ml: 0.35 }}>Update</Typography>
           </Box>
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
+              cursor: "pointer",
             }}
           >
-            <Feedback sx={{ color: grey, fontSize: 35 }} />
+            <Feedback sx={{ color: grey, fontSize: 35 }} href={feedbackUrl} />
             <Typography sx={{ fontSize: 8 }}>FeedBack</Typography>
           </Box>
         </Box>
