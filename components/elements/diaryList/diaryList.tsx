@@ -1,8 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { cookieStorageManager } from "@chakra-ui/react";
-import { CollectionsTwoTone, MoreHoriz } from "@mui/icons-material";
+import { MoreHoriz } from "@mui/icons-material";
 import {
   Box,
   Button,

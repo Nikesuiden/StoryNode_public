@@ -1,23 +1,18 @@
 "use client";
 
 import {
-  BorderClear,
   Feedback,
-  Mail,
   Notifications,
 } from "@mui/icons-material";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
 
 interface UserProps {
   user: User | null; // MainLayoutから渡されるユーザー情報
 }
 
 const TopBar: React.FC<UserProps> = ({ user }) => {
-  const feedbackUrl = process.env.FEEDBACKFORM;
-  const questionaryUrl = process.env.QUESTIONARY_URL;
 
   return (
     <Box sx={{ mb: 2 }}>
@@ -34,9 +29,6 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
           StoryNode
         </Typography>
 
-        {/* <Typography style={{ fontSize: 15 }}>
-          {user ? `${user.user_metadata.full_name}` : "ログインしていません"}
-        </Typography> */}
         <Box
           sx={{
             display: "flex",
@@ -65,8 +57,10 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               cursor: "pointer",
             }}
           >
-            <Feedback sx={{ color: grey, fontSize: 35 }} href={feedbackUrl} />
-            <Typography sx={{ fontSize: 8 }}>FeedBack</Typography>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfvXvSbzokIpUih6UEzyfqMDpcZj8x_8vnGAVrYYAjUcxZwVQ/viewform?usp=sf_link" target="_blank" rel="noopener noreferrer" >
+              <Feedback sx={{ color: grey, fontSize: 35 }}  />
+              <Typography sx={{ fontSize: 8 }}>FeedBack</Typography>
+            </a>
           </Box>
         </Box>
       </Box>
