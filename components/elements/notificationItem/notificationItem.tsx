@@ -1,8 +1,6 @@
 // components/NotificationItem.tsx
 import React from "react";
-import { Box, Paper, Typography } from "@mui/material";
-import { border } from "@chakra-ui/react";
-import { BorderColor } from "@mui/icons-material";
+import { Box, Typography } from "@mui/material";
 
 interface NotificationItemProps {
   title: string;
@@ -17,7 +15,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
 }) => {
   return (
     <Box
-    sx={{
+      sx={{
         marginTop: 2,
         border: "1px solid gray",
         borderRadius: 1,
