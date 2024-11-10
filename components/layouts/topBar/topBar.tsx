@@ -1,18 +1,20 @@
 "use client";
 
-import {
-  Feedback,
-  Notifications,
-} from "@mui/icons-material";
+import { Feedback, Notifications } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 interface UserProps {
   user: User | null; // MainLayoutから渡されるユーザー情報
 }
 
 const TopBar: React.FC<UserProps> = ({ user }) => {
+  const router = useRouter();
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
 
   return (
     <Box sx={{ mb: 2 }}>
@@ -45,6 +47,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               justifyContent: "center",
               cursor: "pointer",
             }}
+            onClick={() => handleNavigation("/notifications")}
           >
             <Notifications sx={{ color: grey, marginRight: 4, fontSize: 35 }} />
             <Typography sx={{ fontSize: 9, ml: 0.35 }}>Update</Typography>
@@ -57,8 +60,12 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               cursor: "pointer",
             }}
           >
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfvXvSbzokIpUih6UEzyfqMDpcZj8x_8vnGAVrYYAjUcxZwVQ/viewform?usp=sf_link" target="_blank" rel="noopener noreferrer" >
-              <Feedback sx={{ color: grey, fontSize: 35 }}  />
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfvXvSbzokIpUih6UEzyfqMDpcZj8x_8vnGAVrYYAjUcxZwVQ/viewform?usp=sf_link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Feedback sx={{ color: grey, fontSize: 35 }} />
               <Typography sx={{ fontSize: 8 }}>FeedBack</Typography>
             </a>
           </Box>
