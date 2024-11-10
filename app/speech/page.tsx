@@ -13,12 +13,12 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import supabase from "@/lib/supabaseClient";
 import TopBar from "@/components/layouts/topBar/topBar";
 import { PhoneDisabled } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import RecommendOS from "@/components/elements/recommendOS/recommendOS";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
+import { createClient } from "@/utils/supabase/client";
 
 interface DiaryPost {
   id: number;
@@ -49,12 +49,10 @@ export default function Speech() {
     router.push(path);
   };
 
-  const handleAuthData = (data: boolean) => {
-    setIsAuthLoading(data);
-  };
-
   // APIから日記の一覧を取得する関数
   const fetchDiaryPosts = useCallback(async () => {
+    const supabase = await createClient();
+
     const {
       data: { session },
     } = await supabase.auth.getSession();

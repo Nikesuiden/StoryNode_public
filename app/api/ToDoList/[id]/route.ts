@@ -2,16 +2,17 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getUserFromRequest } from "@/lib/auth";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 
 // ToDoの更新（PUTリクエスト）
 export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const supabase = await createServerSupabaseClient();
   try {
-    const user = await getUserFromRequest(req);
-    if (!user) {
+    const { data, error } = await supabase.auth.getUser();
+    if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -33,7 +34,7 @@ export async function PUT(
       where: { id },
     });
 
-    if (!existingToDo || existingToDo.userId !== user.id) {
+    if (!existingToDo || existingToDo.userId !== data.user.id) {
       return NextResponse.json(
         { error: "ToDo not found or unauthorized" },
         { status: 404 }
@@ -72,9 +73,11 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const supabase = await createServerSupabaseClient();
+
   try {
-    const user = await getUserFromRequest(req);
-    if (!user) {
+    const { data, error } = await supabase.auth.getUser();
+    if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -87,7 +90,7 @@ export async function DELETE(
       where: { id },
     });
 
-    if (!existingToDo || existingToDo.userId !== user.id) {
+    if (!existingToDo || existingToDo.userId !== data.user.id) {
       return NextResponse.json(
         { error: "ToDo not found or unauthorized" },
         { status: 404 }

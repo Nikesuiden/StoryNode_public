@@ -2,10 +2,10 @@ import { Box, CircularProgress } from "@mui/material";
 import SideBar from "../sideBar/sideBar";
 import BottomBar from "../bottomBar/bottomBar";
 import { ReactNode, useState, useEffect } from "react";
-import TopBar from "../topBar/topBar";
-import supabase from "@/lib/supabaseClient"; // Supabaseクライアントのインポート
+import TopBar from "../topBar/topBar"; // Supabaseクライアントのインポート
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -13,23 +13,25 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true); // 通例ではデフォルトで true
   const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
 
   const router = useRouter();
 
   // ユーザー情報を取得する関数
   const fetchUser = async () => {
+    if (user !== null) {
+      return;
+    }
+
+    const supabase = await createClient();
     try {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.getUser();
       if (error) throw error;
 
-      setUser(session?.user ?? null);
+      setUser(data?.user ?? null);
 
-      if (!session) {
+      if (!data) {
         setIsRedirecting(true); // リダイレクト開始
         router.replace("/opening"); // リダイレクト先のページパス
       }
@@ -81,7 +83,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
               },
             }}
           >
-            <BottomBar user={user}/>
+            <BottomBar user={user} />
           </Box>
 
           {/* PCレスポンシブ */}
@@ -92,7 +94,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
               },
             }}
           >
-            <SideBar user={user}/>
+            <SideBar user={user} />
           </Box>
 
           {/* アプリ情報 */}

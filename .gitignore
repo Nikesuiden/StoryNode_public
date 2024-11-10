@@ -8,6 +8,7 @@
 
 # testing
 /coverage
+.env
 
 # next.js
 /.next/
@@ -37,3 +38,6 @@ next-env.d.ts
 
 # env files
 .env
+
+# securityTest page
+app/securityTest/

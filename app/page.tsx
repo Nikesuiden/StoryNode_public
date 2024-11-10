@@ -3,12 +3,8 @@
 import DiaryInput from "@/components/elements/diaryInput/diaryInput";
 import DiaryList from "@/components/elements/diaryList/diaryList";
 import TimeDisplay from "@/components/elements/timeDisplay/timeDisplay";
-import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
-import SideBar from "@/components/layouts/sideBar/sideBar";
-import TopBar from "@/components/layouts/topBar/topBar";
-import supabase from "@/lib/supabaseClient";
-import { Box } from "@mui/material";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
@@ -22,7 +18,9 @@ const Index: React.FC = () => {
     router.push(path);
   };
 
-  const fetchDiaryPosts = useCallback(async () => {
+  
+
+  const fetchDiaryPosts = useCallback(async () => {const supabase = await createClient();
     setIsLoading(true);
     const {
       data: { session },
@@ -48,7 +46,7 @@ const Index: React.FC = () => {
       alert("情報の取得に失敗しました。タイトル画面に戻ります。");
       handleNavigation("/signin");
     }
-  }, [supabase, handleNavigation]); // 必要な依存関係を追加
+  }, [handleNavigation]); // 必要な依存関係を追加
 
   useEffect(() => {
     fetchDiaryPosts();

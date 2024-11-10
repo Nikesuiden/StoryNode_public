@@ -8,9 +8,9 @@ import { Box, Typography } from "@mui/material";
 import SideBar from "@/components/layouts/sideBar/sideBar";
 import React, { useEffect, useState } from "react";
 import ToDoList from "@/components/elements/todoList/todoList";
-import supabase from "@/lib/supabaseClient";
 import ToDoInput from "@/components/elements/todoInput/todoInput";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
+import { createClient } from "@/utils/supabase/client";
 
 interface ToDo {
   id: number;
@@ -21,6 +21,7 @@ const ToDoPage: React.FC = () => {
   const [todoData, setToDoData] = useState<ToDo[] | null>(null);
 
   const fetchToDoList = async () => {
+    const supabase = await createClient();
     try {
       const {
         data: { session },

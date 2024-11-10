@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getUserFromRequest } from "@/lib/auth";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
+import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
 
 // GETリクエスト用のハンドラ
 export async function GET(
   req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
+  const supabase = await createServerSupabaseClient();
   try {
     // ユーザ認証の箇所　// ここsupabaseからデータを取得
-    const user = await getUserFromRequest(req);
+    const { data, error } = await supabase.auth.getUser();
 
     // ログイン中のアカウントがない場合
-    if (!user) {
+    if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -20,7 +22,7 @@ export async function GET(
     // ユーザーの存在確認　これはデータベースのフィルタ用　PrismaのUserIdとSupabaseのIdに互換性を持たせるため
     const existingUser = await prisma.user.findUnique({
       where: {
-        id: user.id,
+        id: data.user.id,
       },
     });
 
@@ -49,11 +51,26 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
+  const supabase = await createServerSupabaseClient();
   try {
-    const user = await getUserFromRequest(req);
+    const { data, error } = await supabase.auth.getUser();
 
-    if (!user) {
+    if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const UserId = data.user.id;
+    const Email = data.user.email as string;
+
+    // ユーザーの存在確認と作成
+    try {
+      await findOrCreateUser(UserId, Email);
+    } catch (err) {
+      console.error("ユーザー作成エラー:", err);
+      return NextResponse.json(
+        { error: "User creation failed" },
+        { status: 500 }
+      );
     }
 
     const { prompt, response, period } = await req.json();
@@ -61,7 +78,7 @@ export async function POST(
     // ユーザーの存在確認
     const existingUser = await prisma.user.findUnique({
       where: {
-        id: user.id,
+        id: data.user.id,
       },
     });
 

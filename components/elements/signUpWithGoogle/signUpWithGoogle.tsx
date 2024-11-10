@@ -1,11 +1,21 @@
-import supabase from "@/lib/supabaseClient";
+"use client";
 
+import { createClient } from "@/utils/supabase/client";
 
 export default function SignUpWithGoogle() {
   const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        queryParams: {
+          access_type: "offline", //　トークンをリフレッシュします。
+          prompt: "consent", //
+        },
+        // redirectTo: `${window.location.origin}/api/auth/callback`,
+      },
     });
+    // エラーの内容を表示
     if (error) alert(error.message);
   };
   return (

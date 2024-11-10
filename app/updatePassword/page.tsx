@@ -1,13 +1,14 @@
 // UpdatePassword.tsx
 "use client";
 
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import { useState } from "react";
 
 export default function UpdatePassword() {
   const [password, setPassword] = useState("");
 
   const handleUpdatePassword = async () => {
+    const supabase = await createClient();
     const { error } = await supabase.auth.updateUser({ password });
     if (error) {
       console.error("パスワード変更中にエラーが発生しました:", error.message);
