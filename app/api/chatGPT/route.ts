@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
-    return NextResponse.json({ error: 'API key is missing' }, { status: 500 });
+    return NextResponse.json({ error: 'API keyがありません。' }, { status: 500 });
   }
 
   // 一般API用エンドポイント: https://api.openai.com/v1/chat/completions
@@ -42,6 +42,6 @@ export async function POST(request: Request) {
     const streamResponse = new Response(stream);
     return streamResponse;
   } catch (error) {
-    return NextResponse.json({ error: 'Error fetching response' }, { status: 500 });
+    return NextResponse.json({ error: 'responseの取得に失敗しました。' }, { status: 500 });
   }
 }

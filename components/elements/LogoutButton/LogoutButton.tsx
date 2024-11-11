@@ -2,6 +2,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
+import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
@@ -20,5 +21,5 @@ export default function LogoutButton() {
     }
   };
 
-  return <button onClick={handleLogout}>ログアウト</button>;
+  return <Button onClick={handleLogout}>ログアウト</Button>;
 }

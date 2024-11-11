@@ -1,33 +1,8 @@
 // app/api/diaryPost/[id]/route.ts
 
-import { NextResponse, NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
-import { createServerSupabaseClient } from '@/utils/supabase/server';
-
-/**
- * ユーザーの存在確認と作成を行う関数
- * @param userId ユーザーID
- * @param email ユーザーのメールアドレス
- * @returns 存在するユーザーまたは新規作成されたユーザー
- */
-
-async function findOrCreateUser(userId: string, email?: string) {
-  let user = await prisma.user.findUnique({ where: { id: userId } });
-
-  if (!user) {
-    if (!email) {
-      throw new Error('User email is missing');
-    }
-    user = await prisma.user.create({
-      data: {
-        id: userId,
-        email: email,
-      },
-    });
-  }
-
-  return user;
-}
+import { NextResponse, NextRequest } from "next/server";
+import prisma from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 
 /**
  * PUTリクエスト: 日記投稿を更新
@@ -36,28 +11,17 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = await createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient();
   try {
     const { data, error } = await supabase.auth.getUser();
-    if (!data.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    // ユーザーの存在確認と必要なら作成
-    let existingUser;
-    try {
-      existingUser = await findOrCreateUser(data.user.id, data.user.email);
-    } catch (error: any) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+    if (error || !data.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const id = Number(params.id);
     if (isNaN(id)) {
       return NextResponse.json(
-        { error: 'Invalid ID format' },
+        { error: "IDの形式が正しくありません。" }, // パラメータから不正なIdを受信した場合エラーを返す。
         { status: 400 }
       );
     }
@@ -66,7 +30,7 @@ export async function PUT(
 
     if (!content || !emotion) {
       return NextResponse.json(
-        { error: 'Content and emotion are required' },
+        { error: "Content と emotion が必要です。" },
         { status: 400 }
       );
     }
@@ -76,9 +40,9 @@ export async function PUT(
       where: { id: id },
     });
 
-    if (!existingPost || existingPost.userId !== existingUser.id) {
+    if (!existingPost || existingPost.userId !== data.user.id) {
       return NextResponse.json(
-        { error: 'Diary post not found or not authorized' },
+        { error: "Diary postまたはユーザーが見つかりません。" },
         { status: 404 }
       );
     }
@@ -90,9 +54,9 @@ export async function PUT(
 
     return NextResponse.json(updatedDiaryPost, { status: 200 });
   } catch (error) {
-    console.error('Error updating diary post:', error);
+    console.error("diary post更新に失敗しました:", error);
     return NextResponse.json(
-      { error: 'Error updating diary post' },
+      { error: "diary post更新に失敗しました。" },
       { status: 500 }
     );
   }
@@ -108,27 +72,13 @@ export async function DELETE(
   const supabase = await createServerSupabaseClient();
   try {
     const { data, error } = await supabase.auth.getUser();
-    if (!data.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    // ユーザーの存在確認と必要なら作成
-    let existingUser;
-    try {
-      existingUser = await findOrCreateUser(data.user.id, data.user.email);
-    } catch (error: any) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+    if (error || !data.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const postId = Number(params.id);
     if (isNaN(postId)) {
-      return NextResponse.json(
-        { error: 'Invalid ID format' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "IDの形式が正しくありません。" }, { status: 400 });
     }
 
     // 削除する日記が存在し、ユーザーに属しているか確認
@@ -136,9 +86,9 @@ export async function DELETE(
       where: { id: postId },
     });
 
-    if (!post || post.userId !== existingUser.id) {
+    if (!post || post.userId !== data.user.id) {
       return NextResponse.json(
-        { error: 'Diary post not found or not authorized' },
+        { error: "Diary postまたはユーザーデータがありません。" },
         { status: 404 }
       );
     }
@@ -149,13 +99,13 @@ export async function DELETE(
     });
 
     return NextResponse.json(
-      { message: 'Diary post deleted successfully' },
+      { message: "Diary postは削除されました" },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting diary post:', error);
+    console.error("diary postの削除に失敗しました。:", error);
     return NextResponse.json(
-      { error: 'Error deleting diary post' },
+      { error: "diary postの削除に失敗しました。" },
       { status: 500 }
     );
   }

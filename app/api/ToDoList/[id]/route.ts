@@ -18,14 +18,14 @@ export async function PUT(
 
     const id = parseInt(params.id);
     if (isNaN(id)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+      return NextResponse.json({ error: "IDが見つかりませんでした。" }, { status: 400 });
     }
 
     const { todo } = await req.json();
 
     if (!todo || typeof todo !== "string") {
       return NextResponse.json(
-        { error: "Invalid todo content" },
+        { error: "ToDo内容が見つかりません" },
         { status: 400 }
       );
     }
@@ -36,7 +36,7 @@ export async function PUT(
 
     if (!existingToDo || existingToDo.userId !== data.user.id) {
       return NextResponse.json(
-        { error: "ToDo not found or unauthorized" },
+        { error: "ユーザーを見つけることができませんでした。" },
         { status: 404 }
       );
     }
@@ -83,7 +83,7 @@ export async function DELETE(
 
     const id = parseInt(params.id);
     if (isNaN(id)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+      return NextResponse.json({ error: "ToDoのIdが見つかりません" }, { status: 400 });
     }
 
     const existingToDo = await prisma.toDo.findUnique({
@@ -92,7 +92,7 @@ export async function DELETE(
 
     if (!existingToDo || existingToDo.userId !== data.user.id) {
       return NextResponse.json(
-        { error: "ToDo not found or unauthorized" },
+        { error: "ユーザーをみつけることができませんでした。" },
         { status: 404 }
       );
     }
@@ -101,7 +101,7 @@ export async function DELETE(
       where: { id },
     });
 
-    return NextResponse.json({ message: "ToDo deleted" }, { status: 200 });
+    return NextResponse.json({ message: "ToDoは削除されました。" }, { status: 200 });
   } catch (error) {
     if (error instanceof Error) {
       console.error(

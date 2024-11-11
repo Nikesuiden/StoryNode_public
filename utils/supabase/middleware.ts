@@ -73,20 +73,6 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  // Prismaデータベースからユーザー情報を取得
-  let existingUser = await prisma.user.findUnique({
-    where: { id: user.id },
-  });
-
-  // ユーザーが存在しない場合、新規作成
-  if (!existingUser) {
-    existingUser = await prisma.user.create({
-      data: {
-        id: user.id,
-        email: user.email, // 型エラーが発生しないように事前にチェック済み
-      },
-    });
-  }
 
   // 重要: supabaseResponseオブジェクトをそのまま返す必要があります。
   // NextResponse.next()で新しいレスポンスオブジェクトを作成する場合は、以下の点に注意してください:

@@ -6,12 +6,11 @@ import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
 // GETリクエスト用のハンドラ
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id?: string } }
 ) {
   const supabase = await createServerSupabaseClient();
   try {
     // ユーザ認証の箇所　// ここsupabaseからデータを取得
-    const { data, error } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
 
     // ログイン中のアカウントがない場合
     if (!data.user) {
@@ -28,7 +27,7 @@ export async function GET(
 
     // 存在ユーザーの照合が合わなかった場合
     if (!existingUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "ユーザーが見つかりません。" }, { status: 404 });
     }
 
     const chatHistorys = await prisma.chatHistory.findMany({
@@ -40,7 +39,7 @@ export async function GET(
     return NextResponse.json(chatHistorys, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { error: "Error fetching chat history" },
+      { error: "chat history の取得に失敗しました" },
       { status: 500 }
     );
   }
@@ -49,28 +48,13 @@ export async function GET(
 // POSTリクエスト用のハンドラをエクスポート
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id?: string } }
 ) {
   const supabase = await createServerSupabaseClient();
   try {
-    const { data, error } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
 
     if (!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const UserId = data.user.id;
-    const Email = data.user.email as string;
-
-    // ユーザーの存在確認と作成
-    try {
-      await findOrCreateUser(UserId, Email);
-    } catch (err) {
-      console.error("ユーザー作成エラー:", err);
-      return NextResponse.json(
-        { error: "User creation failed" },
-        { status: 500 }
-      );
     }
 
     const { prompt, response, period } = await req.json();
@@ -83,7 +67,7 @@ export async function POST(
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "ユーザーが見つかりません。" }, { status: 404 });
     }
 
     const newChatHistory = await prisma.chatHistory.create({
@@ -97,9 +81,9 @@ export async function POST(
 
     return NextResponse.json(newChatHistory, { status: 201 });
   } catch (error) {
-    console.error("Error saving chat history:", error);
+    console.error("chat historyの保存に失敗しました。:", error);
     return NextResponse.json(
-      { error: "Error saving chat history" },
+      { error: "chat historyの保存に失敗しました。" },
       { status: 500 }
     );
   }
