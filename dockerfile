@@ -14,6 +14,9 @@ COPY . .
 # Prisma クライアントを生成
 RUN npx prisma generate
 
+# Prisma マイグレート
+RUN npx prisma migrate deploy
+
 # 本番用にアプリをビルド
 RUN npm run build
 

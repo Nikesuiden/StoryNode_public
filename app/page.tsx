@@ -18,9 +18,8 @@ const Index: React.FC = () => {
     router.push(path);
   };
 
-  
-
-  const fetchDiaryPosts = useCallback(async () => {const supabase = await createClient();
+  const fetchDiaryPosts = async () => {
+    const supabase = await createClient();
     setIsLoading(true);
     const {
       data: { session },
@@ -46,7 +45,7 @@ const Index: React.FC = () => {
       alert("情報の取得に失敗しました。タイトル画面に戻ります。");
       handleNavigation("/signin");
     }
-  }, [handleNavigation]); // 必要な依存関係を追加
+  }; // 必要な依存関係を追加
 
   useEffect(() => {
     fetchDiaryPosts();

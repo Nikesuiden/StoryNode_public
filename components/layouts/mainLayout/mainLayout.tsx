@@ -6,6 +6,7 @@ import TopBar from "../topBar/topBar"; // Supabaseクライアントのインポ
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -13,8 +14,8 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true); // 通例ではデフォルトで true
-  const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true); // 通例ではデフォルトで true、認証状態を確認
+  const [isRedirecting, setIsRedirecting] = useState<boolean>(false); // 認証の結果後ページ遷移するまでのわずかな隙間を埋める。
 
   const router = useRouter();
 

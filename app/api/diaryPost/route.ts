@@ -13,7 +13,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = data.user.id; // 取得したユーザーID
+    // 認証成功後、データベースにユーザーを作成 この処理は完了しないと先に進めないようにする(await)
+    await findOrCreateUser(data.user.id, data.user.email as string) // ユーザーを確認後, データベースにユーザーを追加する処理を実行
 
     // クエリパラメータから 'period' を取得
     const { searchParams } = new URL(req.url);
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
     if (periodParam) {
       const periodDays = parseInt(periodParam, 10);
       if (isNaN(periodDays) || periodDays < 0) {
-        return NextResponse.json({ error: "Invalid period parameter" }, { status: 400 });
+        return NextResponse.json({ error: "日記収集期間が設定されていません。" }, { status: 400 });
       }
 
       // 現在の日時から period 日前までの範囲を計算
@@ -40,52 +41,36 @@ export async function GET(req: NextRequest) {
     // 日記投稿を取得
     const diaryPosts = await prisma.diaryPost.findMany({
       where: {
-        userId: userId,
+        userId: data.user.id, // ユーザの日記を取得
+        // createdAtFilterが存在する場合のみ、createdAtフィルタを適用、その他は無条件で取得
         ...(createdAtFilter && { createdAt: createdAtFilter }),
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: "desc" }, // 作成日から降順
     });
 
     return NextResponse.json(diaryPosts, { status: 200 });
   } catch (error) {
-    console.error("Error fetching diary posts:", error);
+    console.error("diary postsの取得に失敗しました。:", error);
     return NextResponse.json(
-      { error: "Error fetching diary posts" },
+      { error: "diary postsの取得に失敗しました。" },
       { status: 500 }
     );
   }
 }
 
-/**
- * POSTリクエスト: 新しい日記投稿を作成
- */
 export async function POST(req: NextRequest) {
   const supabase = await createServerSupabaseClient();
   try {
     const { data, error } = await supabase.auth.getUser();
-    if (!data.user) {
+    if (error || !data?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { content, emotion } = await req.json();
 
-    const UserId = data.user.id;
-    const Email = data.user.email as string;
-
-    // ユーザーの存在確認と作成
-    try {
-      await findOrCreateUser(UserId, Email);
-    } catch (err) {
-      console.error("ユーザー作成エラー:", err);
-      return NextResponse.json(
-        { error: "User creation failed" },
-        { status: 500 }
-      );
-    }
-
     if (!content || !emotion) {
       return NextResponse.json(
-        { error: "Content and emotion are required" },
+        { error: "Content と emotion が必要です。" },
         { status: 400 }
       );
     }
@@ -95,7 +80,7 @@ export async function POST(req: NextRequest) {
       data: {
         content,
         emotion,
-        userId: UserId
+        userId: data.user.id
       },
     });
 

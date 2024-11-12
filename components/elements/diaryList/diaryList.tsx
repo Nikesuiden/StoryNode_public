@@ -199,6 +199,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
     fetchDiaryPosts();
   }, []);
 
+  // 親コンポーネントからの fetchDiary の結果を取得
   useEffect(() => {
     setDiaryPosts(initialData.data || []);
   }, [initialData]);

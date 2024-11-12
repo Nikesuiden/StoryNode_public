@@ -60,7 +60,7 @@ const AiChatForm: React.FC = () => {
       const monthDay = `${createdAt.getMonth() + 1}/${createdAt.getDate()}`;
       const hours = String(createdAt.getHours()).padStart(2, "0"); // 時間を2桁にフォーマット
       const minutes = String(createdAt.getMinutes()).padStart(2, "0"); // 分を2桁にフォーマット
-      const time = `${hours}:${minutes}`; // HH:MM形式に変換
+      const time = `${hours}:${minutes}`;
 
       if (!entriesByYear[year]) {
         entriesByYear[year] = {};
@@ -71,7 +71,7 @@ const AiChatForm: React.FC = () => {
       entriesByYear[year][monthDay].push({
         emotion: post.emotion,
         content: post.content.replace(/\n/g, ""), // 改行コードを削除
-        time: time, // 時間を追加
+        time: time,
       });
     });
 
@@ -364,6 +364,7 @@ const AiChatForm: React.FC = () => {
             marginTop: 2,
             height: "40px",
             borderRadius: "30px",
+            // もし生成中なら以下のCSSを追加します。
             ...(isGenerating && {
               animation: `${rainbowAnimation} 3s linear infinite`,
               background:
@@ -381,6 +382,7 @@ const AiChatForm: React.FC = () => {
       </Box>
       <br />
       <Box>
+        <Typography>{diaryToPrompt}</Typography>
         <Typography>{response}</Typography>
       </Box>
     </Box>

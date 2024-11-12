@@ -4,8 +4,6 @@ import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { createServerSupabaseClient } from "@/utils/supabase/server";
-import { supabase } from "@supabase/auth-ui-shared";
-import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
 
 // ToDoリストの取得（GETリクエスト）
 export async function GET(req: NextRequest) {
@@ -44,26 +42,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const UserId = data.user.id;
-    const Email = data.user.email as string;
-
-    // ユーザーの存在確認と作成
-    try {
-      await findOrCreateUser(UserId, Email);
-    } catch (err) {
-      console.error("ユーザー作成エラー:", err);
-      return NextResponse.json(
-        { error: "User creation failed" },
-        { status: 500 }
-      );
-    }
-
     const { todo } = await req.json();
 
     // バリデーション
     if (!todo || typeof todo !== "string") {
       return NextResponse.json(
-        { error: "Invalid todo content" },
+        { error: "ToDoの内容が見つかりませんでした。" },
         { status: 400 }
       );
     }

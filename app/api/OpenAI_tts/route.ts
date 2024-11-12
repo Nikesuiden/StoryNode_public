@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const { input } = await req.json();
 
   if (!input) {
-    return NextResponse.json({ message: "Invalid input" }, { status: 407 });
+    return NextResponse.json({ message: "入力がありません。" }, { status: 407 });
   }
 
   try {
@@ -31,6 +31,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("Error generating speech:", error);
-    return NextResponse.json({ message: "Error generating speech" }, { status: 500 });
+    return NextResponse.json({ message: "音声の生成に失敗しました。" }, { status: 500 });
   }
 }

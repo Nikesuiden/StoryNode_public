@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
-    return NextResponse.json({ error: "API key is missing" }, { status: 500 });
+    return NextResponse.json({ error: "API keyがありません" }, { status: 500 });
   }
 
   // 最初のリクエストの際にGPTに役割を付与する。
