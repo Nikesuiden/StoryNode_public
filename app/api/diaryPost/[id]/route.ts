@@ -9,7 +9,7 @@ import { createServerSupabaseClient } from "@/utils/supabase/server";
  */
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } } // urlの末尾がid 
 ) {
   const supabase = await createServerSupabaseClient();
   try {

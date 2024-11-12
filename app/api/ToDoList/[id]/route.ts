@@ -12,7 +12,7 @@ export async function PUT(
   const supabase = await createServerSupabaseClient();
   try {
     const { data, error } = await supabase.auth.getUser();
-    if (!data.user) {
+    if (error||!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -77,7 +77,7 @@ export async function DELETE(
 
   try {
     const { data, error } = await supabase.auth.getUser();
-    if (!data.user) {
+    if (error||!data.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
