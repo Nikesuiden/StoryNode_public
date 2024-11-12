@@ -13,8 +13,8 @@ export default function SignInWithGoogle() {
       provider: 'google',
       options: {
         queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
+          access_type: 'offline', //リフレッシュトークン
+          prompt: 'consent', // 二重同意画面
         },
         // redirectTo: `${window.location.origin}/api/auth/callback`,
       },
