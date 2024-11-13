@@ -21,7 +21,7 @@ export default function RootLayout({
       <head>
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=0.85, maximum-scale=0.85, minimum-scale=0.85, user-scalable=no"
+          content="width=device-width, initial-scale=0.72, maximum-scale=0.72, user-scalable=no"
         />
       </head>
       <body className={inter.className}>
