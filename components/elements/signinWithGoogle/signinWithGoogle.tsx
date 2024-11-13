@@ -14,7 +14,6 @@ export default function SignInWithGoogle() {
       options: {
         queryParams: {
           access_type: 'offline', //リフレッシュトークン
-          prompt: 'consent', // 二重同意画面
         },
         // redirectTo: `${window.location.origin}/api/auth/callback`,
       },
