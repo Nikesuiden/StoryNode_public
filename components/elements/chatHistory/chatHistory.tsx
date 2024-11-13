@@ -11,11 +11,11 @@ export default function ChatHistory() {
   };
 
   const tellCaution = () => {
-    alert("現在メンテナンス中")
-  }
+    alert("現在メンテナンス中");
+  };
   return (
     <Box sx={{ display: "flex" }}>
-      <Box onClick={() => tellCaution()}>
+      <Box sx={{ display: "none" }} onClick={() => tellCaution()}>
         <PhoneInTalk sx={{ fontSize: 50, cursor: "pointer" }} />
       </Box>
       <Button
