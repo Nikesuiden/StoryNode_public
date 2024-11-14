@@ -31,6 +31,7 @@ interface UserProps {
 
 const SideBar: React.FC<UserProps> = ({ user }) => {
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true)
   const drawerWidth = 180;
 
   const router = useRouter();
@@ -39,9 +40,12 @@ const SideBar: React.FC<UserProps> = ({ user }) => {
   };
 
   useEffect(() => {
+    
+
     if (user) {
       setProfilePicture(user.user_metadata.avatar_url);
     }
+    setLoading(false)
   }, [user]);
 
   const icons = [
