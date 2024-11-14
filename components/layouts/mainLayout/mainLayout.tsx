@@ -14,8 +14,6 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true); // 通例ではデフォルトで true、認証状態を確認
-  const [isRedirecting, setIsRedirecting] = useState<boolean>(false); // 認証の結果後ページ遷移するまでのわずかな隙間を埋める。
 
   const router = useRouter();
 
@@ -31,18 +29,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       if (error) throw error;
 
       setUser(data?.user ?? null);
-
-      if (!data) {
-        setIsRedirecting(true); // リダイレクト開始
-        router.replace("/opening"); // リダイレクト先のページパス
-      }
     } catch (error) {
       console.error("ユーザー取得エラー:", error);
-      setIsRedirecting(true); // エラー時もリダイレクト開始
-      router.replace("/opening"); // エラー時もリダイレクト
       setUser(null);
-    } finally {
-      setIsAuthLoading(false);
     }
   };
 
