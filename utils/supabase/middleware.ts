@@ -1,89 +1,63 @@
-// utils/supabase/middleware.ts
-
-import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
-import prisma from "@/lib/prisma";
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
-  // Next.jsのレスポンスオブジェクトを作成
   let supabaseResponse = NextResponse.next({
     request,
-  });
+  })
 
-  // Supabaseの機サーバー用のクライアントを作成
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        // Cookieの取得
         getAll() {
-          const checkCookies = request.cookies.getAll();
-          console.log("取得したクッキー", checkCookies);
-          return request.cookies.getAll();
+          return request.cookies.getAll()
         },
-
-        // Cookieの設定と削除に対応
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
-          });
+          })
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
-          );
+          )
         },
       },
     }
-  );
+  )
 
-  // 重要: createServerClient と supabase.auth.getUser() の間にロジックを追加しないでください。
-  // 小さなミスでも、ユーザーがランダムにログアウトされる問題をデバッグするのが非常に困難になります。
+  // IMPORTANT: Avoid writing any logic between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
 
   const {
     data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
 
-  if (error) {
-    console.log("getUserエラー:", error.message);
+  if (
+    !user &&
+    !request.nextUrl.pathname.startsWith('/signin') &&
+    !request.nextUrl.pathname.startsWith('/signup')
+  ) {
+    // no user, potentially respond by redirecting the user to the login page
+    const url = request.nextUrl.clone()
+    url.pathname = '/signin'
+    return NextResponse.redirect(url)
   }
 
-  if (!user) {
-    console.log("ユーザー認証がされていません。");
-    if (!request.nextUrl.pathname.startsWith("/signin")) {
-      // 認証されていないユーザーをログインページにリダイレクト
-      const url = request.nextUrl.clone();
-      url.pathname = "/signin";
-      return NextResponse.redirect(url);
-    }
-    // 既に/signinページにいる場合、リダイレクトせずに処理を続行
-    return supabaseResponse;
-  }
-
-  if (!user.email) {
-    console.log("Emailが見つかりませんでした。");
-    if (!request.nextUrl.pathname.startsWith("/signin")) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/signin";
-      return NextResponse.redirect(url);
-    }
-    return supabaseResponse;
-  }
-
-
-  // 重要: supabaseResponseオブジェクトをそのまま返す必要があります。
-  // NextResponse.next()で新しいレスポンスオブジェクトを作成する場合は、以下の点に注意してください:
-  // 1. このようにリクエストを渡します:
+  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
+  // creating a new response object with NextResponse.next() make sure to:
+  // 1. Pass the request in it, like so:
   //    const myNewResponse = NextResponse.next({ request })
-  // 2. クッキーをコピーします:
+  // 2. Copy over the cookies, like so:
   //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. myNewResponseオブジェクトをニーズに合わせて変更しますが、クッキーを変更しないでください！
-  // 4. 最後に:
+  // 3. Change the myNewResponse object to fit your needs, but avoid changing
+  //    the cookies!
+  // 4. Finally:
   //    return myNewResponse
-  // これを行わないと、ブラウザとサーバーが同期しなくなり、ユーザーのセッションが早期に終了する原因となる可能性があります。
+  // If this is not done, you may be causing the browser and server to go out
+  // of sync and terminate the user's session prematurely!
 
-  return supabaseResponse;
+  return supabaseResponse
 }

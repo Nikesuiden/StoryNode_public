@@ -3,10 +3,10 @@ import SideBar from "../sideBar/sideBar";
 import BottomBar from "../bottomBar/bottomBar";
 import { ReactNode, useState, useEffect } from "react";
 import TopBar from "../topBar/topBar"; // Supabaseクライアントのインポート
-import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
+import { User } from "@supabase/supabase-js";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -51,60 +51,44 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   }, []);
 
   return (
-    <Box>
-      {/* 認証中またはリダイレクト中の場合はローディングインジケーターを表示 */}
-      {isAuthLoading || isRedirecting ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh", // ローディング画面を中央に配置
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Box
-          sx={{
-            margin: 2,
-            "@media screen and (min-width:700px)": {
-              display: "flex",
-            },
-            "@media screen and (max-width:700px)": {
-              paddingBottom: "60px",
-            },
-          }}
-        >
-          {/* スマホレスポンシブ */}
-          <Box
-            sx={{
-              "@media screen and (min-width:700px)": {
-                display: "none",
-              },
-            }}
-          >
-            <BottomBar user={user} />
-          </Box>
+    <Box
+      sx={{
+        margin: 2,
+        "@media screen and (min-width:700px)": {
+          display: "flex",
+        },
+        "@media screen and (max-width:700px)": {
+          paddingBottom: "60px",
+        },
+      }}
+    >
+      {/* スマホレスポンシブ */}
+      <Box
+        sx={{
+          "@media screen and (min-width:700px)": {
+            display: "none",
+          },
+        }}
+      >
+        <BottomBar user={user} />
+      </Box>
 
-          {/* PCレスポンシブ */}
-          <Box
-            sx={{
-              "@media screen and (max-width:700px)": {
-                display: "none",
-              },
-            }}
-          >
-            <SideBar user={user} />
-          </Box>
+      {/* PCレスポンシブ */}
+      <Box
+        sx={{
+          "@media screen and (max-width:700px)": {
+            display: "none",
+          },
+        }}
+      >
+        <SideBar user={user} />
+      </Box>
 
-          {/* アプリ情報 */}
-          <Box sx={{ flex: 4 }}>
-            <TopBar user={user} />
-            {children}
-          </Box>
-        </Box>
-      )}
+      {/* アプリ情報 */}
+      <Box sx={{ flex: 4 }}>
+        <TopBar user={user} />
+        {children}
+      </Box>
     </Box>
   );
 };

@@ -6,6 +6,7 @@ import { MeetingRoom } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import SignInWithGoogle from "@/components/elements/signinWithGoogle/signinWithGoogle";
 import { createClient } from "@/utils/supabase/client";
+import OneTapComponent from "@/components/elements/OneTapComponent/OneTapComponent";
 
 export default function SignIn() {
   const router = useRouter();
@@ -136,6 +137,7 @@ export default function SignIn() {
           }}
         >
           <SignInWithGoogle />
+          <OneTapComponent />
         </Box>
       </Box>
     </Box>

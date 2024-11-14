@@ -12,7 +12,7 @@ export default function SignInWithGoogle() {
       options: {
         queryParams: {
           access_type: 'offline', //リフレッシュトークン
-          prompt: "consent",
+          // prompt: "consent",
         },
         redirectTo: `${window.location.origin}/api/auth/callback`,
       },
