@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@types/formidable": "^3.4.5",
+    "@types/google-one-tap": "^1.2.6",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20.16.5",
     "@types/react": "^18.3.8",

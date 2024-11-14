@@ -4,8 +4,6 @@
 
 import { createClient } from "@/utils/supabase/client";
 
-
-
 export default function SignInWithGoogle() {
   const handleGoogleLogin = async () => {
     const supabase = await createClient();
@@ -14,12 +12,14 @@ export default function SignInWithGoogle() {
       options: {
         queryParams: {
           access_type: 'offline', //リフレッシュトークン
+          prompt: "consent",
         },
-        // redirectTo: `${window.location.origin}/api/auth/callback`,
+        redirectTo: `${window.location.origin}/api/auth/callback`,
       },
     })
     if (error) alert(error.message);
   };
+
   return (
     <button
       className="gsi-material-button"
