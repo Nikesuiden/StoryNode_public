@@ -62,7 +62,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
             }}
           >
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSfvXvSbzokIpUih6UEzyfqMDpcZj8x_8vnGAVrYYAjUcxZwVQ/viewform?usp=sf_link"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSeEC8AvnonHX8r0n-eXdErAbXZQhFV9XQHIamGizoSRg9D7dQ/viewform?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
             >
