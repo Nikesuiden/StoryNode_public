@@ -46,10 +46,11 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               flexDirection: "column",
               justifyContent: "center",
               cursor: "pointer",
+              marginRight: 6,
             }}
             onClick={() => handleNavigation("/notifications")}
           >
-            <Notifications sx={{ color: grey, marginRight: 6, fontSize: 35 }} />
+            <Notifications sx={{ color: grey, fontSize: 35 }} />
             <Typography sx={{ fontSize: 9, ml: 0.35 }}>Update</Typography>
           </Box>
           <Box
