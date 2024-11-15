@@ -18,7 +18,7 @@ export default function SignIn() {
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
-    const supabase = await createClient()
+    const supabase = await createClient();
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -138,6 +138,9 @@ export default function SignIn() {
         >
           <SignInWithGoogle />
           <OneTapComponent />
+          <Typography sx={{ marginTop: 3, fontSize: 15 }}>
+            ログイン後、ページ移動までお待ちください。
+          </Typography>
         </Box>
       </Box>
     </Box>
