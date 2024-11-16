@@ -48,7 +48,6 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               cursor: "pointer",
               marginRight: 3,
             }}
-            onClick={() => handleNavigation("/notifications")}
           >
             <Lightbulb sx={{ color: grey, fontSize: 35 }} />
             <Typography sx={{ fontSize: 10, ml: 0.35 }}>使い方</Typography>
@@ -75,7 +74,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
             }}
           >
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSeEC8AvnonHX8r0n-eXdErAbXZQhFV9XQHIamGizoSRg9D7dQ/viewform?usp=sharing"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfvXvSbzokIpUih6UEzyfqMDpcZj8x_8vnGAVrYYAjUcxZwVQ/viewform?usp=sf_link"
               target="_blank"
               rel="noopener noreferrer"
             >
