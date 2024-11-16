@@ -1,6 +1,6 @@
 "use client";
 
-import { Feedback, Notifications } from "@mui/icons-material";
+import { AutoStories, Feedback, Lightbulb, Notifications } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
@@ -46,7 +46,20 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               flexDirection: "column",
               justifyContent: "center",
               cursor: "pointer",
-              marginRight: 6,
+              marginRight: 3,
+            }}
+            onClick={() => handleNavigation("/notifications")}
+          >
+            <Lightbulb sx={{ color: grey, fontSize: 35 }} />
+            <Typography sx={{ fontSize: 10, ml: 0.35 }}>使い方</Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              cursor: "pointer",
+              marginRight: 3,
             }}
             onClick={() => handleNavigation("/notifications")}
           >
