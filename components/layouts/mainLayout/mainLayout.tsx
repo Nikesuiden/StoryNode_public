@@ -1,11 +1,11 @@
 import { Box, CircularProgress } from "@mui/material";
 import SideBar from "../sideBar/sideBar";
 import BottomBar from "../bottomBar/bottomBar";
-import { ReactNode, useState, useEffect } from "react";
+import React, { ReactNode, useState, useEffect, isValidElement, cloneElement } from "react";
 import TopBar from "../topBar/topBar"; // Supabaseクライアントのインポート
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
+import DeleteUser from "@/components/elements/deleteUser/deleteUser";
 import { User } from "@supabase/supabase-js";
 
 interface MainLayoutProps {
@@ -14,6 +14,7 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [userId, setUserId] = useState<string>("");
 
   const router = useRouter();
 
@@ -29,15 +30,26 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       if (error) throw error;
 
       setUser(data?.user ?? null);
+      setUserId(data.user.id ?? "");
     } catch (error) {
       console.error("ユーザー取得エラー:", error);
       setUser(null);
+      setUserId("")
     }
   };
 
   useEffect(() => {
     fetchUser();
   }, []);
+
+  // 特定の子コンポーネントに props を追加
+  const enhancedChildren = React.Children.map(children, (child) => {
+    if (isValidElement(child) && child.type === DeleteUser) {
+      return cloneElement(child as React.ReactElement<UserProps>, { UserProp: userId });
+    }
+    return child;
+  });
+  
 
   return (
     <Box
@@ -76,7 +88,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       {/* アプリ情報 */}
       <Box sx={{ flex: 4 }}>
         <TopBar user={user} />
-        {children}
+        {enhancedChildren}
       </Box>
     </Box>
   );
