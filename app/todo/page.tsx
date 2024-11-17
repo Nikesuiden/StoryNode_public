@@ -57,7 +57,7 @@ const ToDoPage: React.FC = () => {
 
   return (
     <MainLayout>
-      <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
+      <Typography sx={{ flexGrow: 1, fontSize: 25, fontWeight: "550" }}>
         ToDoList
       </Typography>
 

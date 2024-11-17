@@ -49,11 +49,16 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
       alert("日記の内容を記入してください。");
       return;
     }
+
+    if (inputEmotion === "none") {
+      alert("感情を入力してください。");
+      return;
+    }
     try {
       // Supabase からセッション情報を取得
       const { data, error } = await supabase.auth.getSession();
 
-      if (!data.session?.access_token) {
+      if (!data.session?.access_token || error) {
         return;
       }
 
@@ -138,7 +143,6 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
           入力制限: {diaryInput === "" ? "0" : diaryInput?.length} /{" "}
           {d_maxLength}文字
         </Typography>
-        {/* <Typography>{inputEmotion}</Typography> */}
         <TextField
           label="日記を記入してください"
           variant="outlined"

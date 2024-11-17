@@ -46,7 +46,7 @@ const emotionScores: Record<string, number> = {
   anxiety: -1,
 };
 
-const AnalysisPlot = () => {
+const AnalysisChart = () => {
   const [diaryData, setDiaryData] = useState<DiaryPost[]>([]);
   const [chartData, setChartData] = useState<any>(null);
 
@@ -83,15 +83,21 @@ const AnalysisPlot = () => {
   // 感情分析機能
   const calculateEmotionScores = (posts: DiaryPost[]) => {
     const today = dayjs();
+
+    // lengthで取得日数を選択する。
     const last7Days = Array.from({ length: 7 }, (_, i) =>
       today.subtract(i, "day").format("MM/DD")
-    ).reverse(); // 配列を逆順にして、最新の日付が右に来るように設定
+    ).reverse(); // 配列を逆順にして、最新の日付が右に来るように設定 .reverse
 
     // map (Pythonで言うところのfor) を展開して1日ごとの感情スコアを計測する。
     const scores = last7Days.map((date) => {
+
+      // createAtから月と日の数値を取って表の日にちパラメータを生成
       const dailyPosts = posts.filter(
         (post) => dayjs(post.createdAt).format("MM/DD") === date
       );
+
+      // スコアを計算する
       const dailyScore = dailyPosts.reduce((sum, post) => {
         return sum + (emotionScores[post.emotion] || 0);
       }, 0);
@@ -109,16 +115,16 @@ const AnalysisPlot = () => {
         {
           label: "感情の起伏",
           data: scores.map((item) => item.score),
-          borderColor: "rgba(75, 192, 192, 1)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "lightblue",
+          backgroundColor: "lightblue",
           tension: 0.3,
         },
       ],
       options: {
         scales: {
           y: {
-            min: -axisLimit,
-            max: axisLimit,
+            min: -axisLimit, // グラフを線対象にするため 最低値を指定
+            max: axisLimit, // 同様の理由で 最大値を設定
             ticks: {
               stepSize: 1,
             },
@@ -177,4 +183,4 @@ const AnalysisPlot = () => {
   );
 };
 
-export default AnalysisPlot;
+export default AnalysisChart;
