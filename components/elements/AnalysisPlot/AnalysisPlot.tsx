@@ -1,0 +1,159 @@
+"use client";
+
+import { createClient } from "@/utils/supabase/client";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+interface DiaryPost {
+  id: number;
+  content: string;
+  emotion: string;
+  createdAt: string;
+}
+
+// 感情に基づいたスコアを定義
+const emotionScores: Record<string, number> = {
+  grad: 1, // 嬉しい
+  Funny: 1, // 楽しみ
+  expectations: 1, // 期待
+  happy: 1, // 幸せ
+  surprise: 1, // 驚き
+  sad: -1, // 悲しい
+  angry: -1, // 怒り
+  anxiety: -1, // 不安
+};
+
+const AnalysisPlot = () => {
+  const [diaryData, setDiaryData] = useState<DiaryPost[]>([]);
+  const [chartData, setChartData] = useState<any>(null);
+
+  const router = useRouter();
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
+
+  const fetchDiaryPosts = async () => {
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.getSession();
+    if (!data || error) {
+      alert("情報の取得に失敗しました。");
+      return;
+    }
+
+    const response = await fetch("/api/diaryPost", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${data.session?.access_token}`,
+      },
+    });
+
+    if (response.ok) {
+      const diaryPostData: DiaryPost[] = await response.json();
+      setDiaryData(diaryPostData);
+    } else {
+      handleNavigation("/signin");
+    }
+  };
+
+  // 感情分析機能
+  const calculateEmotionScores = (posts: DiaryPost[]) => {
+    const today = dayjs();
+    const last7Days = Array.from({ length: 7 }, (_, i) => today.subtract(i, "day").format("MM/DD"));
+
+    const scores = last7Days.map((date) => {
+      const dailyPosts = posts.filter((post) => dayjs(post.createdAt).format("MM/DD") === date);
+      const dailyScore = dailyPosts.reduce((sum, post) => {
+        return sum + (emotionScores[post.emotion] || 0);
+      }, 0);
+      return { date, score: dailyScore };
+    });
+
+    // 最大値と最小値を取得し、縦軸のスケールを設定
+    const maxScore = Math.max(...scores.map((item) => item.score), 0);
+    const minScore = Math.min(...scores.map((item) => item.score), 0);
+    const axisLimit = Math.max(Math.abs(maxScore), Math.abs(minScore));
+
+    setChartData({
+      labels: scores.map((item) => item.date),
+      datasets: [
+        {
+          label: "感情の起伏",
+          data: scores.map((item) => item.score),
+          borderColor: "rgba(75, 192, 192, 1)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          tension: 0.3,
+        },
+      ],
+      options: {
+        scales: {
+          y: {
+            min: -axisLimit,
+            max: axisLimit,
+            ticks: {
+              stepSize: 1,
+            },
+          },
+        },
+      },
+    });
+  };
+
+  useEffect(() => {
+    fetchDiaryPosts();
+  }, []);
+
+  useEffect(() => {
+    if (diaryData.length > 0) {
+      calculateEmotionScores(diaryData);
+    }
+  }, [diaryData]);
+
+  return (
+    <Box>
+
+      {chartData ? (
+        <Line
+          data={chartData}
+          options={{
+            responsive: true,
+            plugins: {
+              legend: { position: "top" },
+              title: { display: true, text: "過去7日間の感情スコア" },
+            },
+            scales: {
+              y: {
+                min: chartData.options.scales.y.min,
+                max: chartData.options.scales.y.max,
+                ticks: {
+                  stepSize: 1,
+                },
+              },
+            },
+          }}
+        />
+      ) : (
+        <Box
+          sx={{
+            m: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: 20,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+export default AnalysisPlot;

@@ -5,6 +5,7 @@ import {
   Hub,
   CheckCircle,
   Settings,
+  BarChart,
 } from "@mui/icons-material";
 import {
   Box,
@@ -52,10 +53,11 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
           icon={<Forum fontSize="large" />}
           onClick={() => handleNavigation("/aichat")}
         />
-        {/* <BottomNavigationAction
-          label="StoryNode"
-          icon={<Hub fontSize="large" />}
-        /> */}
+        <BottomNavigationAction
+          label="Analysis"
+          icon={<BarChart fontSize="large" />}
+          onClick={() => handleNavigation("/analysis")}
+        />
         <BottomNavigationAction
           label="ToDo"
           icon={<CheckCircle fontSize="large" />}

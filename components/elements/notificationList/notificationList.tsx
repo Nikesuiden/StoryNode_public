@@ -13,19 +13,15 @@ interface Notification {
 const notifications: Notification[] = [
   {
     id: 1,
-    title: "お知らせタイトル1",
-    date: "2023-10-01",
+    title: "追加する予定の機能",
+    date: "2024-11-17",
     content: (
       <Typography>
-        テスト
+        1. アカウント削除機能 <br />
+        2. 説明書機能 <br />
+        3. 日記から感情を統計分析する機能
       </Typography>
     ),
-  },
-  {
-    id: 2,
-    title: "お知らせタイトル2",
-    date: "2023-09-15",
-    content: <Typography>複数の投稿確認</Typography>,
   },
 ];
 
