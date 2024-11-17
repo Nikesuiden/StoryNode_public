@@ -1,14 +1,31 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface DiaryPost {
   id: number;
@@ -19,14 +36,14 @@ interface DiaryPost {
 
 // 感情に基づいたスコアを定義
 const emotionScores: Record<string, number> = {
-  grad: 1, // 嬉しい
-  Funny: 1, // 楽しみ
-  expectations: 1, // 期待
-  happy: 1, // 幸せ
-  surprise: 1, // 驚き
-  sad: -1, // 悲しい
-  angry: -1, // 怒り
-  anxiety: -1, // 不安
+  grad: 1,
+  Funny: 1,
+  expectations: 1,
+  happy: 1,
+  surprise: 1,
+  sad: -1,
+  angry: -1,
+  anxiety: -1,
 };
 
 const AnalysisPlot = () => {
@@ -66,10 +83,15 @@ const AnalysisPlot = () => {
   // 感情分析機能
   const calculateEmotionScores = (posts: DiaryPost[]) => {
     const today = dayjs();
-    const last7Days = Array.from({ length: 7 }, (_, i) => today.subtract(i, "day").format("MM/DD"));
+    const last7Days = Array.from({ length: 7 }, (_, i) =>
+      today.subtract(i, "day").format("MM/DD")
+    ).reverse(); // 配列を逆順にして、最新の日付が右に来るように設定
 
+    // map (Pythonで言うところのfor) を展開して1日ごとの感情スコアを計測する。
     const scores = last7Days.map((date) => {
-      const dailyPosts = posts.filter((post) => dayjs(post.createdAt).format("MM/DD") === date);
+      const dailyPosts = posts.filter(
+        (post) => dayjs(post.createdAt).format("MM/DD") === date
+      );
       const dailyScore = dailyPosts.reduce((sum, post) => {
         return sum + (emotionScores[post.emotion] || 0);
       }, 0);
@@ -118,7 +140,6 @@ const AnalysisPlot = () => {
 
   return (
     <Box>
-
       {chartData ? (
         <Line
           data={chartData}

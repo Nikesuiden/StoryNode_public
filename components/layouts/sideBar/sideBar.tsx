@@ -5,6 +5,7 @@ import {
   Forum,
   CheckCircle,
   Settings,
+  BarChart,
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -31,7 +32,7 @@ interface UserProps {
 
 const SideBar: React.FC<UserProps> = ({ user }) => {
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
   const drawerWidth = 180;
 
   const router = useRouter();
@@ -40,17 +41,16 @@ const SideBar: React.FC<UserProps> = ({ user }) => {
   };
 
   useEffect(() => {
-    
-
     if (user) {
       setProfilePicture(user.user_metadata.avatar_url);
     }
-    setLoading(false)
+    setLoading(false);
   }, [user]);
 
   const icons = [
     { component: <ImportContacts fontSize="large" />, key: "importContacts" },
     { component: <Forum fontSize="large" />, key: "forum" },
+    { component: <BarChart fontSize="large" />, key: "BarChart" },
     { component: <CheckCircle fontSize="large" />, key: "checkCircle" },
     {
       component: (
@@ -64,7 +64,7 @@ const SideBar: React.FC<UserProps> = ({ user }) => {
     },
   ];
 
-  const urls = ["/", "/aichat", "/todo", "/settings"];
+  const urls = ["/", "/aichat", "/analysis", "/todo", "/settings"];
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -86,22 +86,24 @@ const SideBar: React.FC<UserProps> = ({ user }) => {
         anchor="left"
       >
         <List sx={{ ml: 2 }}>
-          {["Diary", "AIchat", "ToDo", "Accounts"].map((text, index) => (
-            <ListItem
-              key={text}
-              disablePadding
-              onClick={() => handleNavigation(urls[index])}
-            >
-              <ListItemButton sx={{ marginTop: 1 }}>
-                <ListItemIcon>
-                  {cloneElement(icons[index].component, {
-                    key: icons[index].key,
-                  })}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {["Diary", "AIchat", "Analysis", "ToDo", "Accounts"].map(
+            (text, index) => (
+              <ListItem
+                key={text}
+                disablePadding
+                onClick={() => handleNavigation(urls[index])}
+              >
+                <ListItemButton sx={{ marginTop: 1 }}>
+                  <ListItemIcon>
+                    {cloneElement(icons[index].component, {
+                      key: icons[index].key,
+                    })}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            )
+          )}
         </List>
       </Drawer>
     </Box>
