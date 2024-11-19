@@ -142,6 +142,8 @@ const AnalysisChart = () => {
     if (diaryData.length > 0) {
       calculateEmotionScores(diaryData);
     }
+
+    
   }, [diaryData]);
 
   return (

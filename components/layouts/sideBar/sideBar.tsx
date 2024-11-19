@@ -86,7 +86,7 @@ const SideBar: React.FC<UserProps> = ({ user }) => {
         anchor="left"
       >
         <List sx={{ ml: 2 }}>
-          {["Diary", "AIchat", "Analysis", "ToDo", "Accounts"].map(
+          {["Diary", "AIchat", "Analysis", "ToDo", "Account"].map(
             (text, index) => (
               <ListItem
                 key={text}
