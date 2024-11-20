@@ -19,7 +19,7 @@ const notifications: Notification[] = [
       <Typography>
         1. アカウント削除機能 <br />
         2. 説明書機能 <br />
-        3. 統計機能 0軸の強調
+        3. 統計グラフ 0軸の強調
       </Typography>
     ),
   },
