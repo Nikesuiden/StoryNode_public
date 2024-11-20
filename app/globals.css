@@ -16,6 +16,12 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+@media (max-width: 700px) {
+  body {
+    font-size: 12px; /* モバイル用に縮小 */
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
