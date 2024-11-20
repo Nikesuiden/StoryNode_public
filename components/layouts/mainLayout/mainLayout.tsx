@@ -1,11 +1,12 @@
-import { Box, CircularProgress } from "@mui/material";
+// MainLayout.tsx
+
+import { Box } from "@mui/material";
 import SideBar from "../sideBar/sideBar";
 import BottomBar from "../bottomBar/bottomBar";
 import { ReactNode, useState, useEffect } from "react";
-import TopBar from "../topBar/topBar"; // Supabaseクライアントのインポート
+import TopBar from "../topBar/topBar";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import { findOrCreateUser } from "@/utils/prisma/findOrCreateUser";
 import { User } from "@supabase/supabase-js";
 
 interface MainLayoutProps {
@@ -42,12 +43,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <Box
       sx={{
-        margin: 2,
+        margin: "1rem",
         "@media screen and (min-width:700px)": {
           display: "flex",
         },
         "@media screen and (max-width:700px)": {
-          paddingBottom: "60px",
+          paddingBottom: "3.75rem", // 60px を rem に変換
         },
       }}
     >

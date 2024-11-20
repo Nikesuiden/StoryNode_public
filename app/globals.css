@@ -16,9 +16,13 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+html {
+  font-size: 16px; /* デフォルトのフォントサイズ */
+}
+
 @media (max-width: 700px) {
-  body {
-    font-size: 12px; /* モバイル用に縮小 */
+  html {
+    font-size: 14px; /* スマホ用に縮小 */
   }
 }
 

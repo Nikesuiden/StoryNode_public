@@ -2,10 +2,7 @@
 
 "use client";
 
-import BottomBar from "@/components/layouts/bottomBar/bottomBar";
-import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Typography } from "@mui/material";
-import SideBar from "@/components/layouts/sideBar/sideBar";
 import React, { useEffect, useState } from "react";
 import ToDoList from "@/components/elements/todoList/todoList";
 import ToDoInput from "@/components/elements/todoInput/todoInput";
