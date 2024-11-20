@@ -130,6 +130,7 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
             <MenuItem value={"sad"}>悲しい</MenuItem>
             <MenuItem value={"angry"}>怒り</MenuItem>
             <MenuItem value={"anxiety"}>不安</MenuItem>
+            <MenuItem value={"painful"}>辛い</MenuItem>
           </Select>
         </FormControl>
         <Typography

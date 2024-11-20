@@ -44,6 +44,7 @@ const emotionScores: Record<string, number> = {
   sad: -1,
   angry: -1,
   anxiety: -1,
+  painful: -1,
 };
 
 const AnalysisChart = () => {
@@ -143,7 +144,7 @@ const AnalysisChart = () => {
       calculateEmotionScores(diaryData);
     }
 
-    
+
   }, [diaryData]);
 
   return (
