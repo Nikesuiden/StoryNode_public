@@ -5,7 +5,6 @@ import {
   Forum,
   BarChart,
   CheckCircle,
-  Settings,
 } from "@mui/icons-material";
 import {
   Box,
@@ -14,7 +13,6 @@ import {
   Divider,
   Avatar,
 } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -49,7 +47,7 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
       }}
     >
       <Divider sx={{color : "#9d9d9d"}}/>
-      <BottomNavigation showLabels sx={{ height: "4.0625rem" }}> {/* 65px → 4.0625rem */}
+      <BottomNavigation showLabels sx={{ height: "4rem" }}> {/* 65px ≒ 4rem */}
         <BottomNavigationAction
           label="Diary"
           icon={<ImportContacts fontSize="large" />}

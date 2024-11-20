@@ -47,7 +47,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
           {/* 「使い方」アイコン */}
           <Box
             sx={{
-              display: "flex",
+              display: "none",
               flexDirection: "column",
               alignItems: "center",
               cursor: "pointer",
