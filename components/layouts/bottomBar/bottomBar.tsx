@@ -1,13 +1,11 @@
 // bottomBar.tsx
 
-"use client";
 import {
   ImportContacts,
   Forum,
-  Hub,
+  BarChart,
   CheckCircle,
   Settings,
-  BarChart,
 } from "@mui/icons-material";
 import {
   Box,
@@ -17,7 +15,6 @@ import {
   Avatar,
 } from "@mui/material";
 import { User } from "@supabase/supabase-js";
-
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -41,10 +38,17 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
 
   return (
     <Box
-      sx={{ position: "fixed", left: 0, bottom: 0, width: "100%", zIndex: 10 }}
+      sx={{
+        position: "fixed",
+        left: 0,
+        bottom: 0,
+        width: "100%",
+        zIndex: 10,
+        backgroundColor: "#5A5A5A",
+      }}
     >
       <Divider />
-      <BottomNavigation showLabels sx={{ height: 65 }}>
+      <BottomNavigation showLabels sx={{ height: "4.0625rem" }}> {/* 65px → 4.0625rem */}
         <BottomNavigationAction
           label="Diary"
           icon={<ImportContacts fontSize="large" />}
@@ -71,7 +75,7 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
             <Avatar
               src={profilePicture ?? undefined}
               alt="User Profile"
-              sx={{ width: 35, height: 35, cursor: "pointer" }}
+              sx={{ width: "2.1875rem", height: "2.1875rem", cursor: "pointer" }}
             />
           }
           onClick={() => handleNavigation("/settings")}
@@ -80,7 +84,5 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
     </Box>
   );
 };
-
-// 背景カラーは#5A5A5A
 
 export default BottomBar;
