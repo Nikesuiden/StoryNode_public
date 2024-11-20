@@ -12,11 +12,8 @@ import {
 import {
   AppBar,
   CssBaseline,
-  Toolbar,
   Box,
-  Typography,
   Drawer,
-  Divider,
   List,
   ListItem,
   ListItemButton,

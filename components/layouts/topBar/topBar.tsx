@@ -3,13 +3,11 @@
 "use client";
 
 import {
-  AutoStories,
   Feedback,
   Lightbulb,
   Notifications,
 } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
@@ -53,9 +51,8 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               flexDirection: "column",
               alignItems: "center",
               cursor: "pointer",
-              marginRight: "1rem", // 適宜調整
+              marginRight: "1.5rem"
             }}
-            onClick={() => handleNavigation("/howto")}
           >
             <Lightbulb sx={{ fontSize: "2.1875rem" }} /> {/* 35px → 2.1875rem */}
             <Typography sx={{ fontSize: "0.625rem", marginLeft: "0.021875rem" }}> {/* 10px → 0.625rem, 0.35px → 0.021875rem */}
@@ -70,12 +67,12 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               flexDirection: "column",
               alignItems: "center",
               cursor: "pointer",
-              marginRight: "1rem", // 適宜調整
+              marginRight: "1.5rem"
             }}
             onClick={() => handleNavigation("/notifications")}
           >
-            <Notifications sx={{ fontSize: "2.1875rem" }} />
-            <Typography sx={{ fontSize: "0.5625rem", marginLeft: "0.021875rem" }}> {/* 9px → 0.5625rem */}
+            <Notifications sx={{ fontSize: "2.2rem" }} />
+            <Typography sx={{ fontSize: "0.6rem", marginLeft: "0.03rem" }}> {/* 9px → 0.5625rem */}
               Update
             </Typography>
           </Box>
@@ -95,8 +92,8 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               rel="noopener noreferrer"
               style={{ textDecoration: "none", color: "inherit" }}
             >
-              <Feedback sx={{ fontSize: "2.1875rem" }} />
-              <Typography sx={{ fontSize: "0.5rem" }}> {/* 8px → 0.5rem */}
+              <Feedback sx={{ fontSize: "2.2rem" }} />
+              <Typography sx={{ fontSize: "0.5rem", marginTop: "0.15rem" }}> {/* 8px → 0.5rem */}
                 FeedBack
               </Typography>
             </a>

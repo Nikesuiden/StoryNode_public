@@ -14,6 +14,7 @@ import {
   Divider,
   Avatar,
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -47,7 +48,7 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
         backgroundColor: "#5A5A5A",
       }}
     >
-      <Divider />
+      <Divider sx={{color : "#9d9d9d"}}/>
       <BottomNavigation showLabels sx={{ height: "4.0625rem" }}> {/* 65px → 4.0625rem */}
         <BottomNavigationAction
           label="Diary"
@@ -75,7 +76,7 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
             <Avatar
               src={profilePicture ?? undefined}
               alt="User Profile"
-              sx={{ width: "2.1875rem", height: "2.1875rem", cursor: "pointer" }}
+              sx={{ width: "2.2rem", height: "2.2rem", cursor: "pointer" }}
             />
           }
           onClick={() => handleNavigation("/settings")}
