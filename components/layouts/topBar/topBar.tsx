@@ -3,7 +3,7 @@
 "use client";
 
 import { AutoStories, Feedback, Lightbulb, Notifications } from "@mui/icons-material";
-import { Box, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
           paddingBottom: 12,
         }}
       >
-        <Typography style={{ fontSize: 30, fontWeight: "550" }}>
+        <Typography style={{ fontSize: 30, fontWeight: "550", top: 20,  position: "absolute" }}>
           StoryNode
         </Typography>
 
@@ -39,7 +39,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
             marginRight: 0,
             position: "absolute",
             right: 20,
-            top: 28,
+            top: 15,
           }}
         >
           <Box
@@ -86,7 +86,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
           </Box>
         </Box>
       </Box>
-      <hr />
+      <Divider sx={{mt: 4}} />
     </Box>
   );
 };
