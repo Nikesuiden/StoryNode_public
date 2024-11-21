@@ -1,7 +1,14 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {  
-    reactStrictMode: true,  // Reactの厳密モードを有効化
-    output: 'standalone',   // Next.jsをスタンドアロンモードでビルド
-};
+import nextPWA from "next-pwa";
+
+const withPWA = nextPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+});
+
+const nextConfig = withPWA({
+  reactStrictMode: true,
+  output: "standalone", // Next.jsをスタンドアロンモードでビルド
+});
 
 export default nextConfig;
