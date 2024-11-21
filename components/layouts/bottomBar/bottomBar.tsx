@@ -41,7 +41,7 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
 
   return (
     <Box
-      sx={{ position: "fixed", left: 0, bottom: 0, height: "57px", width: "100%", zIndex: 10 }}
+      sx={{ position: "fixed", left: 0, bottom: 0, height: "75px", width: "100%", zIndex: 10 }}
     >
       <Divider />
       <BottomNavigation showLabels sx={{ height: 60 }}>

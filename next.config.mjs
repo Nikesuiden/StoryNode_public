@@ -1,14 +1,17 @@
-import nextPWA from "next-pwa";
+// next.config.mjs
+
+import nextPWA from "next-pwa"; // ESモジュールでのインポート
 
 const withPWA = nextPWA({
-  dest: "public",
-  register: true,
-  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development", // 開発モードでは無効化
+  dest: "public", // PWA ファイルの出力先
+  register: true, // Service Worker を自動登録
+  skipWaiting: true, // 古い Service Worker を即時更新
 });
 
 const nextConfig = withPWA({
-  reactStrictMode: true,
-  output: "standalone", // Next.jsをスタンドアロンモードでビルド
+  reactStrictMode: true, // React の厳密モード
+  output: "standalone", // スタンドアロンモードでビルド
 });
 
 export default nextConfig;
