@@ -36,7 +36,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
       >
         <Typography
           style={{
-            fontSize: 30,
+            fontSize: 33,
             fontWeight: "550",
             top: 15,
             position: "absolute",
@@ -63,8 +63,8 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               marginRight: 4,
             }}
           >
-            <Lightbulb sx={{ color: grey, fontSize: 30 }} />
-            <Typography sx={{ fontSize: 8, ml: 0.35 }}>使い方</Typography>
+            <Lightbulb sx={{ color: grey, fontSize: 35 }} />
+            <Typography sx={{ fontSize: 10, ml: 0.35 }}>使い方</Typography>
           </Box>
           <Box
             sx={{
@@ -76,8 +76,8 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
             }}
             onClick={() => handleNavigation("/notifications")}
           >
-            <Notifications sx={{ color: grey, fontSize: 30 }} />
-            <Typography sx={{ fontSize: 8, ml: 0.35 }}>Update</Typography>
+            <Notifications sx={{ color: grey, fontSize: 35 }} />
+            <Typography sx={{ fontSize: 10, ml: 0.2 }}>Update</Typography>
           </Box>
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSfvXvSbzokIpUih6UEzyfqMDpcZj8x_8vnGAVrYYAjUcxZwVQ/viewform?usp=sf_link"
@@ -94,13 +94,13 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
                 mr: 1
               }}
             >
-              <Feedback sx={{ color: grey, fontSize: 30 }} />
-              <Typography sx={{ fontSize: 8 , position: "absolute", top: 30, right: -4}}>FeedBack</Typography>
+              <Feedback sx={{ color: grey, fontSize: 35 }} />
+              <Typography sx={{ fontSize: 10 , position: "absolute", top: 35, right: -5.5}}>FeedBack</Typography>
             </Box>
           </a>
         </Box>
       </Box>
-      <Divider sx={{ mt: 3 }} />
+      <Divider sx={{ mt: 4 }} />
     </Box>
   );
 };
