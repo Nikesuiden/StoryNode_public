@@ -51,7 +51,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
             marginRight: 0,
             position: "absolute",
             right: 20,
-            top: 15,
+            top: 18,
           }}
         >
           <Box

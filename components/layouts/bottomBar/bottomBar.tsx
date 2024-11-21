@@ -81,6 +81,5 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
   );
 };
 
-// 背景カラーは#5A5A5A
 
 export default BottomBar;

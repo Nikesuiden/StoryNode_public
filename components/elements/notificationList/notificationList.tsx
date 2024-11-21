@@ -23,12 +23,28 @@ const notifications: Notification[] = [
       </Typography>
     ),
   },
+  {
+    id: 2,
+    title: "PWAに対応する予定です。",
+    date: "2024-11-21",
+    content: (
+      <Typography>
+        PWAとは、Web上でネイティブアプリ同等のUXを実現できる技術のことです。
+      </Typography>
+    ),
+  },
 ];
+
+// 日付を降順にソート
+const sortedNotifications = notifications.sort((a, b) => {
+  // `date`を新しい順にソート
+  return new Date(b.date).getTime() - new Date(a.date).getTime();
+});
 
 const NotificationList: React.FC = () => {
   return (
     <Stack spacing={4}>
-      {notifications.map((notification) => (
+      {sortedNotifications.map((notification) => (
         <NotificationItem key={notification.id} {...notification} />
       ))}
     </Stack>
