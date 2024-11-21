@@ -2,7 +2,12 @@
 
 "use client";
 
-import { AutoStories, Feedback, Lightbulb, Notifications } from "@mui/icons-material";
+import {
+  AutoStories,
+  Feedback,
+  Lightbulb,
+  Notifications,
+} from "@mui/icons-material";
 import { Box, Divider, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
@@ -29,7 +34,14 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
           paddingBottom: 12,
         }}
       >
-        <Typography style={{ fontSize: 30, fontWeight: "550", top: 20,  position: "absolute" }}>
+        <Typography
+          style={{
+            fontSize: 30,
+            fontWeight: "550",
+            top: 15,
+            position: "absolute",
+          }}
+        >
           StoryNode
         </Typography>
 
@@ -48,11 +60,11 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               flexDirection: "column",
               justifyContent: "center",
               cursor: "pointer",
-              marginRight: 3,
+              marginRight: 4,
             }}
           >
-            <Lightbulb sx={{ color: grey, fontSize: 35 }} />
-            <Typography sx={{ fontSize: 10, ml: 0.35 }}>使い方</Typography>
+            <Lightbulb sx={{ color: grey, fontSize: 30 }} />
+            <Typography sx={{ fontSize: 8, ml: 0.35 }}>使い方</Typography>
           </Box>
           <Box
             sx={{
@@ -60,33 +72,35 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               flexDirection: "column",
               justifyContent: "center",
               cursor: "pointer",
-              marginRight: 3,
+              marginRight: 4,
             }}
             onClick={() => handleNavigation("/notifications")}
           >
-            <Notifications sx={{ color: grey, fontSize: 35 }} />
-            <Typography sx={{ fontSize: 9, ml: 0.35 }}>Update</Typography>
+            <Notifications sx={{ color: grey, fontSize: 30 }} />
+            <Typography sx={{ fontSize: 8, ml: 0.35 }}>Update</Typography>
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSfvXvSbzokIpUih6UEzyfqMDpcZj8x_8vnGAVrYYAjUcxZwVQ/viewform?usp=sf_link"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSfvXvSbzokIpUih6UEzyfqMDpcZj8x_8vnGAVrYYAjUcxZwVQ/viewform?usp=sf_link"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                cursor: "pointer",
+                position: "relative",
+                mr: 1
+              }}
             >
-              <Feedback sx={{ color: grey, fontSize: 35 }} />
-              <Typography sx={{ fontSize: 8 }}>FeedBack</Typography>
-            </a>
-          </Box>
+              <Feedback sx={{ color: grey, fontSize: 30 }} />
+              <Typography sx={{ fontSize: 8 , position: "absolute", top: 30, right: -4}}>FeedBack</Typography>
+            </Box>
+          </a>
         </Box>
       </Box>
-      <Divider sx={{mt: 4}} />
+      <Divider sx={{ mt: 3 }} />
     </Box>
   );
 };
