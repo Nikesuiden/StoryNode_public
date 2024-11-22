@@ -91,7 +91,6 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
                 justifyContent: "center",
                 cursor: "pointer",
                 position: "relative",
-                mr: 1
               }}
             >
               <Feedback sx={{ color: grey, fontSize: 35 }} />
