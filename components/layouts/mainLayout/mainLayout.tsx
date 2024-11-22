@@ -48,7 +48,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           display: "flex",
         },
         "@media screen and (max-width:700px)": {
-          paddingBottom: "5rem", // 80px を rem に変換
+          paddingBottom: "5rem", // 80px を rem に変換 16px = 1rem
         },
       }}
     >
