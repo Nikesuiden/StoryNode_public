@@ -33,6 +33,16 @@ const notifications: Notification[] = [
       </Typography>
     ),
   },
+  {
+    id: 3,
+    title: "PWAを実装しました。",
+    date: "2024-11-23",
+    content: (
+      <Typography>
+        UX向上のため、ホーム画面にアイコンを追加して利用することを推奨します。
+      </Typography>
+    ),
+  },
 ];
 
 // 日付を降順にソート

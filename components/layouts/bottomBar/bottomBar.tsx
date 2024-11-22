@@ -41,6 +41,8 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
     }
   }, [user]);
 
+
+  // マウントするたび、URLの末尾 (path) の名前を取得
   useEffect(() => {
     SetSelectedMenu(window.location.pathname)
   })
