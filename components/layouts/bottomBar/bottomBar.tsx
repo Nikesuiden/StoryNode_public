@@ -61,7 +61,7 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
           label="AIchat"
           icon={<Forum fontSize="large" />}
           onClick={() => handleNavigation("/aichat")}
-          sx={{color: selectedMenu === "/aichat" ? "#2092cb" : null}}
+          sx={{color: selectedMenu === "/aichat" || selectedMenu ==="/chatHistory" ? "#2092cb" : null}}
         />
         <BottomNavigationAction
           label="Analysis"
