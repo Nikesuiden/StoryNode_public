@@ -36,9 +36,9 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
       >
         <Typography
           style={{
-            fontSize: 33,
+            fontSize: 30,
             fontWeight: "550",
-            top: 15,
+            top: 18,
             position: "absolute",
           }}
         >
