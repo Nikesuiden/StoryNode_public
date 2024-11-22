@@ -93,7 +93,7 @@ export default function ChatHistory() {
               mt: 4,
             }}
           >
-            <CircularProgress />
+            <CircularProgress size={50} />
           </Box>
         ) : chatHistory.length > 0 ? (
           /* チャット履歴がある場合 */

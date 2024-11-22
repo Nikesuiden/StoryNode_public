@@ -352,7 +352,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
             mt: 4,
           }}
         >
-          <CircularProgress />
+          <CircularProgress size={50}/>
         </Box>
       )}
 

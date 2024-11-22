@@ -179,7 +179,7 @@ const AnalysisChart = () => {
             mt: 20,
           }}
         >
-          <CircularProgress />
+          <CircularProgress size={50}/>
         </Box>
       )}
     </Box>
