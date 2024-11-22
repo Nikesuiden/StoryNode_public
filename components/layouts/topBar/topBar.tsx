@@ -60,7 +60,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               flexDirection: "column",
               justifyContent: "center",
               cursor: "pointer",
-              marginRight: 4,
+              marginRight: 3,
             }}
           >
             <Lightbulb sx={{ color: grey, fontSize: 35 }} />
@@ -72,7 +72,7 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               flexDirection: "column",
               justifyContent: "center",
               cursor: "pointer",
-              marginRight: 4,
+              marginRight: 3,
             }}
             onClick={() => handleNavigation("/notifications")}
           >
