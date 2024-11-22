@@ -34,6 +34,10 @@ const ToDoInput: React.FC<ToDoInputProps> = ({ onAction }) => {
       return;
     }
 
+    if (todoInput === "") {
+      return;
+    }
+
     const response = await fetch("/api/ToDoList", {
       method: "POST",
       headers: {
@@ -68,7 +72,6 @@ const ToDoInput: React.FC<ToDoInputProps> = ({ onAction }) => {
         <Box
           component="form"
           sx={{
-            "& > *": {},
             display: "flex",
             justifyContent: "center",
           }}

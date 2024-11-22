@@ -2,11 +2,7 @@
 
 "use client";
 
-import {
-  Feedback,
-  Lightbulb,
-  Notifications,
-} from "@mui/icons-material";
+import { Feedback, Lightbulb, Notifications } from "@mui/icons-material";
 import { Box, Divider, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { User } from "@supabase/supabase-js";
@@ -93,7 +89,16 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
               }}
             >
               <Feedback sx={{ color: grey, fontSize: 35 }} />
-              <Typography sx={{ fontSize: 10 , position: "absolute", top: 35, right: -5.5}}>FeedBack</Typography>
+              <Typography
+                sx={{
+                  fontSize: 10,
+                  position: "absolute",
+                  top: 35,
+                  right: -5.5,
+                }}
+              >
+                FeedBack
+              </Typography>
             </Box>
           </a>
         </Box>

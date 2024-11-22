@@ -1,6 +1,7 @@
 // bottomBar.tsx
 
 "use client";
+import { background } from "@chakra-ui/react";
 import {
   ImportContacts,
   Forum,
@@ -27,6 +28,7 @@ interface UserProps {
 
 const BottomBar: React.FC<UserProps> = ({ user }) => {
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [selectedMenu, SetSelectedMenu] = useState<string>("");
 
   const router = useRouter();
   const handleNavigation = (path: string) => {
@@ -39,6 +41,10 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    SetSelectedMenu(window.location.pathname)
+  })
+
   return (
     <Box
       sx={{ position: "fixed", left: 0, bottom: 0, height: "80px", width: "100%", zIndex: 10  }}
@@ -49,24 +55,31 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
           label="Diary"
           icon={<ImportContacts fontSize="large" />}
           onClick={() => handleNavigation("/")}
+          sx={{color: selectedMenu === "/" ? "#2092cb" : null}}
         />
         <BottomNavigationAction
           label="AIchat"
           icon={<Forum fontSize="large" />}
           onClick={() => handleNavigation("/aichat")}
+          sx={{color: selectedMenu === "/aichat" ? "#2092cb" : null}}
         />
         <BottomNavigationAction
           label="Analysis"
+          value={"/analysis"}
           icon={<BarChart fontSize="large" />}
           onClick={() => handleNavigation("/analysis")}
+          sx={{color: selectedMenu === "/analysis" ? "#2092cb" : null}}
         />
         <BottomNavigationAction
           label="ToDo"
+          value={"/todo"}
           icon={<CheckCircle fontSize="large" />}
           onClick={() => handleNavigation("/todo")}
+          sx={{color: selectedMenu === "/todo" ? "#2092cb" : null}}
         />
         <BottomNavigationAction
           label="Account"
+          value={"/settings"}
           icon={
             <Avatar
               src={profilePicture ?? undefined}
@@ -75,6 +88,7 @@ const BottomBar: React.FC<UserProps> = ({ user }) => {
             />
           }
           onClick={() => handleNavigation("/settings")}
+          sx={{color: selectedMenu === "/settings" ? "#2092cb" : null}}
         />
       </BottomNavigation>
     </Box>

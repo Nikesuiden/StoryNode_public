@@ -6,7 +6,7 @@ import TimeDisplay from "@/components/elements/timeDisplay/timeDisplay";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Index: React.FC = () => {
   const [diaryData, setDiaryData] = useState(null); // 保存された日記をリストを親で保持。
