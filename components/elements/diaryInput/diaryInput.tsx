@@ -84,7 +84,7 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
       }
     } catch (error) {
       console.log("送信エラー");
-      console.error("Error creating diary post:", error);
+      console.error("日記の生成中にエラーが発生しました。:", error);
       alert("サーバーとの通信中にエラーが発生しました。");
     }
   };

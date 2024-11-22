@@ -1,13 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import ToDoInput from "@/components/elements/todoInput/todoInput";
-import BottomBar from "@/components/layouts/bottomBar/bottomBar";
-import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import SideBar from "@/components/layouts/sideBar/sideBar";
 import { useCallback, useEffect, useState } from "react";
-import { History, KeyboardReturn } from "@mui/icons-material";
+import { KeyboardReturn } from "@mui/icons-material";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 import { createClient } from "@/utils/supabase/client";
 
@@ -20,13 +16,11 @@ interface ChatHistoryItem {
 
 export default function ChatHistory() {
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 初回レンダリング時にチャット履歴を取得
   const fetchChatHistory = useCallback(async () => {
     const supabase = await createClient();
-
-    setIsLoading(true);
 
     try {
       const {

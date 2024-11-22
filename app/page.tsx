@@ -20,7 +20,6 @@ const Index: React.FC = () => {
 
   const fetchDiaryPosts = async () => {
     const supabase = await createClient();
-    setIsLoading(true);
     const {
       data: { session },
     } = await supabase.auth.getSession();
