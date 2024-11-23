@@ -92,7 +92,6 @@ const AnalysisChart = () => {
 
     // map (Pythonで言うところのfor) を展開して1日ごとの感情スコアを計測する。
     const scores = last7Days.map((date) => {
-
       // createAtから月と日の数値を取って表の日にちパラメータを生成
       const dailyPosts = posts.filter(
         (post) => dayjs(post.createdAt).format("MM/DD") === date
@@ -124,10 +123,20 @@ const AnalysisChart = () => {
       options: {
         scales: {
           y: {
-            min: -axisLimit, // グラフを線対象にするため 最低値を指定
+            min: -axisLimit, // グラフを線対称にするため 最低値を指定
             max: axisLimit, // 同様の理由で 最大値を設定
             ticks: {
               stepSize: 1,
+            },
+            grid: {
+              color: (context: { tick: { value: number } }) => {
+                // y=0 の線を強調
+                return context.tick.value === 0 ? "black" : "lightgray";
+              },
+              lineWidth: (context: { tick: { value: number } }) => {
+                // y=0 の横線を太く
+                return context.tick.value === 0 ? 2 : 1; // 太さを設定
+              },
             },
           },
         },
@@ -143,8 +152,6 @@ const AnalysisChart = () => {
     if (diaryData.length > 0) {
       calculateEmotionScores(diaryData);
     }
-
-
   }, [diaryData]);
 
   return (
@@ -179,7 +186,7 @@ const AnalysisChart = () => {
             mt: 20,
           }}
         >
-          <CircularProgress size={50}/>
+          <CircularProgress size={50} />
         </Box>
       )}
     </Box>
