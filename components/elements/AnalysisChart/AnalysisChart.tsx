@@ -49,7 +49,13 @@ const emotionScores: Record<string, number> = {
 
 const AnalysisChart = () => {
   const [diaryData, setDiaryData] = useState<DiaryPost[]>([]);
-  const [chartData, setChartData] = useState<any>(null);
+  const [chartData, setChartData] = useState<{
+    labels: string[];
+    datasets: any[];
+  }>({
+    labels: [],
+    datasets: [],
+  });
 
   const router = useRouter();
 
@@ -84,29 +90,24 @@ const AnalysisChart = () => {
   // 感情分析機能
   const calculateEmotionScores = (posts: DiaryPost[]) => {
     const today = dayjs();
-  
+
     // 過去7日間の日付を取得
     const last7Days = Array.from({ length: 7 }, (_, i) =>
       today.subtract(i, "day").format("MM/DD")
     ).reverse();
-  
+
     // 各日の感情スコアを計算
     const scores = last7Days.map((date) => {
       const dailyPosts = posts.filter(
         (post) => dayjs(post.createdAt).format("MM/DD") === date
       );
-  
+
       const dailyScore = dailyPosts.reduce((sum, post) => {
         return sum + (emotionScores[post.emotion] || 0);
       }, 0);
       return { date, score: dailyScore };
     });
-  
-    // 縦軸のスケールを設定
-    const maxScore = Math.max(...scores.map((item) => item.score), 0);
-    const minScore = Math.min(...scores.map((item) => item.score), 0);
-    const axisLimit = Math.max(Math.abs(maxScore), Math.abs(minScore));
-  
+
     setChartData({
       labels: scores.map((item) => item.date),
       datasets: [
@@ -118,31 +119,8 @@ const AnalysisChart = () => {
           tension: 0.3,
         },
       ],
-      options: {
-        scales: {
-          y: {
-            min: -axisLimit, // 最低値を設定
-            max: axisLimit, // 最大値を設定
-            ticks: {
-              stepSize: 1,
-            },
-            grid: {
-              drawBorder: true,
-              color: (context: any) => {
-                // y=0 の横線を黒色に、それ以外を薄灰色に
-                return Number(context.tick.value) === 0 ? "black" : "lightgray";
-              },
-              lineWidth: (context: any) => {
-                // y=0 の横線を太くする
-                return Number(context.tick.value) === 0 ? 2 : 1;
-              },
-            },
-          },
-        },
-      },
     });
   };
-  
 
   useEffect(() => {
     fetchDiaryPosts();
@@ -152,13 +130,11 @@ const AnalysisChart = () => {
     if (diaryData.length > 0) {
       calculateEmotionScores(diaryData);
     }
-
-
   }, [diaryData]);
 
   return (
     <Box>
-      {chartData ? (
+      {chartData.labels.length > 0 ? (
         <Line
           data={chartData}
           options={{
@@ -169,10 +145,16 @@ const AnalysisChart = () => {
             },
             scales: {
               y: {
-                min: chartData.options.scales.y.min,
-                max: chartData.options.scales.y.max,
+                min: Math.min(...chartData.datasets[0].data, 0),
+                max: Math.max(...chartData.datasets[0].data, 0),
                 ticks: {
                   stepSize: 1,
+                },
+                grid: {
+                  color: "lightgrey",
+                  lineWidth: (context: any) => {
+                    return Number(context.tick.value) === 0 ? 2.5 : 1;
+                  },
                 },
               },
             },
@@ -188,7 +170,7 @@ const AnalysisChart = () => {
             mt: 20,
           }}
         >
-          <CircularProgress size={50}/>
+          <CircularProgress size={50} />
         </Box>
       )}
     </Box>
