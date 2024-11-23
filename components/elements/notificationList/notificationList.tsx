@@ -35,7 +35,7 @@ const notifications: Notification[] = [
   },
   {
     id: 3,
-    title: "PWAを実装しました。",
+    title: "<重要> PWAを実装しました。",
     date: "2024-11-23",
     content: (
       <Typography>
@@ -51,7 +51,7 @@ const sortedNotifications = notifications.sort((a, b) => {
   return new Date(b.date).getTime() - new Date(a.date).getTime();
 });
 
-const NotificationList: React.FC = () => {
+export default function NotificationList() {
   return (
     <Stack spacing={4}>
       {sortedNotifications.map((notification) => (
@@ -59,6 +59,4 @@ const NotificationList: React.FC = () => {
       ))}
     </Stack>
   );
-};
-
-export default NotificationList;
+}

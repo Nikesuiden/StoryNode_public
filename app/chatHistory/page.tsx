@@ -62,7 +62,7 @@ export default function ChatHistory() {
     <MainLayout>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
-          Chat History
+          ChatHistory
         </Typography>
         <Button
           variant="contained"
