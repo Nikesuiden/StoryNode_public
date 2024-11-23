@@ -49,13 +49,11 @@ const emotionScores: Record<string, number> = {
 
 const AnalysisChart = () => {
   const [diaryData, setDiaryData] = useState<DiaryPost[]>([]);
-  const [chartData, setChartData] = useState<{
-    labels: string[];
-    datasets: any[];
-  }>({
+  const [chartData, setChartData] = useState<{ labels: string[]; datasets: any[] }>({
     labels: [],
     datasets: [],
   });
+  const [axisLimits, setAxisLimits] = useState<{ min: number; max: number }>({ min: 0, max: 0 });
 
   const router = useRouter();
 
@@ -108,6 +106,13 @@ const AnalysisChart = () => {
       return { date, score: dailyScore };
     });
 
+    // 縦軸のスケールを設定
+    const maxScore = Math.max(...scores.map((item) => item.score), 0);
+    const minScore = Math.min(...scores.map((item) => item.score), 0);
+    const axisLimit = Math.max(Math.abs(maxScore), Math.abs(minScore));
+
+    setAxisLimits({ min: -axisLimit, max: axisLimit });
+
     setChartData({
       labels: scores.map((item) => item.date),
       datasets: [
@@ -145,14 +150,18 @@ const AnalysisChart = () => {
             },
             scales: {
               y: {
-                min: Math.min(...chartData.datasets[0].data, 0),
-                max: Math.max(...chartData.datasets[0].data, 0),
+                min: axisLimits.min, // 最低値を設定
+                max: axisLimits.max, // 最大値を設定
                 ticks: {
                   stepSize: 1,
                 },
                 grid: {
-                  color: "lightgrey",
+                  color: (context: any) => {
+                    // y=0 の横線を黒色に、それ以外を薄灰色に
+                    return Number(context.tick.value) === 0 ? "lightgrey" : "lightgray";
+                  },
                   lineWidth: (context: any) => {
+                    // y=0 の横線を太くする
                     return Number(context.tick.value) === 0 ? 2.5 : 1;
                   },
                 },
