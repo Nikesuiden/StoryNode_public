@@ -49,18 +49,24 @@ const TopBar: React.FC<UserProps> = ({ user }) => {
             top: 18,
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              cursor: "pointer",
-              marginRight: 3,
-            }}
+          <a
+            href="https://docs.google.com/presentation/d/1Vx7M7BnEDAwRReOuKD1CtMri3UDYLUCAYnUusm2L3es/edit?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <Lightbulb sx={{ color: grey, fontSize: 35 }} />
-            <Typography sx={{ fontSize: 10, ml: 0.35 }}>使い方</Typography>
-          </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                cursor: "pointer",
+                marginRight: 3,
+              }}
+            >
+              <Lightbulb sx={{ color: grey, fontSize: 35 }} />
+              <Typography sx={{ fontSize: 10, ml: 0.35 }}>使い方</Typography>
+            </Box>
+          </a>
           <Box
             sx={{
               display: "flex",
