@@ -353,6 +353,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
           }}
         >
           <CircularProgress size={50}/>
+          <Typography>読み込み中...</Typography>
         </Box>
       )}
 

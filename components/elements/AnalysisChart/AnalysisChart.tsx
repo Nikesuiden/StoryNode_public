@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -180,6 +180,7 @@ const AnalysisChart = () => {
           }}
         >
           <CircularProgress size={50} />
+          <Typography>読み込み中...</Typography>
         </Box>
       )}
     </Box>

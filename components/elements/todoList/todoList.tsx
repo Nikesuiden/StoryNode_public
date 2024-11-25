@@ -112,6 +112,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
           }}
         >
           <CircularProgress size={50} />
+          <Typography>読み込み中...</Typography>
         </Box>
       ) : Array.isArray(todos) && todos.length > 0 ? (
         todos.map((todo) => (

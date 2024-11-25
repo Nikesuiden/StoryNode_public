@@ -4,11 +4,8 @@ import AiChatForm from "@/components/elements/aiChatForm/aiChatForm";
 import ChatHistory from "@/components/elements/chatHistory/chatHistory";
 import BottomBar from "@/components/layouts/bottomBar/bottomBar";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
-import SideBar from "@/components/layouts/sideBar/sideBar";
-import TopBar from "@/components/layouts/topBar/topBar";
-import { textDecoration } from "@chakra-ui/react";
 import { Box, Typography } from "@mui/material";
-import { useState } from "react";
+
 
 export default function Aichat() {
   return (
