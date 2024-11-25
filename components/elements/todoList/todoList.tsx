@@ -109,10 +109,11 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
             justifyContent: "center",
             alignItems: "center",
             mt: 4,
+            flexDirection: "column",
           }}
         >
-          <CircularProgress size={50} />
-          <Typography>読み込み中...</Typography>
+          <CircularProgress size={50}  />
+          <Typography sx={{ mt: 2 }}>読み込み中...</Typography>
         </Box>
       ) : Array.isArray(todos) && todos.length > 0 ? (
         todos.map((todo) => (

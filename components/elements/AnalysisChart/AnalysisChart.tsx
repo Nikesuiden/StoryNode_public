@@ -49,11 +49,17 @@ const emotionScores: Record<string, number> = {
 
 const AnalysisChart = () => {
   const [diaryData, setDiaryData] = useState<DiaryPost[]>([]);
-  const [chartData, setChartData] = useState<{ labels: string[]; datasets: any[] }>({
+  const [chartData, setChartData] = useState<{
+    labels: string[];
+    datasets: any[];
+  }>({
     labels: [],
     datasets: [],
   });
-  const [axisLimits, setAxisLimits] = useState<{ min: number; max: number }>({ min: 0, max: 0 });
+  const [axisLimits, setAxisLimits] = useState<{ min: number; max: number }>({
+    min: 0,
+    max: 0,
+  });
 
   const router = useRouter();
 
@@ -158,7 +164,9 @@ const AnalysisChart = () => {
                 grid: {
                   color: (context: any) => {
                     // y=0 の横線を黒色に、それ以外を薄灰色に
-                    return Number(context.tick.value) === 0 ? "lightgrey" : "lightgray";
+                    return Number(context.tick.value) === 0
+                      ? "lightgrey"
+                      : "lightgray";
                   },
                   lineWidth: (context: any) => {
                     // y=0 の横線を太くする
@@ -177,10 +185,11 @@ const AnalysisChart = () => {
             justifyContent: "center",
             alignItems: "center",
             mt: 20,
+            flexDirection: "column",
           }}
         >
           <CircularProgress size={50} />
-          <Typography>読み込み中...</Typography>
+          <Typography sx={{ mt: 2 }}>読み込み中...</Typography>
         </Box>
       )}
     </Box>
