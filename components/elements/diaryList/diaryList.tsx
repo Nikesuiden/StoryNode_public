@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, MouseEvent } from "react";
+import LoadingProgress from "../loadingProgress/loadingProgress";
 
 interface DiaryPost {
   id: number;
@@ -353,7 +354,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
             flexDirection: "column",
           }}
         >
-          <CircularProgress />
+          <LoadingProgress />
           <Typography sx={{ mt: 2 }}>読み込み中...</Typography>
         </Box>
       )}
