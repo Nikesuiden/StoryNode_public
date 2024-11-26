@@ -109,7 +109,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            mt: 4,
+            mt: 6,
             flexDirection: "column",
           }}
         >
