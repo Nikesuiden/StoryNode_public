@@ -113,7 +113,8 @@ const AnalysisChart = () => {
     });
 
     // 縦軸のスケールを設定
-    const maxScore = Math.max(...scores.map((item) => item.score), 0);
+    // ...(スプレット構文)は配列の要素をここの因数にするための構文
+    const maxScore = Math.max(...scores.map((item) => item.score), 0); 
     const minScore = Math.min(...scores.map((item) => item.score), 0);
     const axisLimit = Math.max(Math.abs(maxScore), Math.abs(minScore));
 
