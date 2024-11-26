@@ -188,7 +188,7 @@ const AnalysisChart = () => {
             flexDirection: "column",
           }}
         >
-          <CircularProgress size={50} />
+          <CircularProgress />
           <Typography sx={{ mt: 2 }}>読み込み中...</Typography>
         </Box>
       )}

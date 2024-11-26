@@ -112,7 +112,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
             flexDirection: "column",
           }}
         >
-          <CircularProgress size={50}  />
+          <CircularProgress />
           <Typography sx={{ mt: 2 }}>読み込み中...</Typography>
         </Box>
       ) : Array.isArray(todos) && todos.length > 0 ? (
