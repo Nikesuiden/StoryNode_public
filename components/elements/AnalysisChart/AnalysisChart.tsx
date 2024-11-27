@@ -1,26 +1,27 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { Line } from "react-chartjs-2";
+import { Box, Typography } from "@mui/material";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  BarElement,
   PointElement,
   LineElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
+import { Line } from "react-chartjs-2";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import LoadingProgress from "../loadingProgress/loadingProgress";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  BarElement, // 棒グラフ用の要素を登録
   PointElement,
   LineElement,
   Title,
@@ -50,23 +51,10 @@ const emotionScores: Record<string, number> = {
 
 const AnalysisChart = () => {
   const [diaryData, setDiaryData] = useState<DiaryPost[]>([]);
-  const [chartData, setChartData] = useState<{
-    labels: string[];
-    datasets: any[];
-  }>({
+  const [chartData, setChartData] = useState<any>({
     labels: [],
     datasets: [],
   });
-  const [axisLimits, setAxisLimits] = useState<{ min: number; max: number }>({
-    min: 0,
-    max: 0,
-  });
-
-  const router = useRouter();
-
-  const handleNavigation = (path: string) => {
-    router.push(path);
-  };
 
   const fetchDiaryPosts = async () => {
     const supabase = await createClient();
@@ -88,12 +76,13 @@ const AnalysisChart = () => {
       const diaryPostData: DiaryPost[] = await response.json();
       setDiaryData(diaryPostData);
     } else {
-      handleNavigation("/signin");
+      // サインインページへ遷移
+      // handleNavigation("/signin"); // 必要に応じてコメント解除
     }
   };
 
-  // 感情分析機能
-  const calculateEmotionScores = (posts: DiaryPost[]) => {
+  // 感情スコアと投稿数を計算
+  const calculateEmotionAndPostData = (posts: DiaryPost[]) => {
     const today = dayjs();
 
     // 過去7日間の日付を取得
@@ -101,35 +90,46 @@ const AnalysisChart = () => {
       today.subtract(i, "day").format("MM/DD")
     ).reverse();
 
-    // 各日の感情スコアを計算
-    const scores = last7Days.map((date) => {
+    // 各日の感情スコアと投稿数を計算
+    const data = last7Days.map((date) => {
       const dailyPosts = posts.filter(
         (post) => dayjs(post.createdAt).format("MM/DD") === date
       );
 
-      const dailyScore = dailyPosts.reduce((sum, post) => {
-        return sum + (emotionScores[post.emotion] || 0);
-      }, 0);
-      return { date, score: dailyScore };
+      // 各日の感情スコアを計算（平均スコア）
+      const totalScore = dailyPosts.reduce(
+        (sum, post) => sum + (emotionScores[post.emotion] || 0),
+        0
+      );
+      const averageScore =
+        dailyPosts.length > 0 ? totalScore / dailyPosts.length : 0;
+
+      return {
+        date,
+        averageScore, // 平均スコア
+        postCount: dailyPosts.length, // 投稿数
+      };
     });
 
-    // 縦軸のスケールを設定
-    // ...(スプレット構文)は配列の要素をここの引数にするための構文
-    const maxScore = Math.max(...scores.map((item) => item.score), 0);
-    const minScore = Math.min(...scores.map((item) => item.score), 0);
-    const axisLimit = Math.max(Math.abs(maxScore), Math.abs(minScore));
-
-    setAxisLimits({ min: -axisLimit, max: axisLimit });
-
     setChartData({
-      labels: scores.map((item) => item.date),
+      labels: data.map((item) => item.date),
       datasets: [
         {
-          label: "感情の起伏",
-          data: scores.map((item) => item.score),
+          type: "line", // 折れ線グラフ
+          label: "感情の平均スコア",
+          data: data.map((item) => item.averageScore),
           borderColor: "lightblue",
           backgroundColor: "lightblue",
+          yAxisID: "y", // 左側のy軸に紐付け
           tension: 0.3,
+          fill: false,
+        },
+        {
+          type: "bar", // 棒グラフ
+          label: "日記の投稿数",
+          data: data.map((item) => item.postCount),
+          backgroundColor: "#FFFDD0",
+          yAxisID: "y2", // 右側のy軸に紐付け
         },
       ],
     });
@@ -141,7 +141,7 @@ const AnalysisChart = () => {
 
   useEffect(() => {
     if (diaryData.length > 0) {
-      calculateEmotionScores(diaryData);
+      calculateEmotionAndPostData(diaryData);
     }
   }, [diaryData]);
 
@@ -154,26 +154,46 @@ const AnalysisChart = () => {
             responsive: true,
             plugins: {
               legend: { position: "top" },
-              title: { display: true, text: "過去7日間の感情スコア" },
+              title: { display: true, text: "過去7日間の感情スコアと投稿数" },
             },
             scales: {
               y: {
-                min: axisLimits.min, // 最低値を設定
-                max: axisLimits.max, // 最大値を設定
+                type: "linear",
+                position: "left", // 左側のy軸
+                min: -1, // y軸の最小値を-1に設定
+                max: 1, // y軸の最大値を+1に設定
+                title: {
+                  display: true,
+                  text: "感情スコア",
+                },
                 ticks: {
-                  stepSize: 1,
+                  stepSize: 0.5, // ステップサイズを調整
                 },
                 grid: {
                   color: (context: any) => {
-                    // y=0 の横線を黒色に、それ以外を薄灰色に
                     return Number(context.tick.value) === 0
                       ? "lightgrey"
                       : "lightgray";
                   },
                   lineWidth: (context: any) => {
-                    // y=0 の横線を太くする
                     return Number(context.tick.value) === 0 ? 2.5 : 1;
                   },
+                },
+              },
+              y2: {
+                type: "linear",
+                position: "right", // 右側のy軸
+                min: 0, // 投稿数は0以上なので最小値を0に設定
+                // maxは自動調整
+                title: {
+                  display: true,
+                  text: "投稿数",
+                },
+                ticks: {
+                  stepSize: 1, // 必要に応じて調整
+                },
+                grid: {
+                  drawOnChartArea: false, // 右側y軸のグリッドを非表示
                 },
               },
             },
@@ -191,7 +211,7 @@ const AnalysisChart = () => {
           }}
         >
           <LoadingProgress />
-          <Typography sx={{ mt: 2, display: "none" }}>読み込み中...</Typography>
+          <Typography sx={{ mt: 2 }}>読み込み中...</Typography>
         </Box>
       )}
     </Box>

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { KeyboardReturn } from "@mui/icons-material";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 import { createClient } from "@/utils/supabase/client";
+import LoadingProgress from "@/components/elements/loadingProgress/loadingProgress";
 
 interface ChatHistoryItem {
   id: number;
@@ -84,10 +85,10 @@ export default function ChatHistory() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              mt: 4,
+              mt: 6,
             }}
           >
-            <CircularProgress size={50} />
+            <LoadingProgress />
           </Box>
         ) : chatHistory.length > 0 ? (
           /* チャット履歴がある場合 */
