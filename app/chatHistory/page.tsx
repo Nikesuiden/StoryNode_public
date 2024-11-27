@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { KeyboardReturn } from "@mui/icons-material";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 import { createClient } from "@/utils/supabase/client";
