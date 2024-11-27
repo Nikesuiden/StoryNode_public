@@ -20,7 +20,7 @@ export default function ChatHistory() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 初回レンダリング時にチャット履歴を取得
-  const fetchChatHistory = useCallback(async () => {
+  const fetchChatHistory = async () => {
     const supabase = await createClient();
 
     try {
@@ -48,7 +48,7 @@ export default function ChatHistory() {
     } catch (error) {
       console.error("Error fetching chat history:", error);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchChatHistory();
