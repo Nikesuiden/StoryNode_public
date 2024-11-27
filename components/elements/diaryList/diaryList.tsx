@@ -355,7 +355,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
           }}
         >
           <LoadingProgress />
-          <Typography sx={{ mt: 2 }}>読み込み中...</Typography>
+          <Typography sx={{ mt: 2, display: "none" }}>読み込み中...</Typography>
         </Box>
       )}
 
