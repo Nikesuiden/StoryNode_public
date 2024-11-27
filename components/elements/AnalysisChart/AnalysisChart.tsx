@@ -111,7 +111,7 @@ const AnalysisChart = () => {
 
       return {
         date,
-        averageScore, // 平均スコア
+        averageScore,
         postCount: dailyPosts.length, // 投稿数
       };
     });
@@ -159,7 +159,7 @@ const AnalysisChart = () => {
             responsive: true,
             plugins: {
               legend: { position: "top" },
-              title: { display: true, text: "過去7日間の感情スコアと投稿数" },
+              title: { display: true, text: "過去7日間の感情スコア" },
             },
             scales: {
               y: {
