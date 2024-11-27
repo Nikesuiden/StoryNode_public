@@ -17,6 +17,7 @@ import { Line } from "react-chartjs-2";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import LoadingProgress from "../loadingProgress/loadingProgress";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(
   CategoryScale,
@@ -56,6 +57,11 @@ const AnalysisChart = () => {
     datasets: [],
   });
 
+  const router = useRouter();
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  }
+
   const fetchDiaryPosts = async () => {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getSession();
@@ -76,8 +82,7 @@ const AnalysisChart = () => {
       const diaryPostData: DiaryPost[] = await response.json();
       setDiaryData(diaryPostData);
     } else {
-      // サインインページへ遷移
-      // handleNavigation("/signin"); // 必要に応じてコメント解除
+      handleNavigation("/signin"); // 必要に応じてコメント解除
     }
   };
 
@@ -173,7 +178,7 @@ const AnalysisChart = () => {
                   color: (context: any) => {
                     return Number(context.tick.value) === 0
                       ? "lightgrey"
-                      : "lightgray";
+                      : "lightgrey";
                   },
                   lineWidth: (context: any) => {
                     return Number(context.tick.value) === 0 ? 2.5 : 1;
@@ -211,7 +216,7 @@ const AnalysisChart = () => {
           }}
         >
           <LoadingProgress />
-          <Typography sx={{ mt: 2 }}>読み込み中...</Typography>
+          <Typography sx={{ mt: 2, display: "none" }}>読み込み中...</Typography>
         </Box>
       )}
     </Box>
