@@ -121,7 +121,7 @@ const AnalysisChart = () => {
       datasets: [
         {
           type: "line", // 折れ線グラフ
-          label: "感情の平均スコア",
+          label: "感情スコア",
           data: data.map((item) => item.averageScore),
           borderColor: "lightblue",
           backgroundColor: "lightblue",
