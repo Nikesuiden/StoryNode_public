@@ -60,7 +60,7 @@ const AnalysisChart = () => {
   const router = useRouter();
   const handleNavigation = (path: string) => {
     router.push(path);
-  }
+  };
 
   const fetchDiaryPosts = async () => {
     const supabase = await createClient();
@@ -175,11 +175,7 @@ const AnalysisChart = () => {
                   stepSize: 0.5, // ステップサイズを調整
                 },
                 grid: {
-                  color: (context: any) => {
-                    return Number(context.tick.value) === 0
-                      ? "lightgrey"
-                      : "lightgrey";
-                  },
+                  color: () => "lightgrey",
                   lineWidth: (context: any) => {
                     return Number(context.tick.value) === 0 ? 2.5 : 1;
                   },
