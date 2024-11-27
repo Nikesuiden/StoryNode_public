@@ -12,6 +12,7 @@ const withPWA = nextPWA({
 const nextConfig = withPWA({
   reactStrictMode: true, // React の厳密モード
   output: "standalone", // スタンドアロンモードでビルド
+  swcMinify: false, // SWC ミニファイを無効化 パフォーマンス低下の恐れ
 });
 
 export default nextConfig;

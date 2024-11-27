@@ -129,13 +129,13 @@ const AnalysisChart = () => {
           tension: 0.3,
           fill: false,
         },
-        // {
-        //   type: "bar", // 棒グラフ
-        //   label: "日記の投稿数",
-        //   data: data.map((item) => item.postCount),
-        //   backgroundColor: "#FFFDD0",
-        //   yAxisID: "y2", // 右側のy軸に紐付け
-        // },
+        {
+          type: "bar", // 棒グラフ
+          label: "日記の投稿数",
+          data: data.map((item) => item.postCount),
+          backgroundColor: "#FFFDD0",
+          yAxisID: "y2", // 右側のy軸に紐付け
+        },
       ],
     });
   };
@@ -185,22 +185,22 @@ const AnalysisChart = () => {
                   },
                 },
               },
-              // y2: {
-              //   type: "linear",
-              //   position: "right", // 右側のy軸
-              //   min: 0, // 投稿数は0以上なので最小値を0に設定
-              //   // maxは自動調整
-              //   title: {
-              //     display: true,
-              //     text: "投稿数",
-              //   },
-              //   ticks: {
-              //     stepSize: 1, // 必要に応じて調整
-              //   },
-              //   grid: {
-              //     drawOnChartArea: false, // 右側y軸のグリッドを非表示
-              //   },
-              // },
+              y2: {
+                type: "linear",
+                position: "right", // 右側のy軸
+                min: 0, // 投稿数は0以上なので最小値を0に設定
+                // maxは自動調整
+                title: {
+                  display: true,
+                  text: "投稿数",
+                },
+                ticks: {
+                  stepSize: 1, // 必要に応じて調整
+                },
+                grid: {
+                  drawOnChartArea: false, // 右側y軸のグリッドを非表示
+                },
+              },
             },
           }}
         />
