@@ -82,7 +82,7 @@ const AnalysisChart = () => {
       const diaryPostData: DiaryPost[] = await response.json();
       setDiaryData(diaryPostData);
     } else {
-      handleNavigation("/signin"); // 必要に応じてコメント解除
+      handleNavigation("/signin");
     }
   };
 
