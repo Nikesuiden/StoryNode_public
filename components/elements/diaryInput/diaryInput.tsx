@@ -49,11 +49,16 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
       alert("日記の内容を記入してください。");
       return;
     }
+
+    if (inputEmotion === "none") {
+      alert("感情を入力してください。");
+      return;
+    }
     try {
       // Supabase からセッション情報を取得
-      const { data, error } = await supabase.auth.getUser();
+      const { data, error } = await supabase.auth.getSession();
 
-      if (!data.user) {
+      if (!data.session?.access_token || error) {
         return;
       }
 
@@ -61,12 +66,12 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${data.user.id}`, // JWT トークンを Authorization ヘッダーに追加
+          Authorization: `Bearer ${data.session.access_token}`, // JWT トークンを Authorization ヘッダーに追加
         },
         body: JSON.stringify({
           content: diaryInput,
           emotion: inputEmotion,
-          UserId: data.user.id,
+          UserId: data.session.user.id,
         }),
       });
 
@@ -79,7 +84,7 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
       }
     } catch (error) {
       console.log("送信エラー");
-      console.error("Error creating diary post:", error);
+      console.error("日記の生成中にエラーが発生しました。:", error);
       alert("サーバーとの通信中にエラーが発生しました。");
     }
   };
@@ -125,6 +130,7 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
             <MenuItem value={"sad"}>悲しい</MenuItem>
             <MenuItem value={"angry"}>怒り</MenuItem>
             <MenuItem value={"anxiety"}>不安</MenuItem>
+            <MenuItem value={"painful"}>辛い</MenuItem>
           </Select>
         </FormControl>
         <Typography
@@ -138,7 +144,6 @@ const DiaryInput: React.FC<DiaryInputProps> = ({ onAction }) => {
           入力制限: {diaryInput === "" ? "0" : diaryInput?.length} /{" "}
           {d_maxLength}文字
         </Typography>
-        {/* <Typography>{inputEmotion}</Typography> */}
         <TextField
           label="日記を記入してください"
           variant="outlined"

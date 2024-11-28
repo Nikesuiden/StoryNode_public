@@ -13,30 +13,50 @@ interface Notification {
 const notifications: Notification[] = [
   {
     id: 1,
-    title: "お知らせタイトル1",
-    date: "2023-10-01",
+    title: "追加する予定の機能",
+    date: "2024-11-17",
     content: (
       <Typography>
-        テスト
+        1. アカウント削除機能 <br />
+        2. 説明書機能 <br />
+        3. 日記から感情を統計分析する機能
       </Typography>
     ),
   },
   {
     id: 2,
-    title: "お知らせタイトル2",
-    date: "2023-09-15",
-    content: <Typography>複数の投稿確認</Typography>,
+    title: "PWAに対応する予定です。",
+    date: "2024-11-21",
+    content: (
+      <Typography>
+        PWAとは、Web上でネイティブアプリ同等のUXを実現できる技術のことです。
+      </Typography>
+    ),
+  },
+  {
+    id: 3,
+    title: "<重要> PWAを実装しました。",
+    date: "2024-11-23",
+    content: (
+      <Typography>
+        UX向上のため、ホーム画面にアイコンを追加して利用することを推奨します。
+      </Typography>
+    ),
   },
 ];
 
-const NotificationList: React.FC = () => {
+// 日付を降順にソート
+const sortedNotifications = notifications.sort((a, b) => {
+  // `date`を新しい順にソート
+  return new Date(b.date).getTime() - new Date(a.date).getTime();
+});
+
+export default function NotificationList() {
   return (
     <Stack spacing={4}>
-      {notifications.map((notification) => (
+      {sortedNotifications.map((notification) => (
         <NotificationItem key={notification.id} {...notification} />
       ))}
     </Stack>
   );
-};
-
-export default NotificationList;
+}

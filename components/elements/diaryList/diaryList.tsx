@@ -222,6 +222,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
           <MenuItem value={"sad"}>悲しい</MenuItem>
           <MenuItem value={"angry"}>怒り</MenuItem>
           <MenuItem value={"anxiety"}>不安</MenuItem>
+          <MenuItem value={"painful"}>辛い</MenuItem>
         </Select>
       </FormControl>
 
@@ -270,6 +271,7 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
                     <MenuItem value={"sad"}>悲しい</MenuItem>
                     <MenuItem value={"angry"}>怒り</MenuItem>
                     <MenuItem value={"anxiety"}>不安</MenuItem>
+                    <MenuItem value={"painful"}>辛い</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -350,7 +352,8 @@ const DiaryList: React.FC<DiaryPostProps> = ({ initialData }) => {
             mt: 4,
           }}
         >
-          <CircularProgress />
+          <CircularProgress size={50}/>
+          <Typography>読み込み中...</Typography>
         </Box>
       )}
 

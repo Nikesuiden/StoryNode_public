@@ -23,7 +23,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         backgroundColor: "white",
       }}
     >
-      <Typography variant="h5" gutterBottom component="div">
+      <Typography variant="h6" gutterBottom component="div">
         {title}
       </Typography>
       <Typography

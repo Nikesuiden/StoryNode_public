@@ -9,7 +9,7 @@ import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 const Notifications: React.FC = () => {
   return (
     <MainLayout>
-      <Container maxWidth="md" style={{ paddingTop: "2rem" }}>
+      <Container maxWidth="md" style={{ paddingTop: "1rem" }}>
         <NotificationList />
       </Container>
     </MainLayout>

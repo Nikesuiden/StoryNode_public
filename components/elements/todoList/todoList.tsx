@@ -44,9 +44,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
     if (!editingText.trim()) return;
 
     try {
-      const {
-        data, error
-      } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.getSession();
 
       if (!data.session?.access_token) {
         console.error("ユーザーがログインしていません。");
@@ -78,9 +76,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
   const deleteTodo = async (id: number) => {
     const supabase = await createClient();
     try {
-      const {
-        data, error
-      } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.getSession();
 
       if (!data.session?.access_token) {
         console.error("ユーザーがログインしていません。");
@@ -115,7 +111,8 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
             mt: 4,
           }}
         >
-          <CircularProgress />
+          <CircularProgress size={50} />
+          <Typography>読み込み中...</Typography>
         </Box>
       ) : Array.isArray(todos) && todos.length > 0 ? (
         todos.map((todo) => (

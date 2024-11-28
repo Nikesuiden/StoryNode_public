@@ -6,6 +6,7 @@ import { MeetingRoom } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import SignInWithGoogle from "@/components/elements/signinWithGoogle/signinWithGoogle";
 import { createClient } from "@/utils/supabase/client";
+import OneTapComponent from "@/components/elements/OneTapComponent/OneTapComponent";
 
 export default function SignIn() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function SignIn() {
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
-    const supabase = await createClient()
+    const supabase = await createClient();
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -136,6 +137,10 @@ export default function SignIn() {
           }}
         >
           <SignInWithGoogle />
+          <OneTapComponent />
+          <Typography sx={{ marginTop: 3, fontSize: 15 }}>
+            ログイン後、ページ移動までお待ちください。
+          </Typography>
         </Box>
       </Box>
     </Box>

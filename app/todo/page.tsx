@@ -2,10 +2,7 @@
 
 "use client";
 
-import BottomBar from "@/components/layouts/bottomBar/bottomBar";
-import TopBar from "@/components/layouts/topBar/topBar";
 import { Box, Typography } from "@mui/material";
-import SideBar from "@/components/layouts/sideBar/sideBar";
 import React, { useEffect, useState } from "react";
 import ToDoList from "@/components/elements/todoList/todoList";
 import ToDoInput from "@/components/elements/todoInput/todoInput";
@@ -57,7 +54,7 @@ const ToDoPage: React.FC = () => {
 
   return (
     <MainLayout>
-      <Typography style={{ flexGrow: 1, fontSize: 30, fontWeight: "550" }}>
+      <Typography sx={{ flexGrow: 1, fontSize: 25, fontWeight: "550" }}>
         ToDoList
       </Typography>
 

@@ -11,6 +11,7 @@ import {
   Typography,
   MenuItem,
   SelectChangeEvent,
+  Divider,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import { createClient } from "@/utils/supabase/client";
@@ -382,7 +383,6 @@ const AiChatForm: React.FC = () => {
       </Box>
       <br />
       <Box>
-        <Typography>{diaryToPrompt}</Typography>
         <Typography>{response}</Typography>
       </Box>
     </Box>

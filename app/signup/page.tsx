@@ -8,6 +8,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import SignUpWithGoogle from "@/components/elements/signUpWithGoogle/signUpWithGoogle";
 import { createClient } from "@/utils/supabase/client";
+import OneTapComponent from "@/components/elements/OneTapComponent/OneTapComponent";
 
 export default function SignUp() {
   const router = useRouter();
@@ -96,6 +97,10 @@ export default function SignUp() {
           }}
         >
           <SignUpWithGoogle />
+          <OneTapComponent />
+          <Typography sx={{ marginTop: 3, fontSize: 15 }}>
+            ログイン後、ページ移動までお待ちください。
+          </Typography>
         </Box>
       </Box>
     </Box>

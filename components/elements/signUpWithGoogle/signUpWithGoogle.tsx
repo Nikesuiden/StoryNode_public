@@ -10,9 +10,9 @@ export default function SignUpWithGoogle() {
       options: {
         queryParams: {
           access_type: "offline", //　トークンをリフレッシュします。
-          prompt: "consent", //
+          prompt: "consent",
         },
-        // redirectTo: `${window.location.origin}/api/auth/callback`,
+        redirectTo: `${window.location.origin}/api/auth/callback`,
       },
     });
     // エラーの内容を表示
