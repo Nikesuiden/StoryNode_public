@@ -11,7 +11,6 @@ import {
   Typography,
   MenuItem,
   SelectChangeEvent,
-  Divider,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import { createClient } from "@/utils/supabase/client";

@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { KeyboardReturn } from "@mui/icons-material";
 import MainLayout from "@/components/layouts/mainLayout/mainLayout";
 import { createClient } from "@/utils/supabase/client";
+import LoadingProgress from "@/components/elements/loadingProgress/loadingProgress";
 
 interface ChatHistoryItem {
   id: number;
@@ -19,7 +20,7 @@ export default function ChatHistory() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 初回レンダリング時にチャット履歴を取得
-  const fetchChatHistory = useCallback(async () => {
+  const fetchChatHistory = async () => {
     const supabase = await createClient();
 
     try {
@@ -47,7 +48,7 @@ export default function ChatHistory() {
     } catch (error) {
       console.error("Error fetching chat history:", error);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchChatHistory();
@@ -84,10 +85,10 @@ export default function ChatHistory() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              mt: 4,
+              mt: 6,
             }}
           >
-            <CircularProgress size={50} />
+            <LoadingProgress />
           </Box>
         ) : chatHistory.length > 0 ? (
           /* チャット履歴がある場合 */

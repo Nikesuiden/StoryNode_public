@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import React from "react";
+import LoadingProgress from "../loadingProgress/loadingProgress";
 
 interface ToDo {
   id: number;
@@ -108,11 +109,12 @@ const ToDoList: React.FC<ToDoListProps> = ({ initialData, onAction }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            mt: 4,
+            mt: 6,
+            flexDirection: "column",
           }}
         >
-          <CircularProgress size={50} />
-          <Typography>読み込み中...</Typography>
+          <LoadingProgress />
+          <Typography sx={{ mt: 2, display: "none" }}>読み込み中...</Typography>
         </Box>
       ) : Array.isArray(todos) && todos.length > 0 ? (
         todos.map((todo) => (
